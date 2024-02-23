@@ -13,7 +13,7 @@ def move_files(source_directory, target_directory):
 
 
 source = '../data/openapi-directory-main/APIs'
-target = '../data/downloaded_openapi_specifications'
+target = '../data/specifications'
 
 # Ensure the target directory exists
 os.makedirs(target, exist_ok=True)
