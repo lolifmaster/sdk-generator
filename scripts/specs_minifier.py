@@ -36,11 +36,11 @@ keys_to_keep = {
 }
 
 key_abbreviations = {
-    "operationid": "opid",
+    "operationId": "opid",
     "parameters": "params",
-    "requestbody": "reqBody",
+    "requestBody": "reqBody",
     "properties": "props",
-    "schemaname": "schName",
+    "schemaName": "schName",
     "description": "desc",
     "summary": "sum",
     "string": "str",
@@ -216,7 +216,7 @@ def abbreviate(data, abbreviations):
     if isinstance(data, dict):
         # Lowercase keys, apply abbreviations and recursively process values
         return {
-            abbreviations.get(key.lower(), key.lower()): abbreviate(abbreviations.get(str(value).lower(), value),
+            abbreviations.get(key, key): abbreviate(abbreviations.get(str(value), value),
                                                                     abbreviations)
             for key, value in data.items()
         }
@@ -225,7 +225,7 @@ def abbreviate(data, abbreviations):
         return [abbreviate(item, abbreviations) for item in data]
     elif isinstance(data, str):
         # If the data is a string, convert it to lowercase and replace if abbreviation exists
-        return abbreviations.get(data.lower(), data.lower())
+        return abbreviations.get(data, data)
     else:
         # Return data unchanged if it's not a dict, list or string
         return data
@@ -288,7 +288,7 @@ def minify(spec):
             description = tag.get("description")
             # Add to the dictionary
             if name and description:
-                tag_summary_dict[name] = description.lower()
+                tag_summary_dict[name] = description
 
     # Dictionary with each unique tag as a key, and the value is a list of finalized endpoints with that tag
     endpoints_by_tag = defaultdict(list)
@@ -327,7 +327,7 @@ def minify(spec):
             for tag in tags:
                 endpoints_by_tag[tag].append(extracted_endpoint_data)
 
-                operation_id = endpoint.get('operationId', '').lower()
+                operation_id = endpoint.get('operationId', '')
 
                 content_string = write_dict_to_text(extracted_endpoint_data)
 
