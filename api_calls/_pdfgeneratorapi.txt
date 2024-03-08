@@ -1,0 +1,56 @@
+Here is a Python client SDK for the provided API using the `requests` library:
+
+```python
+import requests
+
+class APIClient:
+    def __init__(self, base_url, auth_token):
+        self.base_url = base_url
+        self.auth_token = auth_token
+
+    def _make_request(self, method, path, params=None, data=None):
+        url = self.base_url + path
+        headers = {'Authorization': f'Bearer {self.auth_token}'}
+
+        response = requests.request(method, url, params=params, json=data, headers=headers)
+        response.raise_for_status()
+
+        return response.json()
+
+    def _make_authenticated_request(self, method, path, params=None, data=None):
+        return self._make_request(method, path, params, data)
+
+    def merge_templates(self, docname, name, format='pdf', output='base64', batch_data):
+        path = '/templates/output'
+        params = {'docname': docname, 'name': name, 'format': format, 'output': output}
+        data = {'BatchData': batch_data}
+        return self._make_authenticated_request('POST', path, params=params, data=data)
+
+    def merge_template(self, template_id, docname, name, format='pdf', output='base64', data):
+        path = f'/templates/{template_id}/output'
+        params = {'name': name, 'format': format, 'output': output}
+        return self._make_authenticated_request('POST', path, params=params, data=data)
+
+    def get_templates(self):
+        path = '/templates'
+        return self._make_authenticated_request('GET', path)
+
+    def create_template(self, template_definition):
+        path = '/templates'
+        return self._make_authenticated_request('POST', path, data=template_definition)
+
+    def delete_template(self, template_id):
+        path = f'/templates/{template_id}'
+        return self._make_authenticated_request('DELETE', path)
+
+    def get_template(self, template_id):
+        path = f'/templates/{template_id}'
+        return self._make_authenticated_request('GET', path)
+
+    def update_template(self, template_id, template_definition):
+        path = f'/templates/{template_id}'
+        return self._make_authenticated_request('PUT', path, data=template_definition)
+
+    def copy_template(self, template_id, name=None):
+        path = f'/templates/{template_id}/copy'
+        params = {'name

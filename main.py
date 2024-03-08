@@ -1,43 +1,52 @@
+import json
 import requests
+import pathlib
+
+headers = {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjJhODdiMTUtMTk0MC00YTE3LTljYzQtN2E1ZWVjZDQ4ZGJkIiwidHlwZSI6ImFwaV90b2tlbiJ9.ChywjC-I1Ksp7KeHi1aASB5Oys1fRPY1AtDwhL0AZrc"}
+
+url = "https://api.edenai.run/v2/text/code_generation"
+
+simplified_specs_dir = pathlib.Path(__file__).parent.absolute() / 'data' / 'simplified-batch-specs'
+
+output_dir = pathlib.Path(__file__).parent.absolute() / 'api_calls'
+
+api_spec_name = "_pdfgeneratorapi.txt"
+
+api_spec = simplified_specs_dir / api_spec_name
+
+TEMPLATE = """
+Write a Python client sdk for the following API:
+
+---
+{API_SPEC}
+---
+
+The client sdk should be able to make requests to the API and return the response.
+you should use the requests library to make the requests.
+the client sdk should be a class with methods for each endpoint in the API and _make_request, _make_authenticated_request methods.
+"""
+
+payload = {
+    "providers": "openai",
+    "prompt": "",
+    "instruction": TEMPLATE.format(API_SPEC=api_spec.read_text()),
+    "temperature": 0.1,
+    "max_tokens": 500,
+    "fallback_providers": ""
+}
 
 
-class DocumentServiceSDK:
-    def __init__(self, base_url):
-        self.base_url = base_url
+def generate_code():
+    response = requests.post(url, json=payload, headers=headers)
 
-    def _make_request(self, method, path, **kwargs):
-        url = f"{self.base_url}{path}"
-        response = requests.request(method, url, **kwargs)
-        response.raise_for_status()
-        return response.json()
+    result = json.loads(response.text)
 
-    def merge_templates(self, docname, format="pdf", output="base64", batch_data=None):
-        path = "/templates/output"
-        params = {"name": docname, "format": format, "output": output}
-        return self._make_request("POST", path, params=params, json=batch_data)
-
-    def merge_template(self, template_id, docname, format="pdf", output="base64", data=None):
-        path = f"/templates/{template_id}/output"
-        params = {"name": docname, "format": format, "output": output}
-        return self._make_request("POST", path, params=params, json=data)
-
-    def get_templates(self):
-        path = "/templates"
-        return self._make_request("GET", path)
-
-    def get_specifications(self):
-        return self._make_request("GET", '')
+    if response.status_code == 200:
+        output_file = output_dir / api_spec_name
+        output_file.write_text(result['openai']['generated_text'])
+        print(f"Output written to {output_file}")
 
 
-# Example Usage
 if __name__ == "__main__":
-    # Instantiate the SDK with the base URL of your API
-    api_base_url = "https://us1.pdfgeneratorapi.com/api/v3"
-    sdk = DocumentServiceSDK(api_base_url)
-
-    # Get the specification
-    try:
-        spec = sdk.get_specifications()
-        print(spec)
-    except requests.exceptions.RequestException as e:
-        print(e)
+    generate_code()

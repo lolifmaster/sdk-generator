@@ -394,6 +394,7 @@ def process_file(args):
     file_path, filename, target_directory = args
     try:
         spec = load_spec(file_path, filename)
+        filename = filename.split('.')[0]
         save_as_txt(spec, target_directory, filename)
     except Exception as e:
         print(f'Error processing file {filename}: {e}')

@@ -2,9 +2,12 @@ import os
 import yaml
 import json
 from datetime import datetime, date
+from typing import override
+from tqdm import tqdm
 
 
 class DateTimeEncoder(json.JSONEncoder):
+    @override
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.isoformat()
@@ -35,18 +38,15 @@ def convert_folder(yaml_folder, json_folder):
     yaml_folder: Path to the folder containing YAML files.
     json_folder: Path to the folder to store the JSON files.
   """
-    # Create the output folder if it doesn't exist
     os.makedirs(json_folder, exist_ok=True)
 
-    # Loop through all files in the yaml folder
-    for filename in os.listdir(yaml_folder):
+    for filename in tqdm(os.listdir(yaml_folder)):
         if filename.endswith('.yaml'):
             yaml_path = os.path.join(yaml_folder, filename)
             json_path = os.path.join(json_folder, os.path.splitext(filename)[0] + '.json')
             convert_yaml_to_json(yaml_path, json_path)
 
 
-# Example usage
 input_yaml_folder = '../data/specifications'
 output_json_folder = '../data/specifications-json'
 convert_folder(input_yaml_folder, output_json_folder)
