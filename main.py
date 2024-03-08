@@ -11,7 +11,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-url = "https://api.edenai.run/v2/text/code_generation"
+url = "https://api.edenai.run/v2/text/chat"
 
 simplified_specs_dir = pathlib.Path(__file__).parent.absolute() / 'data' / 'simplified-batch-specs'
 
@@ -30,15 +30,20 @@ Write a Python client sdk for the following API:
 
 The client sdk should be able to make requests to the API and return the response.
 you should use the requests library to make the requests.
-the client sdk should be a class with methods for each endpoint in the API and _make_request, _make_authenticated_request methods.
+the client sdk should be a class with methods for each endpoint in the API.
+the requests should be by two methods _make_request or _make_authenticated_request.
 """
 
 payload = {
     "providers": "openai",
-    "prompt": "",
-    "instruction": TEMPLATE.format(API_SPEC=api_spec.read_text()),
-    "temperature": 0.1,
-    "max_tokens": 500,
+    "text": TEMPLATE.format(API_SPEC=api_spec.read_text()),
+    "chatbot_global_action": "You are a programmer",
+    "previous_history": [],
+    "temperature": 0.0,
+    "max_tokens": 2000,
+    "settings": {
+        "openai": "gpt-4"
+    },
     "fallback_providers": ""
 }
 

@@ -39,7 +39,7 @@ if __name__ == "__main__":
     # Instantiate the SDK with the base URL of your API
     api_base_url = "https://us1.pdfgeneratorapi.com/api/v3"
     sdk = DocumentServiceSDK(api_base_url,
-                             token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2ZDdiOWJhNjhmM2FjODJiZDMzOWY3N2I3ZjI0Y2U1ZjU2MzhiNDk5MmI5ZjY3ODBlZjExOWFhOWZiYzUwMDQ4Iiwic3ViIjoiY2hhcmVmMjAwMkBnbWFpbC5jb20iLCJleHAiOjE3MDk4OTMxMjl9.H0GH5Iinhypb81sc16jVynq1YvMi2unoH3HWc5aT4MU")
+                             token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2ZDdiOWJhNjhmM2FjODJiZDMzOWY3N2I3ZjI0Y2U1ZjU2MzhiNDk5MmI5ZjY3ODBlZjExOWFhOWZiYzUwMDQ4Iiwic3ViIjoiY2hhcmVmMjAwMkBnbWFpbC5jb20iLCJleHAiOjE3MDk4OTk2NzZ9.8Wab2Ur269Rapue0IkYojHMo_jWB3ZJJGsDaldwjJ5A")
 
     # Get the specification
     try:
