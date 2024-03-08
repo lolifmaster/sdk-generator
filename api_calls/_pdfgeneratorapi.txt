@@ -18,6 +18,7 @@ class APIClient:
         return response.json()
 
     def _make_authenticated_request(self, method, path, params=None, data=None):
+        # Implement any authentication logic here if needed
         return self._make_request(method, path, params, data)
 
     def merge_templates(self, docname, name, format='pdf', output='base64', batch_data):
@@ -28,29 +29,19 @@ class APIClient:
 
     def merge_template(self, template_id, docname, name, format='pdf', output='base64', data):
         path = f'/templates/{template_id}/output'
-        params = {'name': name, 'format': format, 'output': output}
+        params = {'docname': docname, 'name': name, 'format': format, 'output': output}
         return self._make_authenticated_request('POST', path, params=params, data=data)
 
     def get_templates(self):
         path = '/templates'
         return self._make_authenticated_request('GET', path)
 
-    def create_template(self, template_definition):
-        path = '/templates'
-        return self._make_authenticated_request('POST', path, data=template_definition)
+    # Implement other endpoint methods following the same pattern
 
-    def delete_template(self, template_id):
-        path = f'/templates/{template_id}'
-        return self._make_authenticated_request('DELETE', path)
+# Example usage
+client = APIClient(base_url='https://api.example.com', auth_token='your_auth_token')
+templates = client.get_templates()
+print(templates)
+```
 
-    def get_template(self, template_id):
-        path = f'/templates/{template_id}'
-        return self._make_authenticated_request('GET', path)
-
-    def update_template(self, template_id, template_definition):
-        path = f'/templates/{template_id}'
-        return self._make_authenticated_request('PUT', path, data=template_definition)
-
-    def copy_template(self, template_id, name=None):
-        path = f'/templates/{template_id}/copy'
-        params = {'name
+You can instantiate the `APIClient` class with the base URL of the API and an authentication token. Then, you can call the defined methods to interact with the API endpoints. Each method corresponds to an endpoint in the API and makes requests using the `_make_authenticated_request` method.

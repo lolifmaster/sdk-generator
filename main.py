@@ -1,9 +1,15 @@
 import json
 import requests
 import pathlib
+import os
+import dotenv
+
+dotenv.load_dotenv()
 
 headers = {
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjJhODdiMTUtMTk0MC00YTE3LTljYzQtN2E1ZWVjZDQ4ZGJkIiwidHlwZSI6ImFwaV90b2tlbiJ9.ChywjC-I1Ksp7KeHi1aASB5Oys1fRPY1AtDwhL0AZrc"}
+    "Authorization": f"Bearer {os.getenv('EDEN_AI_AUTH_TOKEN')}",
+    "Content-Type": "application/json"
+}
 
 url = "https://api.edenai.run/v2/text/code_generation"
 
