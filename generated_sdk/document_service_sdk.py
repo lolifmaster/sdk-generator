@@ -19,9 +19,13 @@ class DocumentServiceSDK:
     def merge_templates(self, docname, format="pdf", output="base64", batch_data=None):
         path = "/templates/output"
         params = {"name": docname, "format": format, "output": output}
-        return self._make_authenticated_request("POST", path, params=params, json=batch_data)
+        return self._make_authenticated_request(
+            "POST", path, params=params, json=batch_data
+        )
 
-    def merge_template(self, template_id, docname, format="pdf", output="base64", data=None):
+    def merge_template(
+        self, template_id, docname, format="pdf", output="base64", data=None
+    ):
         path = f"/templates/{template_id}/output"
         params = {"name": docname, "format": format, "output": output}
         return self._make_authenticated_request("POST", path, params=params, json=data)
@@ -31,15 +35,17 @@ class DocumentServiceSDK:
         return self._make_authenticated_request("GET", path)
 
     def get_specifications(self):
-        return self._make_request("GET", '')
+        return self._make_request("GET", "")
 
 
 # Example Usage
 if __name__ == "__main__":
     # Instantiate the SDK with the base URL of your API
     api_base_url = "https://us1.pdfgeneratorapi.com/api/v3"
-    sdk = DocumentServiceSDK(api_base_url,
-                             token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2ZDdiOWJhNjhmM2FjODJiZDMzOWY3N2I3ZjI0Y2U1ZjU2MzhiNDk5MmI5ZjY3ODBlZjExOWFhOWZiYzUwMDQ4Iiwic3ViIjoiY2hhcmVmMjAwMkBnbWFpbC5jb20iLCJleHAiOjE3MDk4OTk2NzZ9.8Wab2Ur269Rapue0IkYojHMo_jWB3ZJJGsDaldwjJ5A")
+    sdk = DocumentServiceSDK(
+        api_base_url,
+        token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2ZDdiOWJhNjhmM2FjODJiZDMzOWY3N2I3ZjI0Y2U1ZjU2MzhiNDk5MmI5ZjY3ODBlZjExOWFhOWZiYzUwMDQ4Iiwic3ViIjoiY2hhcmVmMjAwMkBnbWFpbC5jb20iLCJleHAiOjE3MDk4OTk2NzZ9.8Wab2Ur269Rapue0IkYojHMo_jWB3ZJJGsDaldwjJ5A",
+    )
 
     # Get the specification
     try:

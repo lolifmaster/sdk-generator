@@ -51,17 +51,16 @@ key_abbreviations = {
     "integer": "int",
     "default": "def",
     "required": "req",
-
 }
 
 methods_to_handle = {"get", "post", "patch", "delete", "put"}
 
 
 def load_spec(file_path, filename):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        if filename.endswith('.yaml'):
+    with open(file_path, "r", encoding="utf-8") as file:
+        if filename.endswith(".yaml"):
             return yaml.safe_load(file)
-        elif filename.endswith('.json'):
+        elif filename.endswith(".json"):
             return json.load(file)
 
 
@@ -69,8 +68,8 @@ def resolve_refs(openapi_spec, endpoint):
     if isinstance(endpoint, dict):
         new_endpoint = {}
         for key, value in endpoint.items():
-            if key == '$ref':
-                ref_path = value.split('/')[1:]
+            if key == "$ref":
+                ref_path = value.split("/")[1:]
                 ref_object = openapi_spec
                 for p in ref_path:
                     ref_object = ref_object.get(p, {})
@@ -97,37 +96,45 @@ def resolve_refs(openapi_spec, endpoint):
 
 def populate_keys(endpoint, path):
     # Gets the main keys from the specs
-    extracted_endpoint_data = {'path': path, 'operationId': endpoint.get('operationId')}
+    extracted_endpoint_data = {"path": path, "operationId": endpoint.get("operationId")}
 
     if keys_to_keep["parameters"]:
-        extracted_endpoint_data['parameters'] = endpoint.get('parameters')
+        extracted_endpoint_data["parameters"] = endpoint.get("parameters")
 
     if keys_to_keep["endpoint_summaries"]:
-        extracted_endpoint_data['summary'] = endpoint.get('summary')
+        extracted_endpoint_data["summary"] = endpoint.get("summary")
 
     if keys_to_keep["endpoint_descriptions"]:
-        extracted_endpoint_data['description'] = endpoint.get('description')
+        extracted_endpoint_data["description"] = endpoint.get("description")
 
     if keys_to_keep["request_bodies"]:
-        extracted_endpoint_data['requestBody'] = endpoint.get('requestBody')
+        extracted_endpoint_data["requestBody"] = endpoint.get("requestBody")
 
     if keys_to_keep["good_responses"] or keys_to_keep["bad_responses"]:
-        extracted_endpoint_data['responses'] = {}
+        extracted_endpoint_data["responses"] = {}
 
     if keys_to_keep["good_responses"]:
-        if 'responses' in endpoint and '200' in endpoint['responses']:
-            extracted_endpoint_data['responses']['200'] = endpoint['responses'].get('200')
+        if "responses" in endpoint and "200" in endpoint["responses"]:
+            extracted_endpoint_data["responses"]["200"] = endpoint["responses"].get(
+                "200"
+            )
 
     if keys_to_keep["bad_responses"]:
-        if 'responses' in endpoint:
+        if "responses" in endpoint:
             # Loop through all the responses
-            for status_code, response in endpoint['responses'].items():
+            for status_code, response in endpoint["responses"].items():
                 # Check if status_code starts with '4' or '5' (4xx or 5xx)
-                if status_code.startswith('4') or status_code.startswith('5') or 'def' in status_code:
+                if (
+                    status_code.startswith("4")
+                    or status_code.startswith("5")
+                    or "def" in status_code
+                ):
                     # Extract the schema or other relevant information from the response
                     bad_response_content = response
                     if bad_response_content is not None:
-                        extracted_endpoint_data['responses'][f'{status_code}'] = bad_response_content
+                        extracted_endpoint_data["responses"][
+                            f"{status_code}"
+                        ] = bad_response_content
 
     return extracted_endpoint_data
 
@@ -137,7 +144,7 @@ def remove_empty_keys(endpoint):
         # Create a new dictionary without empty keys
         new_endpoint = {}
         for key, value in endpoint.items():
-            if value is not None and value != '':
+            if value is not None and value != "":
                 # Recursively call the function for nested dictionaries
                 cleaned_value = remove_empty_keys(value)
                 new_endpoint[key] = cleaned_value
@@ -163,11 +170,15 @@ def remove_unnecessary_keys(endpoint):
             # Iterate over a copy of the keys, as we may modify the dictionary during iteration
             for k in list(current_data.keys()):
                 # Check if this key should be removed based on settings and context
-                if k == 'example' and not keys_to_keep["examples"]:
+                if k == "example" and not keys_to_keep["examples"]:
                     del current_data[k]
-                if k == 'enum' and not keys_to_keep["enums"]:
+                if k == "enum" and not keys_to_keep["enums"]:
                     del current_data[k]
-                elif k == 'description' and len(parent_keys) > 0 and not keys_to_keep["nested_descriptions"]:
+                elif (
+                    k == "description"
+                    and len(parent_keys) > 0
+                    and not keys_to_keep["nested_descriptions"]
+                ):
                     del current_data[k]
                 # Otherwise, if the value is a dictionary or a list, add it to the stack for further processing
                 # Check if the key still exists before accessing it
@@ -179,7 +190,7 @@ def remove_unnecessary_keys(endpoint):
             # Add each item to the stack for further processing
             for item in current_data:
                 if isinstance(item, (dict, list)):
-                    stack.append((item, parent_keys + ['list']))
+                    stack.append((item, parent_keys + ["list"]))
 
     return endpoint
 
@@ -216,8 +227,9 @@ def abbreviate(data, abbreviations):
     if isinstance(data, dict):
         # Lowercase keys, apply abbreviations and recursively process values
         return {
-            abbreviations.get(key, key): abbreviate(abbreviations.get(str(value), value),
-                                                                    abbreviations)
+            abbreviations.get(key, key): abbreviate(
+                abbreviations.get(str(value), value), abbreviations
+            )
             for key, value in data.items()
         }
     elif isinstance(data, list):
@@ -234,11 +246,13 @@ def abbreviate(data, abbreviations):
 def write_dict_to_text(data):
     def remove_html_tags_and_punctuation(input_str):
         # Strip HTML tags
-        no_html_str = re.sub('<.*?>', '', input_str)
+        no_html_str = re.sub("<.*?>", "", input_str)
         # Define the characters that should be considered as punctuation
-        modified_punctuation = set(string.punctuation) - {'/', '#'}
+        modified_punctuation = set(string.punctuation) - {"/", "#"}
         # Remove punctuation characters
-        return ''.join(ch for ch in no_html_str if ch not in modified_punctuation).strip()
+        return "".join(
+            ch for ch in no_html_str if ch not in modified_punctuation
+        ).strip()
 
     # List to accumulate the formatted text parts
     formatted_text_parts = []
@@ -274,14 +288,14 @@ def write_dict_to_text(data):
 
     # Join the formatted text parts with a single newline character
     # but filter out any empty strings before joining
-    return '\n'.join(filter(lambda x: x.strip(), formatted_text_parts))
+    return "\n".join(filter(lambda x: x.strip(), formatted_text_parts))
 
 
 def minify(spec):
-    server_url = spec['servers'][0]['url']
+    server_url = spec["servers"][0]["url"]
     tag_summary_dict = {}
 
-    if tags := spec.get('tags'):
+    if tags := spec.get("tags"):
         for tag in tags:
             # Extract name and description
             name = tag.get("name")
@@ -293,10 +307,11 @@ def minify(spec):
     # Dictionary with each unique tag as a key, and the value is a list of finalized endpoints with that tag
     endpoints_by_tag = defaultdict(list)
     endpoints_by_tag_metadata = defaultdict(list)
-    for path, methods in spec['paths'].items():
+    for path, methods in spec["paths"].items():
         for method, endpoint in methods.items():
             if method not in methods_to_handle or (
-                    endpoint.get('deprecated', False) and not keys_to_keep["deprecated"]):
+                endpoint.get("deprecated", False) and not keys_to_keep["deprecated"]
+            ):
                 continue
             # Adds schema to each endpoint
             if keys_to_keep["schemas"]:
@@ -315,11 +330,13 @@ def minify(spec):
             extracted_endpoint_data = flatten_endpoint(extracted_endpoint_data)
 
             # Abbreviate keys
-            extracted_endpoint_data = abbreviate(extracted_endpoint_data, key_abbreviations)
+            extracted_endpoint_data = abbreviate(
+                extracted_endpoint_data, key_abbreviations
+            )
 
-            tags = endpoint.get('tags')
+            tags = endpoint.get("tags")
             if tags is None:
-                tags = ['default']
+                tags = ["default"]
             else:
                 tags = [tag for tag in tags]
 
@@ -327,19 +344,16 @@ def minify(spec):
             for tag in tags:
                 endpoints_by_tag[tag].append(extracted_endpoint_data)
 
-                operation_id = endpoint.get('operationId', '')
+                operation_id = endpoint.get("operationId", "")
 
                 content_string = write_dict_to_text(extracted_endpoint_data)
 
                 metadata = {
-                    'tag': tag,
-                    'operation_id': operation_id,
-                    'server_url': f'{server_url}{path}'
+                    "tag": tag,
+                    "operation_id": operation_id,
+                    "server_url": f"{server_url}{path}",
                 }
-                endpoint_dict = {
-                    "metadata": metadata,
-                    "content": content_string
-                }
+                endpoint_dict = {"metadata": metadata, "content": content_string}
 
                 endpoints_by_tag_metadata[tag].append(endpoint_dict)
 
@@ -354,35 +368,35 @@ def minify(spec):
     for tag in endpoints_by_tag.keys():
         # If the tag is not already in tag_summary_dict, add it with an empty description
         if tag not in tag_summary_dict:
-            tag_summary_dict[tag] = ''
+            tag_summary_dict[tag] = ""
 
     return endpoints_by_tag_metadata, tag_summary_dict
 
 
 def save_as_txt(spec, target_directory, spec_name):
-    output_file_path = os.path.join(target_directory, f'{spec_name}.txt')
+    output_file_path = os.path.join(target_directory, f"{spec_name}.txt")
 
     endpoints_by_tag_metadata, tag_summary_dict_output = minify(spec)
-    output_string = ''
+    output_string = ""
 
     for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
         # If we're adding tag descriptions, and they exist they're added here.
         tag_description = tag_summary_dict_output.get(tag)
         if keys_to_keep["tag_descriptions"] and tag_description:
             tag_description = write_dict_to_text(tag_summary_dict_output.get(tag))
-            tag_string = f'{tag}! {tag_description}!!\n'
+            tag_string = f"{tag}! {tag_description}!!\n"
         else:
-            tag_string = f'{tag}!\n'
+            tag_string = f"{tag}!\n"
 
         for endpoint in endpoints_with_tag:
-            operation_id = endpoint.get('metadata', '').get('operation_id', '')
-            tag_string += f'{operation_id}!'
-            tag_string += endpoint.get('content', '')
+            operation_id = endpoint.get("metadata", "").get("operation_id", "")
+            tag_string += f"{operation_id}!"
+            tag_string += endpoint.get("content", "")
 
-        output_string += f'{tag_string}\n'
+        output_string += f"{tag_string}\n"
 
     # Write sorted info_strings to the output file
-    with open(output_file_path, 'w', encoding='utf-8') as output_file:
+    with open(output_file_path, "w", encoding="utf-8") as output_file:
         output_file.write(output_string)
 
     # file_path = os.path.join(target_directory, f'{spec_name}.txt')
@@ -394,20 +408,23 @@ def process_file(args):
     file_path, filename, target_directory = args
     try:
         spec = load_spec(file_path, filename)
-        filename = filename.split('.')[0]
+        filename = filename.split(".")[0]
         save_as_txt(spec, target_directory, filename)
     except Exception as e:
-        print(f'Error processing file {filename}: {e}')
+        print(f"Error processing file {filename}: {e}")
 
 
 def main(input_directory, target_directory):
     if os.path.exists(target_directory):
         shutil.rmtree(target_directory)
     os.makedirs(target_directory)
-    tasks = [(os.path.join(input_directory, filename), filename, target_directory) for filename in
-             os.listdir(input_directory) if filename.endswith('.yaml') or filename.endswith('.json')]
+    tasks = [
+        (os.path.join(input_directory, filename), filename, target_directory)
+        for filename in os.listdir(input_directory)
+        if filename.endswith(".yaml") or filename.endswith(".json")
+    ]
     process_map(process_file, tasks, max_workers=5)
 
 
-if __name__ == '__main__':
-    main('../data/specification-batch', '../data/simplified-batch-specs')
+if __name__ == "__main__":
+    main("../data/specification-batch", "../data/simplified-batch-specs")

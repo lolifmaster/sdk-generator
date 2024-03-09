@@ -5,7 +5,6 @@ class DocumentsClient:
     def __init__(self, base_url, api_key):
         self.base_url = base_url
         self.api_key = api_key
-        self.headers = {"Authorization": f"Bearer {self.api_key}"}
 
     def _make_request(self, method, path, params=None, data=None):
         url = self.base_url + path
@@ -14,30 +13,33 @@ class DocumentsClient:
         return response.json()
 
     def _make_authenticated_request(self, method, path, params=None, data=None):
+        headers = {"Authorization": "Bearer " + self.api_key}
         url = self.base_url + path
         response = requests.request(
-            method, url, params=params, json=data, headers=self.headers
+            method, url, params=params, json=data, headers=headers
         )
         response.raise_for_status()
         return response.json()
 
-    def merge_templates(self, name, format, output):
+    def merge_templates(self, name, format="pdf", output="base64", data=None):
         path = "/templates/output"
         params = {"name": name, "format": format, "output": output}
-        return self._make_authenticated_request("POST", path, params=params)
+        return self._make_authenticated_request("POST", path, params=params, data=data)
 
-    def merge_template(self, template_id, name, format, output):
+    def merge_template(
+        self, template_id, name, format="pdf", output="base64", data=None
+    ):
         path = f"/templates/{template_id}/output"
         params = {"name": name, "format": format, "output": output}
-        return self._make_authenticated_request("POST", path, params=params)
+        return self._make_authenticated_request("POST", path, params=params, data=data)
 
     def get_templates(self):
         path = "/templates"
         return self._make_authenticated_request("GET", path)
 
-    def create_template(self, template_definition):
+    def create_template(self, data):
         path = "/templates"
-        return self._make_authenticated_request("POST", path, data=template_definition)
+        return self._make_authenticated_request("POST", path, data=data)
 
     def delete_template(self, template_id):
         path = f"/templates/{template_id}"
@@ -47,19 +49,19 @@ class DocumentsClient:
         path = f"/templates/{template_id}"
         return self._make_authenticated_request("GET", path)
 
-    def update_template(self, template_id, template_definition):
+    def update_template(self, template_id, data):
         path = f"/templates/{template_id}"
-        return self._make_authenticated_request("PUT", path, data=template_definition)
+        return self._make_authenticated_request("PUT", path, data=data)
 
     def copy_template(self, template_id, name=None):
         path = f"/templates/{template_id}/copy"
         params = {"name": name} if name else None
         return self._make_authenticated_request("POST", path, params=params)
 
-    def get_editor_url(self, template_id, language=None):
+    def get_editor_url(self, template_id, language=None, data=None):
         path = f"/templates/{template_id}/editor"
         params = {"language": language} if language else None
-        return self._make_authenticated_request("GET", path, params=params)
+        return self._make_authenticated_request("POST", path, params=params, data=data)
 
     def delete_workspace(self, workspace_id):
         path = f"/workspaces/{workspace_id}"
@@ -70,13 +72,5 @@ class DocumentsClient:
         return self._make_authenticated_request("GET", path)
 
 
-client = DocumentsClient(
-    "https://us1.pdfgeneratorapi.com/api/v3",
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2ZDdiOWJhNjhmM2FjODJiZDMzOWY3N2I3ZjI0Y2U1ZjU2MzhiNDk5MmI5ZjY3ODBlZjExOWFhOWZiYzUwMDQ4Iiwic3ViIjoiY2hhcmVmMjAwMkBnbWFpbC5jb20iLCJleHAiOjE3MDk4OTk2NzZ9.8Wab2Ur269Rapue0IkYojHMo_jWB3ZJJGsDaldwjJ5A",
-)
-
-try:
-    spec = client.get_templates()
-    print(spec)
-except requests.exceptions.RequestException as e:
-    print(e)
+client = DocumentsClient("https://api.example.com", "your-api-key")
+templates = client.get_templates()
