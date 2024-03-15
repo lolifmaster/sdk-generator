@@ -1,6 +1,7 @@
 import json
 import os
 
+
 def split_openapi_schema(openapi_schema):
     global_schema = json.loads(openapi_schema)
 
@@ -24,11 +25,11 @@ def split_openapi_schema(openapi_schema):
 
 
 if __name__ == "__main__":
-    eden_openapi_schema = open("../data/eden/Eden AI.json", encoding='utf-8').read()
+    eden_openapi_schema = open("../data/eden/Eden AI.json", encoding="utf-8").read()
     schemas = split_openapi_schema(eden_openapi_schema)
 
-    os.makedirs("../data/eden/sub_domains", exist_ok=True)
+    os.makedirs("../data/eden/sub-domains", exist_ok=True)
 
     for sub_domain, schema in schemas.items():
-        with open(f"../data/eden/sub_domains/{sub_domain}.json", "w") as f:
+        with open(f"../data/eden/sub-domains/{sub_domain}.json", "w") as f:
             f.write(json.dumps(schema, indent=2))

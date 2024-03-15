@@ -7,7 +7,7 @@ from context import process_file
 def main(input_directory, target_directory):
     if os.path.exists(target_directory):
         shutil.rmtree(target_directory)
-    os.makedirs(target_directory)
+    os.makedirs(target_directory, exist_ok=True)
     tasks = [
         (os.path.join(input_directory, filename), filename, target_directory)
         for filename in os.listdir(input_directory)
@@ -17,4 +17,4 @@ def main(input_directory, target_directory):
 
 
 if __name__ == "__main__":
-    main("../data/specification-batch", "../data/simplified-batch-specs")
+    main("../data/eden/sub-domains", "../data/eden/processed-specs")
