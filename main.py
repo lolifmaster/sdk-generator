@@ -23,9 +23,17 @@ sdk_output_dir = pathlib.Path(__file__).parent.absolute() / "generated_sdk"
 api_spec_name = "_pdfgeneratorapi.txt"
 api_spec = simplified_specs_dir / api_spec_name
 
+TEMPLATE = """
+    Write a Python client sdk for the following API:\n---\n{api_spec}\n---\n
+    The client sdk should be able to make requests to the API and return the response.\n
+    you should use the requests library to make the requests.\n
+    the client sdk should be a class with methods for each endpoint in the API.\n
+    the requests should be by two methods _make_request or _make_authenticated_request. no yapping, just code.
+"""
+
 payload = {
     "providers": "openai",
-    "text": f"Write a Python client sdk for the following API:\n---\n{api_spec.read_text()}\n---\nThe client sdk should be able to make requests to the API and return the response.\nyou should use the requests library to make the requests.\nthe client sdk should be a class with methods for each endpoint in the API.\nthe requests should be by two methods _make_request or _make_authenticated_request.",
+    "text": TEMPLATE.format(api_spec=api_spec.read_text()),
     "chatbot_global_action": "You are a programmer",
     "previous_history": [],
     "temperature": 0.0,
