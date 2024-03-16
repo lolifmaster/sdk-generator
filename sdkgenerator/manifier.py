@@ -1,10 +1,10 @@
-import os
 import json
 import yaml
 from collections import defaultdict
 from datetime import datetime, date
 import re
 import string
+from pathlib import Path
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -53,12 +53,14 @@ key_abbreviations = {
 methods_to_handle = {"get", "post", "patch", "delete", "put"}
 
 
-def load_spec(file_path, filename):
+def load_spec(file_path: Path):
     with open(file_path, "r", encoding="utf-8") as file:
-        if filename.endswith(".yaml"):
-            return yaml.safe_load(file)
-        elif filename.endswith(".json"):
+        if file_path.suffix == ".json":
             return json.load(file)
+        elif file_path.suffix in {".yaml", ".yml"}:
+            return yaml.safe_load(file)
+        else:
+            raise ValueError(f"Unsupported file format for {file_path}")
 
 
 def resolve_refs(openapi_spec, endpoint):
@@ -122,9 +124,9 @@ def populate_keys(endpoint, path):
             for status_code, response in endpoint["responses"].items():
                 # Check if status_code starts with '4' or '5' (4xx or 5xx)
                 if (
-                        status_code.startswith("4")
-                        or status_code.startswith("5")
-                        or "def" in status_code
+                    status_code.startswith("4")
+                    or status_code.startswith("5")
+                    or "def" in status_code
                 ):
                     # Extract the schema or other relevant information from the response
                     bad_response_content = response
@@ -172,9 +174,9 @@ def remove_unnecessary_keys(endpoint):
                 if k == "enum" and not keys_to_keep["enums"]:
                     del current_data[k]
                 elif (
-                        k == "description"
-                        and len(parent_keys) > 0
-                        and not keys_to_keep["nested_descriptions"]
+                    k == "description"
+                    and len(parent_keys) > 0
+                    and not keys_to_keep["nested_descriptions"]
                 ):
                     del current_data[k]
                 # Otherwise, if the value is a dictionary or a list, add it to the stack for further processing
@@ -307,7 +309,7 @@ def minify(spec):
     for path, methods in spec["paths"].items():
         for method, endpoint in methods.items():
             if method not in methods_to_handle or (
-                    endpoint.get("deprecated", False) and not keys_to_keep["deprecated"]
+                endpoint.get("deprecated", False) and not keys_to_keep["deprecated"]
             ):
                 continue
             # Adds schema to each endpoint
@@ -370,9 +372,7 @@ def minify(spec):
     return endpoints_by_tag_metadata, tag_summary_dict
 
 
-def save_as_txt(spec, target_directory, spec_name):
-    output_file_path = os.path.join(target_directory, f"{spec_name}.txt")
-
+def save_as_txt(spec):
     endpoints_by_tag_metadata, tag_summary_dict_output = minify(spec)
     output_string = ""
 
@@ -392,25 +392,15 @@ def save_as_txt(spec, target_directory, spec_name):
 
         output_string += f"{tag_string}\n"
 
-    # Write sorted info_strings to the output file
-    with open(output_file_path, "w", encoding="utf-8") as output_file:
-        output_file.write(output_string)
-
-    # file_path = os.path.join(target_directory, f'{spec_name}.txt')
-    # with open(file_path, 'w', encoding='utf-8') as file:
-    #     file.write(json.dumps(minified_spec, indent=2, cls=DateTimeEncoder))
+    return output_string
 
 
-def process_file(args: tuple[str, str, str]):
+def process_file(file_path: Path):
     """
     Process an openapi specification file and save the minified spec to a text file.
     args: Tuple containing the file path (json or yaml), filename and target directory
     return: None
     """
-    file_path, filename, target_directory = args
-    try:
-        spec = load_spec(file_path, filename)
-        filename = filename.split(".")[0]
-        save_as_txt(spec, target_directory, filename)
-    except Exception as e:
-        print(f"Error processing file {filename}: {e}")
+
+    spec = load_spec(file_path)
+    return save_as_txt(spec)
