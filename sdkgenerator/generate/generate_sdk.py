@@ -40,7 +40,7 @@ def generate_llm_response(
     payload = {
         "providers": "openai",
         "text": TEMPLATES.get(language).format(api_spec=api_spec),
-        "chatbot_global_action": "You are a python developer, and you are writing a client sdk for an API",
+        "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
         "previous_history": [],
         "temperature": 0.0,
         "max_tokens": 3000,

@@ -1,20 +1,32 @@
 import os
 import shutil
-from tqdm.contrib.concurrent import process_map
 from context import process_file
+from pathlib import Path
 
 
-def main(input_directory, target_directory):
+def process_and_save_file(file_path, output_file, target_directory):
+    try:
+        result = process_file(file_path)
+        with open(os.path.join(target_directory, output_file), "w") as f:
+            f.write(result)
+    except Exception as e:
+        print(f"Error processing file {file_path}: {e}")
+
+
+def main(input_directory: Path, target_directory: Path):
     if os.path.exists(target_directory):
         shutil.rmtree(target_directory)
     os.makedirs(target_directory, exist_ok=True)
-    tasks = [
-        (os.path.join(input_directory, filename), filename, target_directory)
-        for filename in os.listdir(input_directory)
-        if filename.endswith(".yaml") or filename.endswith(".json")
-    ]
-    process_map(process_file, tasks, max_workers=5)
+
+    for file in input_directory.iterdir():
+        if file.is_file():
+            if file.suffix == '.json' or file.suffix == '.yaml':
+                output_file = f"{file.stem}.txt"
+                process_and_save_file(file, output_file, target_directory)
 
 
 if __name__ == "__main__":
-    main("../data/eden/sub-domains", "../data/eden/processed-specs")
+    # main("../data/eden/sub-domains", "../data/eden/processed-specs")
+    dataFolder = Path(__file__).parent.parent / 'data'
+
+    main((dataFolder / 'eden' / 'sub-domains'), dataFolder / 'eden' / 'processed-specs')
