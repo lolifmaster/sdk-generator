@@ -21,7 +21,7 @@ TEMPLATES: dict[Language, str] = {
         Sdk must be a class with methods for each endpoint in the API.
         Nullable fields must be NotRequired in the method arguments.
         Ensure type hints for arguments and return types.
-        objects typed using TypedDict not required params must be inside NotRequired provided by typing module.
+        objects typed using TypedDict not required params must be inside NotRequired type.
         enums typed using Literal.
         the class name must be the name of the API.
         the requests must be by two methods _make_request or _make_authenticated_request\n.

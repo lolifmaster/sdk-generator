@@ -1,3 +1,4 @@
+import requests
 from generated_sdk.aiproducts import AskYoDa
 import dotenv
 import os
@@ -10,18 +11,52 @@ def main():
         api_key=os.getenv('EDEN_AI_AUTH_TOKEN'),
     )
 
+    # Delete all projects
     try:
-        client.create_project(data={
-            'project_name': 'AskYoDa',
-            'collection_name': 'doc_parser',
-            'ocr_provider': 'microsoft',
-            'speech_to_text_provider': 'openai',
-        })
-    except Exception as e:
-        print(e)
+        projects = client.aiproducts_aiproducts_list().json()
+        for project in projects:
+            response = client.aiproducts_aiproducts_delete_destroy(project['project_id'])
+            print(response.text, project['project_id'])
+    except requests.exceptions.RequestException as e:
+        print(e.response.text)
 
-    res = client.list_projects(project_type='doc_parser')
-    print(res)
+    # Create a project
+    try:
+        response = client.aiproducts_aiproducts_askyoda_v2_create(
+            data={
+                'project_name': 'Test Project',
+                'collection_name': 'Test Collection',
+                'ocr_provider': 'microsoft',
+                'speech_to_text_provider': 'google',
+                'llm_provider': 'openai',
+            }
+        )
+        print(response.text)
+    except requests.exceptions.RequestException as e:
+        print(e.response.text)
+
+    # Get all projects
+    try:
+        response = client.aiproducts_aiproducts_list()
+        projects: list = response.json()
+        project_id = projects[0]['project_id']
+        print(project_id)
+    except requests.exceptions.RequestException as e:
+        print(e.response.text)
+        return
+    # Ask LLM
+    try:
+        response = client.aiproducts_aiproducts_askyoda_v2_ask_llm_create(
+            project_id=project_id,
+            data={
+                'query': 'What is the capital of Nigeria?',
+                "llm_provider": "openai",
+                "llm_model": "gpt-4",
+            }
+        )
+        print(response.text)
+    except requests.exceptions.RequestException as e:
+        print(e.response.text)
 
 
 if __name__ == "__main__":
