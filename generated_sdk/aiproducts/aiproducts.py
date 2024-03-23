@@ -44,9 +44,11 @@ class AskLLMRequest(TypedDict):
     max_tokens: NotRequired[int]
 
 
-class PatchedAskYodaProjectUpdateRequest(TypedDict):
+class PatchedAskYodaProjectUpdateRequest(TypedDict, total=False):
     llm_provider: str
     llm_model: str
+    ocr_provider: str
+    speech_to_text_provider: str
 
 
 class UniversalTranslatorCreatetRequest(TypedDict):
@@ -142,6 +144,9 @@ class AskYoDa:
 
     def aiproducts_aiproducts_delete_destroy(self, project_id: str):
         return self._make_authenticated_request("DELETE", f"/aiproducts/delete/{project_id}")
+
+    def aiproducts_aiproducts_translathor_list(self, project_type: Optional[str] = None):
+        return self._make_authenticated_request("GET", "/aiproducts/translathor/", params={"project_type": project_type})
 
     def aiproducts_aiproducts_translathor_create(self, data: UniversalTranslatorCreatetRequest):
         return self._make_authenticated_request("POST", "/aiproducts/translathor/", json=data)
