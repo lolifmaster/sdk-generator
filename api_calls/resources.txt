@@ -1,0 +1,75 @@
+Here is a Python client SDK for the given API:
+
+```python
+import requests
+from typing import Optional, Literal, TypedDict
+
+class ResourceCreateRequest(TypedDict):
+    resource: str
+    data: dict
+    provider: str
+
+class ResourceUpdateRequest(TypedDict):
+    resource: str
+    data: dict
+    provider: str
+
+class AssetCreateRequest(TypedDict):
+    sub_resource: str
+    data: dict
+
+class AssetUpdateRequest(TypedDict):
+    sub_resource: str
+    data: dict
+
+TypeEnum = Literal["db", "bucket", "db_vector", "ai"]
+
+class ResourcesAPI:
+    def __init__(self, base_url: str):
+        self.base_url = base_url
+
+    def _make_request(self, method: str, path: str, params: Optional[dict] = None, data: Optional[dict] = None):
+        url = self.base_url + path
+        response = requests.request(method, url, params=params, json=data)
+        response.raise_for_status()
+        return response.json()
+
+    def _make_authenticated_request(self, method: str, path: str, params: Optional[dict] = None, data: Optional[dict] = None):
+        # Add your authentication logic here
+        pass
+
+    def list_resources(self):
+        return self._make_request('GET', '/resources/')
+
+    def create_resource(self, request: ResourceCreateRequest):
+        return self._make_request('POST', '/resources/', data=request)
+
+    def retrieve_resource(self, resource: str):
+        return self._make_request('GET', f'/resources/{resource}/')
+
+    def update_resource(self, resource: str, request: ResourceUpdateRequest):
+        return self._make_request('PUT', f'/resources/{resource}/', data=request)
+
+    def partial_update_resource(self, resource: str, request: ResourceUpdateRequest):
+        return self._make_request('PATCH', f'/resources/{resource}/', data=request)
+
+    def destroy_resource(self, resource: str):
+        return self._make_request('DELETE', f'/resources/{resource}/')
+
+    def create_asset(self, resource: str, request: AssetCreateRequest):
+        return self._make_request('POST', f'/resources/{resource}/asset/', data=request)
+
+    def retrieve_asset(self, resource: str, asset: str):
+        return self._make_request('GET', f'/resources/{resource}/asset/{asset}/')
+
+    def update_asset(self, resource: str, asset: str, request: AssetUpdateRequest):
+        return self._make_request('PUT', f'/resources/{resource}/asset/{asset}/', data=request)
+
+    def partial_update_asset(self, resource: str, asset: str, request: AssetUpdateRequest):
+        return self._make_request('PATCH', f'/resources/{resource}/asset/{asset}/', data=request)
+
+    def destroy_asset(self, resource: str, asset: str):
+        return self._make_request('DELETE', f'/resources/{resource}/asset/{asset}/')
+```
+
+This SDK uses the `requests` library to make HTTP requests to the API. Each method corresponds to an endpoint in the API. The `_make_request` method is used to make the actual HTTP requests. The `_make_authenticated_request` method is a placeholder for making authenticated requests. You would need to implement the authentication logic in this method. The `ResourceCreateRequest`, `ResourceUpdateRequest`, `AssetCreateRequest`, and `AssetUpdateRequest` classes are `TypedDict` classes that define the structure of the request bodies for the respective endpoints. The `TypeEnum` is a `Literal` type that defines the possible values for the `type` field in the request bodies.

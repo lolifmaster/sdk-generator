@@ -1,0 +1,43 @@
+Here is a Python client SDK for the given API:
+
+```python
+import requests
+from typing import Optional, Literal, TypedDict, List
+
+class BatchRequest(TypedDict):
+    webhook_receiver: str
+    requests: List[dict]
+
+class BatchClient:
+    def __init__(self, base_url: str, api_key: str):
+        self.base_url = base_url
+        self.api_key = api_key
+
+    def _make_request(self, method: str, path: str, params: Optional[dict] = None, data: Optional[dict] = None):
+        url = self.base_url + path
+        response = requests.request(method, url, params=params, json=data)
+        response.raise_for_status()
+        return response.json()
+
+    def _make_authenticated_request(self, method: str, path: str, params: Optional[dict] = None, data: Optional[dict] = None):
+        headers = {'Authorization': 'Bearer ' + self.api_key}
+        url = self.base_url + path
+        response = requests.request(method, url, headers=headers, params=params, json=data)
+        response.raise_for_status()
+        return response.json()
+
+    def feature_batch_retrieve(self, feature: str, name: str, subfeature: str, page: Optional[int] = None, public_id: Optional[int] = None, status: Optional[Literal['succeeded', 'failed', 'finished', 'processing']] = None):
+        path = f'/{feature}/{subfeature}/batch/{name}/'
+        params = {'page': page, 'public_id': public_id, 'status': status}
+        return self._make_authenticated_request('GET', path, params=params)
+
+    def feature_batch_create(self, feature: str, name: str, subfeature: str, batch_request: BatchRequest):
+        path = f'/{feature}/{subfeature}/batch/{name}/'
+        return self._make_authenticated_request('POST', path, data=batch_request)
+
+    def feature_batch_destroy(self, feature: str, name: str, subfeature: str):
+        path = f'/{feature}/{subfeature}/batch/{name}/'
+        return self._make_authenticated_request('DELETE', path)
+```
+
+This SDK provides a `BatchClient` class that can be used to interact with the API. The class has methods for each endpoint in the API, and uses the `requests` library to make the actual HTTP requests. The `_make_request` and `_make_authenticated_request` methods are used to make the requests, with the latter including an `Authorization` header for authenticated requests. The `feature_batch_retrieve`, `feature_batch_create`, and `feature_batch_destroy` methods correspond to the `feature_batch_retrieve`, `feature_batch_create`, and `feature_batch_destroy` endpoints in the API, respectively.

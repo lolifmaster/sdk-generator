@@ -1,7 +1,7 @@
 base_url:https://api.edenai.run/v2!
 AskYoDa!
 ---
-aiproducts_aiproducts_list!path: /aiproducts/
+path: /aiproducts/
 opid: aiproducts_aiproducts_list
 params
 in: query
@@ -11,7 +11,7 @@ type: str
 req: False
 sum: List Projects
 ---
-aiproducts_aiproducts_retrieve!path: /aiproducts/project_id
+path: /aiproducts/project_id
 opid: aiproducts_aiproducts_retrieve
 params
 in: path
@@ -22,7 +22,7 @@ format: uuid
 req: True
 sum: Retrieve Project
 ---
-aiproducts_aiproducts_askyoda_v2_create!path: /aiproducts/askyoda/v2/
+path: /aiproducts/askyoda/v2/
 opid: aiproducts_aiproducts_askyoda_v2_create
 sum: Create Project
 desc: Allows you to create a new Ask YODA project with specified details
@@ -67,7 +67,7 @@ collection_name
 project_name
 req: True
 ---
-aiproducts_aiproducts_askyoda_v2_add_file_create!path: /aiproducts/askyoda/v2/project_id/add_file
+path: /aiproducts/askyoda/v2/project_id/add_file
 opid: aiproducts_aiproducts_askyoda_v2_add_file_create
 params
 in: path
@@ -103,7 +103,7 @@ req
 data_type
 req: True
 ---
-aiproducts_aiproducts_askyoda_v2_add_text_create!path: /aiproducts/askyoda/v2/project_id/add_text
+path: /aiproducts/askyoda/v2/project_id/add_text
 opid: aiproducts_aiproducts_askyoda_v2_add_text_create
 params
 in: path
@@ -134,7 +134,7 @@ req
 texts
 req: True
 ---
-aiproducts_aiproducts_askyoda_v2_add_url_create!path: /aiproducts/askyoda/v2/project_id/add_url
+path: /aiproducts/askyoda/v2/project_id/add_url
 opid: aiproducts_aiproducts_askyoda_v2_add_url_create
 params
 in: path
@@ -165,7 +165,7 @@ req
 urls
 req: True
 ---
-aiproducts_aiproducts_askyoda_v2_ask_llm_create!path: /aiproducts/askyoda/v2/project_id/ask_llm
+path: /aiproducts/askyoda/v2/project_id/ask_llm
 opid: aiproducts_aiproducts_askyoda_v2_ask_llm_create
 params
 in: path
@@ -225,7 +225,7 @@ req
 query
 req: True
 ---
-aiproducts_aiproducts_askyoda_v2_delete_chunk_destroy!path: /aiproducts/askyoda/v2/project_id/delete_chunk
+path: /aiproducts/askyoda/v2/project_id/delete_chunk
 opid: aiproducts_aiproducts_askyoda_v2_delete_chunk_destroy
 params
 in: query
@@ -243,7 +243,7 @@ req: True
 sum: Delete Chunk
 desc: Delete a query from your project by its ID
 ---
-aiproducts_aiproducts_askyoda_v2_info_retrieve!path: /aiproducts/askyoda/v2/project_id/info
+path: /aiproducts/askyoda/v2/project_id/info
 opid: aiproducts_aiproducts_askyoda_v2_info_retrieve
 params
 in: path
@@ -256,7 +256,7 @@ sum: Get info
 desc: Retrieve details about your project within your Ask YODA project
 including the total number of items stored in your project collection and default models
 ---
-aiproducts_aiproducts_askyoda_v2_query_create!path: /aiproducts/askyoda/v2/project_id/query
+path: /aiproducts/askyoda/v2/project_id/query
 opid: aiproducts_aiproducts_askyoda_v2_query_create
 params
 in: path
@@ -316,7 +316,7 @@ req
 query
 req: True
 ---
-aiproducts_aiproducts_askyoda_v2_update_project_partial_update!path: /aiproducts/askyoda/v2/project_id/update_project
+path: /aiproducts/askyoda/v2/project_id/update_project
 opid: aiproducts_aiproducts_askyoda_v2_update_project_partial_update
 params
 in: path
@@ -340,7 +340,7 @@ llm_model
 type: str
 minLength: 1
 ---
-aiproducts_aiproducts_delete_destroy!path: /aiproducts/delete/project_id
+path: /aiproducts/delete/project_id
 opid: aiproducts_aiproducts_delete_destroy
 params
 in: path
@@ -355,7 +355,7 @@ desc: View to delete an AI project
 
 TranslaThor!
 ---
-aiproducts_aiproducts_list!path: /aiproducts/
+path: /aiproducts/
 opid: aiproducts_aiproducts_list
 params
 in: query
@@ -365,7 +365,7 @@ type: str
 req: False
 sum: List Projects
 ---
-aiproducts_aiproducts_retrieve!path: /aiproducts/project_id
+path: /aiproducts/project_id
 opid: aiproducts_aiproducts_retrieve
 params
 in: path
@@ -376,7 +376,7 @@ format: uuid
 req: True
 sum: Retrieve Project
 ---
-aiproducts_aiproducts_delete_destroy!path: /aiproducts/delete/project_id
+path: /aiproducts/delete/project_id
 opid: aiproducts_aiproducts_delete_destroy
 params
 in: path
@@ -388,12 +388,12 @@ req: True
 sum: Delete Project
 desc: View to delete an AI project
 ---
-aiproducts_aiproducts_translathor_list!path: /aiproducts/translathor/
+path: /aiproducts/translathor/
 opid: aiproducts_aiproducts_translathor_list
 sum: List all TranslaThor Projects
 desc: List all language pairs of all projects created by the user
 ---
-aiproducts_aiproducts_translathor_create!path: /aiproducts/translathor/
+path: /aiproducts/translathor/
 opid: aiproducts_aiproducts_translathor_create
 sum: Create Language Provider Pair
 desc: Create a new language pair and associate it to an existing project If the project does not exist a new project will be
@@ -432,7 +432,7 @@ project_name
 provider
 req: True
 ---
-aiproducts_aiproducts_translathor_retrieve!path: /aiproducts/translathor/project_id
+path: /aiproducts/translathor/project_id
 opid: aiproducts_aiproducts_translathor_retrieve
 params
 in: path
@@ -458,7 +458,7 @@ desc: List all language pairs withing a project_name You should at leat provide 
         
 Example to retreive this language pair Any Enlish  aiproducts/translathor/project_namesource_langalltarget_langen
 ---
-aiproducts_aiproducts_translathor_partial_update!path: /aiproducts/translathor/project_id
+path: /aiproducts/translathor/project_id
 opid: aiproducts_aiproducts_translathor_partial_update
 params
 in: path
@@ -511,7 +511,7 @@ type: str
 minLength: 1
 maxLength: 50
 ---
-aiproducts_aiproducts_translathor_destroy!path: /aiproducts/translathor/project_id
+path: /aiproducts/translathor/project_id
 opid: aiproducts_aiproducts_translathor_destroy
 params
 in: path
@@ -536,7 +536,7 @@ desc: Delete a language pair withing a project_name Both source_lang and target_
        
 NB If  your source or target language references any language use all as value for the query parameter
 ---
-aiproducts_aiproducts_translathor_translate_create_2!path: /aiproducts/translathor/project_id/translate
+path: /aiproducts/translathor/project_id/translate
 opid: aiproducts_aiproducts_translathor_translate_create_2
 params
 in: path
@@ -564,7 +564,7 @@ target_language
 text
 req: True
 ---
-aiproducts_aiproducts_translathor_translate_create!path: /aiproducts/translathor/translate/project_name
+path: /aiproducts/translathor/translate/project_name
 opid: aiproducts_aiproducts_translathor_translate_create
 params
 in: path
@@ -595,16 +595,16 @@ req: True
 
 X-Merge!
 ---
-aiproducts_aiproducts_x_merge_list!path: /aiproducts/x_merge/
+path: /aiproducts/x_merge/
 opid: aiproducts_aiproducts_x_merge_list
 sum: List XMerge project
 desc: List all user XMerge projects
 ---
-aiproducts_aiproducts_x_merge_doc_parser_list!path: /aiproducts/x_merge/doc_parser/
+path: /aiproducts/x_merge/doc_parser/
 opid: aiproducts_aiproducts_x_merge_doc_parser_list
 sum: List doc_parser projects
 ---
-aiproducts_aiproducts_x_merge_doc_parser_create!path: /aiproducts/x_merge/doc_parser/
+path: /aiproducts/x_merge/doc_parser/
 opid: aiproducts_aiproducts_x_merge_doc_parser_create
 sum: Create doc_parser project
 reqBody
@@ -629,7 +629,7 @@ project_name
 subfeature
 req: True
 ---
-aiproducts_aiproducts_x_merge_doc_parser_retrieve!path: /aiproducts/x_merge/doc_parser/project_id
+path: /aiproducts/x_merge/doc_parser/project_id
 opid: aiproducts_aiproducts_x_merge_doc_parser_retrieve
 params
 in: path
@@ -640,7 +640,7 @@ format: uuid
 req: True
 sum: Retrieve doc_parser project
 ---
-aiproducts_aiproducts_x_merge_doc_parser_partial_update!path: /aiproducts/x_merge/doc_parser/project_id
+path: /aiproducts/x_merge/doc_parser/project_id
 opid: aiproducts_aiproducts_x_merge_doc_parser_partial_update
 params
 in: path
@@ -658,7 +658,7 @@ type: obj
 additionalProperties
 nullable: True
 ---
-aiproducts_aiproducts_x_merge_doc_parser_launch_call_create!path: /aiproducts/x_merge/doc_parser/project_id/launch_call
+path: /aiproducts/x_merge/doc_parser/project_id/launch_call
 opid: aiproducts_aiproducts_x_merge_doc_parser_launch_call_create
 params
 in: path

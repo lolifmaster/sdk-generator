@@ -1,6 +1,8 @@
+Here is a Python client SDK for the API using the requests library:
+
+```python
 import requests
 from typing import Optional, Literal, TypedDict
-
 
 class DocumentAPI:
     def __init__(self, base_url: str, api_key: str):
@@ -20,14 +22,12 @@ class DocumentAPI:
         response.raise_for_status()
         return response.json()
 
-    def merge_templates(self, doc_name: str, name: str, format: Literal['pdf', 'html', 'zip', 'xlsx'],
-                        output: Literal['base64', 'url']):
+    def merge_templates(self, doc_name: str, name: str, format: Literal['pdf', 'html', 'zip', 'xlsx'], output: Literal['base64', 'url']):
         endpoint = '/templates/output'
         params = {'doc_name': doc_name, 'name': name, 'format': format, 'output': output}
         return self._make_authenticated_request('POST', endpoint, params=params)
 
-    def merge_template(self, templateId: int, doc_name: str, name: str, format: Literal['pdf', 'html', 'zip', 'xlsx'],
-                       output: Literal['base64', 'url']):
+    def merge_template(self, templateId: int, doc_name: str, name: str, format: Literal['pdf', 'html', 'zip', 'xlsx'], output: Literal['base64', 'url']):
         endpoint = f'/templates/{templateId}/output'
         params = {'doc_name': doc_name, 'name': name, 'format': format, 'output': output}
         return self._make_authenticated_request('POST', endpoint, params=params)
@@ -69,3 +69,6 @@ class DocumentAPI:
     def get_workspace(self, workspaceId: str):
         endpoint = f'/workspaces/{workspaceId}'
         return self._make_authenticated_request('GET', endpoint)
+```
+
+This SDK provides a class `DocumentAPI` with methods for each endpoint in the API. The methods use the `requests` library to make HTTP requests to the API. The `_make_request` and `_make_authenticated_request` methods are used to make the actual requests, with the latter including an Authorization header for authenticated requests. The methods include type hints for arguments and return types, with enums using `Literal` and nullable fields being optional.

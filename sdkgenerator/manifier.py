@@ -102,10 +102,10 @@ def populate_keys(endpoint, path):
         extracted_params = endpoint.get("parameters")
         if extracted_params:
             for param in extracted_params:
-                if 'required' in param:
-                    param['required'] = str(param['required'])
+                if "required" in param:
+                    param["required"] = str(param["required"])
                 else:
-                    param['required'] = 'False'
+                    param["required"] = "False"
             extracted_endpoint_data["parameters"] = extracted_params
     if keys_to_keep["endpoint_summaries"]:
         extracted_endpoint_data["summary"] = endpoint.get("summary")
@@ -395,8 +395,8 @@ def save_as_txt(spec):
         tag_string += "---\n"
 
         for endpoint in endpoints_with_tag:
-            operation_id = endpoint.get("metadata", "").get("operation_id", "")
-            tag_string += f"{operation_id}!"
+            # operation_id = endpoint.get("metadata", "").get("operation_id", "")
+            # tag_string += f"{operation_id}!"
             tag_string += f"{endpoint.get('content')}\n"
             tag_string += "---\n"
 

@@ -62,7 +62,7 @@ def generate_sdk(file_path: Path, *, language: Language = "python"):
     Generate code for the API spec and save it to the generated_sdk directory.
     """
     api_spec = process_file(file_path)
-    api_spec_name = file_path.stem.split('.')[0]
+    api_spec_name = file_path.stem.split(".")[0]
 
     response = generate_llm_response(api_spec, api_spec_name, language)
 
@@ -82,5 +82,7 @@ def generate_sdk(file_path: Path, *, language: Language = "python"):
     )
     sdk_output_file = sdk_output_dir / f"{api_spec_name}{file_extension}"
     sdk_output_file.write_text(code)
-    print(f"Generated code for {api_spec_name} in {language} and saved to {sdk_output_file}")
+    print(
+        f"Generated code for {api_spec_name} in {language} and saved to {sdk_output_file}"
+    )
     return sdk_output_file

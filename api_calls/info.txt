@@ -1,0 +1,40 @@
+Here is a Python client SDK for the given API:
+
+```python
+import requests
+from typing import Optional, TypedDict, Literal
+
+class ProviderSubfeatures(TypedDict):
+    feature__name: Optional[str]
+    gender: Optional[str]
+    is_working: Optional[bool]
+    language: Optional[str]
+    phase__name: Optional[str]
+    provider__name: Optional[str]
+    subfeature__name: Optional[str]
+
+class Infos:
+    def __init__(self, base_url: str):
+        self.base_url = base_url
+
+    def _make_request(self, endpoint: str, params: Optional[dict] = None):
+        response = requests.get(f"{self.base_url}{endpoint}", params=params)
+        response.raise_for_status()
+        return response.json()
+
+    def _make_authenticated_request(self, endpoint: str, params: Optional[dict] = None):
+        # Add your authentication logic here
+        pass
+
+    def info_info_provider_subfeatures_list(self, params: ProviderSubfeatures):
+        endpoint = "/info/provider_subfeatures"
+        return self._make_request(endpoint, params)
+```
+
+In this SDK, `Infos` is the main class representing the API. It has two methods for making requests: `_make_request` and `_make_authenticated_request`. The latter is left empty for you to fill in with your authentication logic.
+
+The `info_info_provider_subfeatures_list` method corresponds to the `/info/provider_subfeatures` endpoint of the API. It takes a `ProviderSubfeatures` dictionary as an argument, which represents the query parameters for this endpoint. All fields in this dictionary are optional, as indicated by the `Optional` type hint.
+
+The `ProviderSubfeatures` class is a `TypedDict`, which is a way of hinting the types of dictionaries with a fixed set of keys, each with a specific type. This is used to represent the query parameters for the `/info/provider_subfeatures` endpoint.
+
+The `Literal` type hint is not used in this SDK, as there are no arguments or return types that are restricted to a specific set of literal values.

@@ -1,0 +1,56 @@
+Here is a Python client SDK for the given API using the requests library:
+
+```python
+import requests
+from typing import Optional, Literal, TypedDict
+
+class AutomaticTranslationRequest(TypedDict):
+    providers: str
+    fallback_providers: Optional[str]
+    response_as_dict: bool
+    attributes_as_list: bool
+    show_original_response: bool
+    text: str
+    source_language: Optional[str]
+    target_language: str
+
+class DocumentTranslationRequest(TypedDict):
+    providers: str
+    fallback_providers: Optional[str]
+    response_as_dict: bool
+    attributes_as_list: bool
+    show_original_response: bool
+    file: str
+    file_url: Optional[str]
+    file_password: Optional[str]
+    source_language: Optional[str]
+    target_language: str
+
+class LanguageDetectionRequest(TypedDict):
+    providers: str
+    fallback_providers: Optional[str]
+    response_as_dict: bool
+    attributes_as_list: bool
+    show_original_response: bool
+    text: str
+
+class TranslationAPI:
+    def __init__(self, base_url: str):
+        self.base_url = base_url
+
+    def _make_request(self, endpoint: str, data: dict):
+        response = requests.post(f"{self.base_url}/{endpoint}", data=data)
+        response.raise_for_status()
+        return response.json()
+
+    def automatic_translation_create(self, data: AutomaticTranslationRequest):
+        return self._make_request("/translation/automatic_translation", data)
+
+    def document_translation_create(self, data: DocumentTranslationRequest):
+        return self._make_request("/translation/document_translation", data)
+
+    def language_detection_create(self, data: LanguageDetectionRequest):
+        return self._make_request("/translation/language_detection", data)
+```
+
+This SDK provides a class `TranslationAPI` with methods for each endpoint in the API. The methods take in a dictionary of parameters and make a POST request to the corresponding endpoint. The response from the server is returned as a JSON object. The dictionary of parameters is typed using `TypedDict` for better type checking.

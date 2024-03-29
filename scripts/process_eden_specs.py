@@ -20,13 +20,13 @@ def main(input_directory: Path, target_directory: Path):
 
     for file in input_directory.iterdir():
         if file.is_file():
-            if file.suffix == '.json' or file.suffix == '.yaml':
+            if file.suffix == ".json" or file.suffix == ".yaml":
                 output_file = f"{file.stem}.txt"
                 process_and_save_file(file, output_file, target_directory)
 
 
 if __name__ == "__main__":
     # main("../data/eden/sub-domains", "../data/eden/processed-specs")
-    dataFolder = Path(__file__).parent.parent / 'data'
+    dataFolder = Path(__file__).parent.parent / "data"
 
-    main((dataFolder / 'eden' / 'sub-domains'), dataFolder / 'eden' / 'processed-specs')
+    main((dataFolder / "eden" / "sub-domains"), dataFolder / "eden" / "processed-specs")

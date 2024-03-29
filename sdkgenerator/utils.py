@@ -18,7 +18,7 @@ TEMPLATES: dict[Language, str] = {
         Write a Python client sdk for the following API:
         ---{api_spec}---
         Sdk must use the requests library to make the requests.
-        Sdk must be a class with methods for each endpoint in the API.
+        Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
         Nullable fields must be NotRequired in the method arguments.
         Ensure type hints for arguments and return types.
         objects typed using TypedDict not required params must be inside NotRequired type.

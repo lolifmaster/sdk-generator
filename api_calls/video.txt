@@ -1,0 +1,53 @@
+Here is a Python client SDK for the given API using the requests library:
+
+```python
+import requests
+from typing import Optional, Literal, TypedDict
+
+class AsyncVideoAnalysisRequest(TypedDict):
+    providers: str
+    fallback_providers: Optional[str]
+    show_original_response: bool
+    webhook_receiver: str
+    users_webhook_parameters: dict
+    file: str
+    file_url: Optional[str]
+
+class VideoAPI:
+    def __init__(self, base_url: str, api_key: str):
+        self.base_url = base_url
+        self.api_key = api_key
+
+    def _make_request(self, method: str, endpoint: str, **kwargs):
+        url = self.base_url + endpoint
+        response = requests.request(method, url, **kwargs)
+        response.raise_for_status()
+        return response.json()
+
+    def _make_authenticated_request(self, method: str, endpoint: str, **kwargs):
+        headers = kwargs.get('headers', {})
+        headers['Authorization'] = f'Bearer {self.api_key}'
+        kwargs['headers'] = headers
+        return self._make_request(method, endpoint, **kwargs)
+
+    def explicit_content_detection_async_retrieve(self):
+        endpoint = '/video/explicit_content_detection_async'
+        return self._make_authenticated_request('GET', endpoint)
+
+    def explicit_content_detection_async_create(self, request: AsyncVideoAnalysisRequest):
+        endpoint = '/video/explicit_content_detection_async'
+        return self._make_authenticated_request('POST', endpoint, json=request)
+
+    def explicit_content_detection_async_destroy(self):
+        endpoint = '/video/explicit_content_detection_async'
+        return self._make_authenticated_request('DELETE', endpoint)
+
+    def explicit_content_detection_async_retrieve_2(self, public_id: str, response_as_dict: bool = True, show_original_response: bool = False):
+        endpoint = f'/video/explicit_content_detection_async/{public_id}'
+        params = {'response_as_dict': response_as_dict, 'show_original_response': show_original_response}
+        return self._make_authenticated_request('GET', endpoint, params=params)
+
+    # Implement other methods in a similar way...
+```
+
+This SDK provides a class `VideoAPI` that can be used to interact with the API. The class has methods for each endpoint in the API. The `_make_request` and `_make_authenticated_request` methods are used to make the actual HTTP requests. The `explicit_content_detection_async_retrieve`, `explicit_content_detection_async_create`, `explicit_content_detection_async_destroy`, and `explicit_content_detection_async_retrieve_2` methods correspond to the endpoints in the API. The other methods can be implemented in a similar way.
