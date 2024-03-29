@@ -1,4 +1,4 @@
-from generated_sdk.aiproducts import AskYoDa
+from working_sdks.aiproducts import AskYoDa
 import dotenv
 import os
 from pprint import pprint
@@ -15,9 +15,7 @@ def main():
 
     projects = client.list_projects().json()
     for project in projects:
-        response = client.delete_project(
-            project["project_id"]
-        )
+        response = client.delete_project(project["project_id"])
         pprint(response.text)
 
     # Create a project
