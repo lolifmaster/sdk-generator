@@ -23,7 +23,7 @@ def generate_test(sdk_file: Path) -> Path:
 
     payload = {
         "providers": "openai",
-        "text": TEMPLATES[language]["test"].format(sdk=sdk_code),
+        "text": TEMPLATES[language]["test"].format(sdk=sdk_code, sdk_file_name=sdk_file.name),
         "chatbot_global_action": f"You are a {language} developer, and you are writing tests for an SDK.",
         "previous_history": [
             {
@@ -60,7 +60,7 @@ def generate_test(sdk_file: Path) -> Path:
         raise Exception("Generated test code is empty.")
 
     # create the test file
-    test_output_file = GENERATED_SDK_DIR / sdk_name / f"{sdk_name}_test{file_extension}"
+    test_output_file = GENERATED_SDK_DIR / sdk_name / f"test_{sdk_name}{file_extension}"
     test_output_file.write_text(code)
 
     return test_output_file

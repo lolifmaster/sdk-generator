@@ -5,7 +5,6 @@ import os
 import requests
 from dotenv import load_dotenv
 from typing import TypedDict
-from pprint import pprint
 
 load_dotenv()
 
@@ -35,27 +34,30 @@ class Template(TypedDict):
 TEMPLATES: dict[Language, Template] = {
     "python": {
         "sdk": """
-        Write a Python client sdk for the following API:
-        ###{api_spec}###
+        Write a Python client sdk for the following API (inside triple quotes):
+        \"\"\"{api_spec}\"\"\"
         Sdk must use the requests library to make the requests.
         Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
         Nullable fields must be NotRequired in the method arguments.
         Ensure type hints for arguments and return types.
-        objects typed using TypedDict not required params must be inside NotRequired type.
-        enums typed using Literal.
-        the class name must be the name of the API.
-        the requests must be by two methods _make_request or _make_authenticated_request\n.
+        Objects typed using TypedDict not required params must be inside NotRequired type.
+        Enums typed using Literal.
+        The requests must handle authenticated request with a _make_authenticated_request\n.
+        Use json for the request body.
+        The methods must return The requests library Response object.
     
-        ensure implementing all the methods.\n
-        no yapping.
+        Ensure implementing all the methods.\n
+        No yapping.
     """,
         "test": """
-            Write a test for the following python client sdk class:
-            ---{sdk}---
-            Test must use the unittest library.
-            Test must test each method in the class.
-            Test must mock the requests library.
-            No yapping.
+        Write unit tests for the following python client sdk class (inside triple quotes):
+        \"\"\"{sdk}\"\"\"
+        Use unittest and mock.patch to mock the requests library.
+        The sdk class must be imported from the sdk file named {sdk_file_name} found in the same directory as the test file.
+        Write a test for each method in the sdk class.
+        
+        Ensure all methods are tested.
+        No yapping.
         """,
     }
 }
