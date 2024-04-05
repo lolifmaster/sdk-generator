@@ -23,12 +23,12 @@ keys_to_keep = {
     "bad_responses": False,
     "request_bodies": True,
     "schemas": True,
-    "endpoint_descriptions": True,
+    "endpoint_descriptions": False,
     "endpoint_summaries": True,
     "enums": True,
     "nested_descriptions": False,
     "examples": False,
-    "tag_descriptions": True,
+    "tag_descriptions": False,
     "deprecated": False,
 }
 
@@ -114,7 +114,12 @@ def populate_keys(endpoint, path):
         extracted_endpoint_data["description"] = endpoint.get("description")
 
     if keys_to_keep["request_bodies"]:
-        extracted_endpoint_data["requestBody"] = endpoint.get("requestBody")
+        request_body = endpoint.get("requestBody")
+        if request_body and "content" in request_body:
+            # Extract the schema of application/json request body
+            extracted_endpoint_data["requestBody"] = request_body["content"].get(
+                "application/json"
+            )
 
     if keys_to_keep["good_responses"] or keys_to_keep["bad_responses"]:
         extracted_endpoint_data["responses"] = {}
@@ -254,7 +259,15 @@ def write_dict_to_text(data):
         # Strip HTML tags
         no_html_str = re.sub("<.*?>", "", input_str)
         # Define the characters that should be considered as punctuation
-        modified_punctuation = set(string.punctuation) - {"/", "#", "_", "-"}
+        modified_punctuation = set(string.punctuation) - {
+            "/",
+            "#",
+            "_",
+            "-",
+            "|",
+            ".",
+            ",",
+        }
         # Remove punctuation characters
         return "".join(
             ch for ch in no_html_str if ch not in modified_punctuation

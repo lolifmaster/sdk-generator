@@ -7,7 +7,9 @@ from pathlib import Path
 def process_and_save_file(file_path, output_file, target_directory):
     try:
         result = process_file(file_path)
-        with open(os.path.join(target_directory, output_file), "w") as f:
+        with open(
+            os.path.join(target_directory, output_file), "w", encoding="utf-8"
+        ) as f:
             f.write(result)
     except Exception as e:
         print(f"Error processing file {file_path}: {e}")

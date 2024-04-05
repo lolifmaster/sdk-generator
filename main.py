@@ -15,11 +15,11 @@ def main():
 
         try:
             sdk_file_path = generate_sdk(file, language="python")
-            test_file_path = generate_test(sdk_file_path)
-            if test_file_path:
-                print(f"Generated both SDK and Test for {file.stem}")
-            else:
-                print(f"Failed to generate Test for {file.stem}")
+            # test_file_path = generate_test(sdk_file_path)
+            # if test_file_path:
+            #     print(f"Generated both SDK and Test for {file.stem}")
+            # else:
+            #     print(f"Failed to generate Test for {file.stem}")
         except Exception as e:
             print(f"Failed to generate SDK and Test for {file.stem}: {e}")
 

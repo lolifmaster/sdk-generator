@@ -23,7 +23,9 @@ def generate_test(sdk_file: Path) -> Path:
 
     payload = {
         "providers": "openai",
-        "text": TEMPLATES[language]["test"].format(sdk=sdk_code, sdk_file_name=sdk_file.name),
+        "text": TEMPLATES[language]["test"].format(
+            sdk=sdk_code, sdk_file_name=sdk_file.name
+        ),
         "chatbot_global_action": f"You are a {language} developer, and you are writing tests for an SDK.",
         "previous_history": [
             {

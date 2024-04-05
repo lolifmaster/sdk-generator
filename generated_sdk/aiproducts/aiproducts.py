@@ -7,10 +7,12 @@ class AskYourDataProjectRequest(TypedDict):
     asset: NotRequired[str]
     project_name: str
     collection_name: str
-    db_provider: Literal["qdrant", "supabase"]
-    embeddings_provider: str
-    llm_provider: str
-    llm_model: str
+    db_provider: NotRequired[Literal["qdrant", "supabase"]]
+    embeddings_provider: NotRequired[str]
+    llm_provider: NotRequired[str]
+    llm_model: NotRequired[str]
+    ocr_provider: str
+    speech_to_text_provider: str
 
 
 class AddFileRequest(TypedDict):
