@@ -5,6 +5,9 @@ import os
 import requests
 from dotenv import load_dotenv
 from typing import TypedDict
+import yaml
+import json
+from pathlib import Path
 
 load_dotenv()
 
@@ -110,3 +113,39 @@ def generate_llm_response(
         return response.json()
     except Exception as e:
         print(e)
+
+
+def split_openapi_spec(file_path: Path, output_dir_path: Path):
+    """
+    Split an OpenAPI specification file into separate files for each resource.
+    :param file_path: Path to the OpenAPI specification file.
+    :param output_dir_path: Path to the directory where the split files will be saved.
+
+    :return: None
+    """
+    with open(file_path, 'r', encoding='utf-8') as file:
+        if file_path.suffix == '.yaml' or file_path.suffix == '.yml':
+            spec = yaml.safe_load(file)
+        elif file_path.suffix == '.json':
+            spec = json.load(file)
+        else:
+            raise ValueError("Unsupported file format. Please provide a YAML or JSON file.")
+
+    paths = spec.get('paths', {})
+    default_spec = spec.copy()
+    del default_spec['paths']
+
+    specs = {}
+    for path, methods in paths.items():
+        resource = path.split('/')[1]
+        if resource not in specs:
+            specs[resource] = default_spec.copy()
+            specs[resource]['paths'] = {}
+
+        specs[resource]['paths'][path] = methods
+
+    for resource, spec in specs.items():
+        resource = resource.replace('{', '').replace('}', '')
+        output_file = output_dir_path / f'{resource}.json'
+        with open(output_file, 'w', encoding='utf-8') as file:
+            json.dump(spec, file, indent=2)

@@ -28,7 +28,6 @@ def main(input_directory: Path, target_directory: Path):
 
 
 if __name__ == "__main__":
-    # main("../data/eden/sub-domains", "../data/eden/processed-specs")
     dataFolder = Path(__file__).parent.parent / "data"
 
-    main((dataFolder / "eden" / "sub-domains"), dataFolder / "eden" / "processed-specs")
+    main((dataFolder / "eden" / "specifications"), dataFolder / "eden" / "processed-specs")

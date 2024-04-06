@@ -1,35 +1,11 @@
-import json
 import os
-
-
-def split_openapi_schema(openapi_schema):
-    global_schema = json.loads(openapi_schema)
-
-    domains = {}
-
-    for path, details in global_schema["paths"].items():
-        domain = path.split("/")[1]
-
-        if domain not in domains:
-            domains[domain] = {
-                "openapi": global_schema.get("openapi", "3.0.0"),
-                "info": global_schema.get("info", {}),
-                "paths": {},
-                "servers": global_schema.get("servers", []),
-                "components": global_schema.get("components", {}),
-            }
-
-        domains[domain]["paths"][path] = details
-
-    return domains
-
+from pathlib import Path
+from context import split_openapi_spec
 
 if __name__ == "__main__":
-    eden_openapi_schema = open("../data/eden/Eden AI.json", encoding="utf-8").read()
-    schemas = split_openapi_schema(eden_openapi_schema)
+    data_dir = Path(__file__).parent.parent / 'data' / 'eden'
+    openapi_file = data_dir / 'Eden AI.json'
+    output_dir = data_dir / 'specifications'
 
-    os.makedirs("../data/eden/sub-domains", exist_ok=True)
-
-    for sub_domain, schema in schemas.items():
-        with open(f"../data/eden/sub-domains/{sub_domain}.json", "w") as f:
-            f.write(json.dumps(schema, indent=2))
+    os.makedirs(output_dir, exist_ok=True)
+    split_openapi_spec(openapi_file, output_dir)
