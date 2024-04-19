@@ -38,9 +38,8 @@ class Template(TypedDict):
 
 TEMPLATES: dict[Language, Template] = {
     "python": {
-        "initial_code": """
-            Write a Python client sdk for the following API (inside triple quotes):
-            \"\"\"{api_spec}\"\"\"
+        "initial_code": '''Write a Python client sdk for the following API (inside triple quotes):
+            """{api_spec}"""
             Sdk must use the requests library to make the requests.
             Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
             Nullable fields must be NotRequired in the method arguments.
@@ -53,24 +52,24 @@ TEMPLATES: dict[Language, Template] = {
         
             Ensure implementing all the methods.\n
             No yapping.
-        """,
-
-        "feedback": """
-            Write feedback on the following generated code (inside triple quotes):
-            \"\"\"{generated_code}\"\"\"
+        ''',
+        "feedback": '''Write feedback on the following generated code (inside triple quotes):
+            """{generated_code}"""
             The feedback should be constructive and point out any issues with the code.
             The feedback should be detailed and provide suggestions for improvement.
             The feedback should be written as if you are reviewing the code.
-        """,
-
-        "final_code": """
-         with the initial code and feedback provided, write the final code for the API spec:
-        """,
-
+            
+            Ensure all issues are addressed.
+        ''',
+        "final_code": '''Write the final version of the Python client sdk looking at the feedback provided (inside triple quotes):
+            """feedback"""
+            Ensure all issues are addressed.
+            Ensure type hints, especially for dicts.
+            No yapping.''',
         # TODO: Implement test template
         # "test": """
         #     Write unit tests for the following python client sdk class (inside triple quotes):
-        #     \"\"\"{sdk}\"\"\"
+        #     """{sdk}"""
         #     Use unittest and mock.patch to mock the requests library.
         #     The sdk class must be imported from the sdk file named {sdk_file_name} found in the same directory as the test file.
         #     Write a test for each method in the sdk class.
