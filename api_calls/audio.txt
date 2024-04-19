@@ -1,0 +1,78 @@
+Here is a Python client SDK for the provided API using the requests library:
+
+```python
+import requests
+from typing import Optional, Literal, Dict, Any
+from requests.models import Response
+
+class EdenaiClient:
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+        self.base_url = "https://api.edenai.run/v2"
+
+    def _make_authenticated_request(self, method: str, endpoint: str, data: Optional[Dict[str, Any]] = None) -> Response:
+        headers = {"Authorization": f"Bearer {self.api_key}"}
+        url = f"{self.base_url}{endpoint}"
+        response = requests.request(method, url, headers=headers, json=data)
+        response.raise_for_status()
+        return response
+
+    def list_speech_to_text_jobs(self) -> Response:
+        return self._make_authenticated_request("GET", "/audio/speech_to_text_async")
+
+    def launch_speech_to_text_job(self, providers: str, file: str, file_url: Optional[str] = None, language: Optional[str] = None, speakers: Optional[int] = None, profanity_filter: Optional[bool] = None, convert_to_wav: Optional[bool] = None) -> Response:
+        data = {
+            "providers": providers,
+            "file": file,
+            "file_url": file_url,
+            "language": language,
+            "speakers": speakers,
+            "profanity_filter": profanity_filter,
+            "convert_to_wav": convert_to_wav
+        }
+        return self._make_authenticated_request("POST", "/audio/speech_to_text_async", data)
+
+    def delete_speech_to_text_job(self) -> Response:
+        return self._make_authenticated_request("DELETE", "/audio/speech_to_text_async")
+
+    def get_speech_to_text_job_results(self, public_id: str, response_as_dict: Optional[bool] = None, show_original_response: Optional[bool] = None) -> Response:
+        return self._make_authenticated_request("GET", f"/audio/speech_to_text_async/{public_id}")
+
+    def text_to_speech(self, providers: str, text: str, language: Optional[str] = None, option: Literal["FEMALE", "MALE"], rate: Optional[int] = None, pitch: Optional[int] = None, volume: Optional[int] = None, sampling_rate: Optional[int] = None) -> Response:
+        data = {
+            "providers": providers,
+            "text": text,
+            "language": language,
+            "option": option,
+            "rate": rate,
+            "pitch": pitch,
+            "volume": volume,
+            "sampling_rate": sampling_rate
+        }
+        return self._make_authenticated_request("POST", "/audio/text_to_speech", data)
+
+    def list_text_to_speech_jobs(self) -> Response:
+        return self._make_authenticated_request("GET", "/audio/text_to_speech_async")
+
+    def launch_text_to_speech_job(self, providers: str, text: str, language: Optional[str] = None, option: Literal["FEMALE", "MALE"], rate: Optional[int] = None, pitch: Optional[int] = None, volume: Optional[int] = None, audio_format: Optional[str] = None, sampling_rate: Optional[int] = None) -> Response:
+        data = {
+            "providers": providers,
+            "text": text,
+            "language": language,
+            "option": option,
+            "rate": rate,
+            "pitch": pitch,
+            "volume": volume,
+            "audio_format": audio_format,
+            "sampling_rate": sampling_rate
+        }
+        return self._make_authenticated_request("POST", "/audio/text_to_speech_async", data)
+
+    def delete_text_to_speech_job(self) -> Response:
+        return self._make_authenticated_request("DELETE", "/audio/text_to_speech_async")
+
+    def get_text_to_speech_job_results(self, public_id: str, response_as_dict: Optional[bool] = None, show_original_response: Optional[bool] = None) -> Response:
+        return self._make_authenticated_request("GET", f"/audio/text_to_speech_async/{public_id}")
+```
+
+This SDK provides a class `EdenaiClient` that has methods for each endpoint in the API. The methods use the requests library to make HTTP requests to the API. The `_make_authenticated_request` method is used to make authenticated requests to the API. The methods return the requests library Response object.
