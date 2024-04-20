@@ -63,10 +63,11 @@ TEMPLATES: dict[Language, Template] = {
             
             Ensure all issues are addressed.
         ''',
-        "final_code": '''Write the final version of the Python client sdk looking at the feedback provided (inside triple quotes):
-            """feedback"""
+        "final_code": '''Write the final version of the Python client sdk looking at this feedback (inside triple quotes):
+            """{feedback}"""
             Ensure all issues are addressed.
-            Ensure type hints, especially for dicts.
+            Ensure type hints, especially for objects with TypedDict.
+            Give the whole file.
             No yapping.''',
         # TODO: Implement test template
         # "test": """

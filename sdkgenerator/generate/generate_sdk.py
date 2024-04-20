@@ -139,9 +139,11 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     Generate full SDK for the API spec and return the path to the generated SDK file.
     """
     api_spec = process_file(file_path)
+
     api_spec_name = file_path.stem.split(".")[0]
 
     initial_code, history = generate_initial_code(api_spec, language=language, sdk_name=api_spec_name)
+    history = history[:-1]
 
     feedback = feedback_on_generated_code(initial_code, history, language=language, sdk_name=api_spec_name)
 

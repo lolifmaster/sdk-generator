@@ -6,6 +6,8 @@ import re
 import string
 from pathlib import Path
 
+# TODO: Check if openapi spec is valid, separate types and endpoints into different files
+
 
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
