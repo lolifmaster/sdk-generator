@@ -13,17 +13,18 @@ load_dotenv()
 
 
 def generate_initial_code(
-    api_spec: str, *, language: Language = "python"
+    api_spec: str, *, sdk_name: str, language: Language = "python"
 ) -> tuple[str, list]:
     """
     Generate code for the API spec and return it as a string.
 
     Args:
-    file_path: The path to the API spec file.
+    api_spec: The API spec.
+    sdk_name: The name of the SDK.
     language: The language of the generated code. Default is "python".
 
     Returns:
-    str: The generated code for the API spec.
+        tuple[str, list]: The generated code for the API spec and the history of the conversation.
     """
 
     response = generate_llm_response(
@@ -36,6 +37,8 @@ def generate_initial_code(
             "max_tokens": 4000,
             "settings": {"openai": "gpt-4"},
         },
+        step="initial_code",
+        sdk_name=sdk_name,
     )
 
     if response is None:
@@ -53,14 +56,16 @@ def generate_initial_code(
 
 
 def feedback_on_generated_code(
-    generated_code: str, previous_history: list, *, language: Language = "python"
+    generated_code: str, previous_history: list, *, sdk_name: str, language: Language = "python"
 ) -> str:
     """
     Generate Feedback on the generated code for the API spec and return it as a string.
 
     Args:
     generated_code: The generated code for the API spec.
+    previous_history: The previous history of the conversation.
     language: The language of the generated code. Default is "python".
+    sdk_name: The name of the SDK.
 
     Returns:
     str: The feedback on the generated code.
@@ -77,6 +82,8 @@ def feedback_on_generated_code(
             "max_tokens": 2000,
             "settings": {"openai": "gpt-4"},
         },
+        step="feedback",
+        sdk_name=sdk_name,
     )
 
     if response is None:
@@ -89,7 +96,7 @@ def feedback_on_generated_code(
 
 
 def generate_final_code(
-    feedback: str, previous_history: list, *, language: Language = "python"
+    feedback: str, previous_history: list, *, sdk_name: str, language: Language = "python"
 ) -> str:
     """
     Generate final code for the API spec and return it as a string.
@@ -98,6 +105,7 @@ def generate_final_code(
     initial_code: The initial code for the API spec.
     feedback: The feedback on the initial code.
     language: The language of the generated code. Default is "python".
+    sdk_name: The name of the SDK.
 
     Returns:
     str: The final code for the API spec.
@@ -113,6 +121,8 @@ def generate_final_code(
             "max_tokens": 4000,
             "settings": {"openai": "gpt-4"},
         },
+        step="final_code",
+        sdk_name=sdk_name,
     )
 
     if response is None:
@@ -131,11 +141,11 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     api_spec = process_file(file_path)
     api_spec_name = file_path.stem.split(".")[0]
 
-    initial_code, history = generate_initial_code(api_spec, language=language)
+    initial_code, history = generate_initial_code(api_spec, language=language, sdk_name=api_spec_name)
 
-    feedback = feedback_on_generated_code(initial_code, history, language=language)
+    feedback = feedback_on_generated_code(initial_code, history, language=language, sdk_name=api_spec_name)
 
-    final_code = generate_final_code(feedback, history, language=language)
+    final_code = generate_final_code(feedback, history, language=language, sdk_name=api_spec_name)
 
     code, file_extension = get_code_from_model_response(final_code)
 

@@ -1,13 +1,13 @@
 import re
-from typing import Literal
 import pathlib
 import os
 import requests
 from dotenv import load_dotenv
-from typing import TypedDict
+from typing import TypedDict, Literal
 import yaml
 import json
 from pathlib import Path
+from sdkgenerator.db import db
 
 load_dotenv()
 
@@ -35,6 +35,8 @@ class Template(TypedDict):
     final_code: str
     # test: str
 
+
+Step = Literal["initial_code", "feedback", "final_code"]
 
 TEMPLATES: dict[Language, Template] = {
     "python": {
@@ -107,10 +109,14 @@ def get_code_from_model_response(response):
     return code, file_extension
 
 
-def log_llm_response(payload: dict, response: dict):
+def log_llm_response(payload: dict, response: dict, *, step: Step, sdk_name: str = None):
     """
     Log the response from the language model to logs file.
 
+    :param sdk_name: The name of the SDK.
+    :type sdk_name: str
+    :param step: The step in the process.
+    :type step: Step
     :param payload: The payload sent to the language model.
     :type payload: dict
     :param response: The response from the language model.
@@ -118,20 +124,28 @@ def log_llm_response(payload: dict, response: dict):
     :return: None
     """
 
+    # save the response to the database
+    db.insert_one({
+        "step": step,
+        "sdk_name": sdk_name,
+        "payload": payload,
+        "response": response
+    })
+
     with open(API_CALLS_DIR / "logs.txt", "a+", encoding="utf-8") as file:
+        file.write(f"Step: {step}\n")
         file.write(f"Payload: {json.dumps(payload, indent=2)}\n")
         file.write(f"Response: {json.dumps(response, indent=2)}\n-----------\n")
 
 
 def generate_llm_response(
-    payload: dict,
+        payload: dict, *, step: Step, sdk_name: str
 ):
     """
     Generate code for the API spec via the language model.
 
     :return: The response from the language model.
     """
-    # TODO: will be in a config file
 
     headers = {
         "Authorization": f"Bearer {os.getenv('EDEN_AI_AUTH_TOKEN')}",
@@ -140,7 +154,7 @@ def generate_llm_response(
 
     try:
         response = requests.post(EDEN_AI_API, headers=headers, json=payload)
-        log_llm_response(payload, response.json())
+        log_llm_response(payload, response.json(), step=step, sdk_name=sdk_name)
         response.raise_for_status()
         return response.json()
     except Exception as e:
