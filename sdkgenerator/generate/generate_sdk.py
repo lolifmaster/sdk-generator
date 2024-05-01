@@ -1,3 +1,5 @@
+import json
+
 from dotenv import load_dotenv
 from sdkgenerator.manifier import process_file
 from sdkgenerator.utils import (
@@ -138,25 +140,39 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     """
     Generate full SDK for the API spec and return the path to the generated SDK file.
     """
-    api_spec = process_file(file_path)
+    api_spec, types = process_file(file_path)
 
     api_spec_name = file_path.stem.split(".")[0]
 
-    initial_code, history = generate_initial_code(api_spec, language=language, sdk_name=api_spec_name)
-    history = history[:-1]
+    # save api spec to file
+    api_spec_file = Path(__file__).parent.parent.parent / "api_specs" / 'specs' / f'{api_spec_name}.txt'
 
-    feedback = feedback_on_generated_code(initial_code, history, language=language, sdk_name=api_spec_name)
+    api_spec_file.parent.mkdir(exist_ok=True)
+    api_spec_file.write_text(api_spec, encoding="utf-8")
 
-    final_code = generate_final_code(feedback, history, language=language, sdk_name=api_spec_name)
+    # save types to file
+    types_file = Path(__file__).parent.parent.parent / "api_specs" / 'types' / f'{api_spec_name}.txt'
 
-    code, file_extension = get_code_from_model_response(final_code)
+    types_file.parent.mkdir(exist_ok=True)
+    types_file.write_text(
+        json.dumps(types, indent=4),
+        encoding="utf-8")
 
-    # create a module for the generated sdk
-    sdk_module = GENERATED_SDK_DIR / api_spec_name
-    sdk_module.mkdir(exist_ok=True)
+    # initial_code, history = generate_initial_code(api_spec, language=language, sdk_name=api_spec_name)
+    # history = history[:-1]
+    #
+    # feedback = feedback_on_generated_code(initial_code, history, language=language, sdk_name=api_spec_name)
+    #
+    # final_code = generate_final_code(feedback, history, language=language, sdk_name=api_spec_name)
+    #
+    # code, file_extension = get_code_from_model_response(final_code)
+    #
+    # # create a module for the generated sdk
+    # sdk_module = GENERATED_SDK_DIR / api_spec_name
+    # sdk_module.mkdir(exist_ok=True)
+    #
+    # # create the sdk file
+    # sdk_output_file = sdk_module / f"{api_spec_name}{file_extension}"
+    # sdk_output_file.write_text(code)
 
-    # create the sdk file
-    sdk_output_file = sdk_module / f"{api_spec_name}{file_extension}"
-    sdk_output_file.write_text(code)
-
-    return sdk_output_file
+    # return sdk_output_file

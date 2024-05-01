@@ -6,6 +6,7 @@ import re
 import string
 from pathlib import Path
 
+
 # TODO: Check if openapi spec is valid, separate types and endpoints into different files
 
 
@@ -65,30 +66,35 @@ def load_spec(file_path: Path):
             raise ValueError(f"Unsupported file format for {file_path}")
 
 
-def resolve_refs(openapi_spec, endpoint):
+def resolve_refs_types(openapi_spec, endpoint, types):
     if isinstance(endpoint, dict):
         new_endpoint = {}
         for key, value in endpoint.items():
             if key == "$ref":
+                ref_name = value.split("/")[-1]
+                if ref_name in types:
+                    return ref_name
+
                 ref_path = value.split("/")[1:]
                 ref_object = openapi_spec
                 for p in ref_path:
                     ref_object = ref_object.get(p, {})
 
                 # Recursively resolve references inside the ref_object
-                ref_object = resolve_refs(openapi_spec, ref_object)
+                ref_object = resolve_refs_types(openapi_spec, ref_object, types)
 
-                # Use the last part of the reference path as key
-                new_key = ref_path[-1]
-                new_endpoint[new_key] = ref_object
-            else:
-                # Recursively search in nested dictionaries
-                new_endpoint[key] = resolve_refs(openapi_spec, value)
+                # Add the resolved object to the types dictionary
+                new_endpoint[key] = ref_name
+                types[ref_name] = ref_object
+
+            elif key not in {'description', 'example'}:
+                new_endpoint[key] = resolve_refs_types(openapi_spec, value, types)
+
         return new_endpoint
 
     elif isinstance(endpoint, list):
         # Recursively search in lists
-        return [resolve_refs(openapi_spec, item) for item in endpoint]
+        return [resolve_refs_types(openapi_spec, item, types) for item in endpoint]
 
     else:
         # Base case: return the endpoint as is if it's neither a dictionary nor a list
@@ -119,9 +125,13 @@ def populate_keys(endpoint, path):
         request_body = endpoint.get("requestBody")
         if request_body and "content" in request_body:
             # Extract the schema of application/json request body
-            extracted_endpoint_data["requestBody"] = request_body["content"].get(
+            reqBody = request_body["content"].get(
                 "application/json"
             )
+            if reqBody and 'schema' in reqBody:
+                extracted_endpoint_data["requestBody"] = reqBody["schema"]
+            else:
+                extracted_endpoint_data["requestBody"] = None
 
     if keys_to_keep["good_responses"] or keys_to_keep["bad_responses"]:
         extracted_endpoint_data["responses"] = {}
@@ -138,9 +148,9 @@ def populate_keys(endpoint, path):
             for status_code, response in endpoint["responses"].items():
                 # Check if status_code starts with '4' or '5' (4xx or 5xx)
                 if (
-                    status_code.startswith("4")
-                    or status_code.startswith("5")
-                    or "def" in status_code
+                        status_code.startswith("4")
+                        or status_code.startswith("5")
+                        or "def" in status_code
                 ):
                     # Extract the schema or other relevant information from the response
                     bad_response_content = response
@@ -188,9 +198,9 @@ def remove_unnecessary_keys(endpoint):
                 if k == "enum" and not keys_to_keep["enums"]:
                     del current_data[k]
                 elif (
-                    k == "description"
-                    and len(parent_keys) > 0
-                    and not keys_to_keep["nested_descriptions"]
+                        k == "description"
+                        and len(parent_keys) > 0
+                        and not keys_to_keep["nested_descriptions"]
                 ):
                     del current_data[k]
                 # Otherwise, if the value is a dictionary or a list, add it to the stack for further processing
@@ -315,6 +325,7 @@ def write_dict_to_text(data):
 def minify(spec):
     server_url = spec["servers"][0]["url"]
     tag_summary_dict = {}
+    types = {}
 
     if tags := spec.get("tags"):
         for tag in tags:
@@ -331,16 +342,17 @@ def minify(spec):
     for path, methods in spec["paths"].items():
         for method, endpoint in methods.items():
             if method not in methods_to_handle or (
-                endpoint.get("deprecated", False) and not keys_to_keep["deprecated"]
+                    endpoint.get("deprecated", False) and not keys_to_keep["deprecated"]
             ):
                 continue
-            # Adds schema to each endpoint
-            if keys_to_keep["schemas"]:
-                extracted_endpoint_data = resolve_refs(spec, endpoint)
-            else:
-                extracted_endpoint_data = endpoint
+
             # Populate output list with desired keys
-            extracted_endpoint_data = populate_keys(extracted_endpoint_data, path)
+            extracted_endpoint_data = populate_keys(endpoint, path)
+
+            # Get types from schemas
+            if keys_to_keep["schemas"] and 'requestBody' in extracted_endpoint_data:
+                resolve_refs_types(spec, extracted_endpoint_data.get('requestBody'), types)
+
             # If key == None or key == ''
             extracted_endpoint_data = remove_empty_keys(extracted_endpoint_data)
 
@@ -391,13 +403,12 @@ def minify(spec):
         if tag not in tag_summary_dict:
             tag_summary_dict[tag] = ""
 
-    return endpoints_by_tag_metadata, tag_summary_dict, server_url
+    return endpoints_by_tag_metadata, tag_summary_dict, server_url, types
 
 
-def save_as_txt(spec):
-    endpoints_by_tag_metadata, tag_summary_dict_output, server_url = minify(spec)
+def extract_information(spec):
+    endpoints_by_tag_metadata, tag_summary_dict_output, server_url, types = minify(spec)
     output_string = f"base_url:{server_url}!\n"
-
     for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
         # If we're adding tag descriptions, and they exist they're added here.
         tag_description = tag_summary_dict_output.get(tag)
@@ -417,7 +428,7 @@ def save_as_txt(spec):
 
         output_string += f"{tag_string}\n"
 
-    return output_string
+    return output_string, types
 
 
 def process_file(file_path: Path):
@@ -428,4 +439,4 @@ def process_file(file_path: Path):
     """
 
     spec = load_spec(file_path)
-    return save_as_txt(spec)
+    return extract_information(spec)
