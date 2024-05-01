@@ -53,6 +53,24 @@ key_abbreviations = {
     "required": "req",
 }
 
+types_key_abbreviations ={
+    "properties": "props",
+    "schemaName": "schName",
+    "description": "desc",
+    "string": "str",
+    "number": "num",
+    "object": "obj",
+    "boolean": "bool",
+    "array": "arr",
+    "integer": "int",
+    "default": "def",
+    "required": "req",
+    "minLength": "minLen",
+    "maxLength": "maxLen",
+    "minimum": "min",
+    "maximum": "max",
+}
+
 methods_to_handle = {"get", "post", "patch", "delete", "put"}
 
 
@@ -352,6 +370,7 @@ def minify(spec):
             # Get types from schemas
             if keys_to_keep["schemas"] and 'requestBody' in extracted_endpoint_data:
                 resolve_refs_types(spec, extracted_endpoint_data.get('requestBody'), types)
+                types = abbreviate(types, types_key_abbreviations)
 
             # If key == None or key == ''
             extracted_endpoint_data = remove_empty_keys(extracted_endpoint_data)
