@@ -1,5 +1,3 @@
-import json
-
 from dotenv import load_dotenv
 from sdkgenerator.manifier import process_file
 from sdkgenerator.utils import (
@@ -14,8 +12,45 @@ from pathlib import Path
 load_dotenv()
 
 
+def generate_types(
+        types_json: Path, *, language: Language = "python"
+) -> str:
+    """
+    Generate types for the API spec and return it as a string.
+
+    Args:
+    types_file_path: The types file path.
+    language: The language of the generated code. Default is "python".
+
+    Returns:
+        str: The generated types for the API spec.
+    """
+
+    response = generate_llm_response(
+        payload={
+            "providers": "openai",
+            "text": TEMPLATES[language]["types"].format(types=types_json),
+            "chatbot_global_action": f"You are a {language} developer, and you are writing types for an API",
+            "previous_history": [],
+            "temperature": 0.0,
+            "max_tokens": 4000,
+            "settings": {"openai": "gpt-4"},
+        },
+        step="types",
+        sdk_name="types",
+    )
+
+    if response is None:
+        raise Exception("Failed to generate types")
+
+    if "error" in response["openai"]:
+        raise Exception(response["openai"]["error"])
+
+    return response["openai"]["generated_text"]
+
+
 def generate_initial_code(
-    api_spec: str, *, sdk_name: str, language: Language = "python"
+    api_spec: str, * types: str, sdk_name: str, language: Language = "python"
 ) -> tuple[str, list]:
     """
     Generate code for the API spec and return it as a string.
@@ -34,7 +69,16 @@ def generate_initial_code(
             "providers": "openai",
             "text": TEMPLATES[language]["initial_code"].format(api_spec=api_spec),
             "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
-            "previous_history": [],
+            "previous_history": [
+                {
+                    "role": "user",
+                    "message": "Generate types needed for the sdk"
+                },
+                {
+                    "role": "assistant",
+                    "message": f"Here are the types needed for the sdk stored in a file called types.py : '''{types}'''"
+                }
+            ],
             "temperature": 0.0,
             "max_tokens": 4000,
             "settings": {"openai": "gpt-4"},
@@ -140,39 +184,32 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     """
     Generate full SDK for the API spec and return the path to the generated SDK file.
     """
-    api_spec, types = process_file(file_path)
+    api_spec, types_json = process_file(file_path)
 
     api_spec_name = file_path.stem.split(".")[0]
 
-    # save api spec to file
-    api_spec_file = Path(__file__).parent.parent.parent / "api_specs" / 'specs' / f'{api_spec_name}.txt'
+    types = generate_types(types_json, language=language)
+    types_code, file_extension = get_code_from_model_response(types)
 
-    api_spec_file.parent.mkdir(exist_ok=True)
-    api_spec_file.write_text(api_spec, encoding="utf-8")
+    # create a module for the generated sdk
+    sdk_module = GENERATED_SDK_DIR / api_spec_name
+    sdk_module.mkdir(exist_ok=True)
 
-    # save types to file
-    types_file = Path(__file__).parent.parent.parent / "api_specs" / 'types' / f'{api_spec_name}.txt'
+    # create the types file
+    types_file = sdk_module / f"types{file_extension}"
+    types_file.write_text(types_code)
 
-    types_file.parent.mkdir(exist_ok=True)
-    types_file.write_text(
-        json.dumps(types, indent=4),
-        encoding="utf-8")
+    initial_code, history = generate_initial_code(api_spec, language=language, sdk_name=api_spec_name)
+    history = history[:-1]
 
-    # initial_code, history = generate_initial_code(api_spec, language=language, sdk_name=api_spec_name)
-    # history = history[:-1]
-    #
-    # feedback = feedback_on_generated_code(initial_code, history, language=language, sdk_name=api_spec_name)
-    #
-    # final_code = generate_final_code(feedback, history, language=language, sdk_name=api_spec_name)
-    #
-    # code, file_extension = get_code_from_model_response(final_code)
-    #
-    # # create a module for the generated sdk
-    # sdk_module = GENERATED_SDK_DIR / api_spec_name
-    # sdk_module.mkdir(exist_ok=True)
-    #
-    # # create the sdk file
-    # sdk_output_file = sdk_module / f"{api_spec_name}{file_extension}"
-    # sdk_output_file.write_text(code)
+    feedback = feedback_on_generated_code(initial_code, history, language=language, sdk_name=api_spec_name)
 
-    # return sdk_output_file
+    final_code = generate_final_code(feedback, history, language=language, sdk_name=api_spec_name)
+
+    code, file_extension = get_code_from_model_response(final_code)
+
+    # create the sdk file
+    sdk_output_file = sdk_module / f"{api_spec_name}{file_extension}"
+    sdk_output_file.write_text(code)
+
+    return sdk_output_file

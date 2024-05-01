@@ -30,24 +30,29 @@ extension_to_language = {v: k for k, v in language_to_extension.items()}
 
 
 class Template(TypedDict):
+    types: str
     initial_code: str
     feedback: str
     final_code: str
     # test: str
 
 
-Step = Literal["initial_code", "feedback", "final_code"]
+Step = Literal["types", "initial_code", "feedback", "final_code"]
 
 TEMPLATES: dict[Language, Template] = {
     "python": {
+        "types": '''Write types in python using TypedDict, Enums, Literal and other python typing features specified in the following json (inside triple quotes):
+        """{types}"""
+        
+        Ensure all types are defined.
+        Ensure all types are correct.
+        ''',
         "initial_code": '''Write a Python client sdk for the following API (inside triple quotes):
             """{api_spec}"""
+            the types needed are in the types file (from types import *).
+            the ref types are found in types.py file.
             Sdk must use the requests library to make the requests.
             Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
-            Nullable fields must be NotRequired in the method arguments.
-            Ensure type hints for arguments and return types.
-            Objects typed using TypedDict not required params must be inside NotRequired type.
-            Enums typed using Literal.
             The requests must handle authenticated request with a _make_authenticated_request\n.
             Use json for the request body.
             The methods must return The requests library Response object.
@@ -55,7 +60,7 @@ TEMPLATES: dict[Language, Template] = {
             Ensure implementing all the methods.\n
             No yapping.
         ''',
-        "feedback": '''Write feedback on the following generated code (inside triple quotes):
+        "feedback": '''Write feedback on the following generated code (inside triple quotes) context (types are in types.py):
             """{generated_code}"""
             The feedback should be constructive and point out any issues with the code.
             The feedback should be detailed and provide suggestions for improvement.
@@ -65,9 +70,11 @@ TEMPLATES: dict[Language, Template] = {
         ''',
         "final_code": '''Write the final version of the Python client sdk looking at this feedback (inside triple quotes):
             """{feedback}"""
+            
+            the types needed are in the types file (from types import *).
             Ensure all issues are addressed.
-            Ensure type hints, especially for objects with TypedDict.
             Give the whole file.
+            The ref types are found in types.py file.
             No yapping.''',
         # TODO: Implement test template
         # "test": """
