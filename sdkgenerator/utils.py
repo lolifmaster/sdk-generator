@@ -7,6 +7,7 @@ from typing import TypedDict, Literal
 import yaml
 import json
 from pathlib import Path
+import tiktoken
 from sdkgenerator.db import db
 
 load_dotenv()
@@ -41,16 +42,17 @@ Step = Literal["types", "initial_code", "feedback", "final_code"]
 
 TEMPLATES: dict[Language, Template] = {
     "python": {
-        "types": '''Write types in python using TypedDict, Enums, Literal and other python typing features specified in the following json (inside triple quotes):
+        "types": '''Write the types in python specified in the following json (inside triple quotes):
         """{types}"""
         
-        Ensure all types are defined.
-        Ensure all types are correct.
+        - Use TypedDict for objects (not required fields should have NotRequired type).
+        - use Enums, Literals and other types where necessary.
+        - Ensure all types are defined.
+        - Ensure all types are correct.
         ''',
         "initial_code": '''Write a Python client sdk for the following API (inside triple quotes):
             """{api_spec}"""
-            the types needed are in the types file (from types import *).
-            the ref types are found in types.py file.
+            the ref types are found in types.py file (from types import *).
             Sdk must use the requests library to make the requests.
             Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
             The requests must handle authenticated request with a _make_authenticated_request\n.
@@ -205,3 +207,9 @@ def split_openapi_spec(file_path: Path, output_dir_path: Path):
         output_file = output_dir_path / f"{resource}.json"
         with open(output_file, "w", encoding="utf-8") as file:
             json.dump(spec, file, indent=2)
+
+
+def count_token(txt, model):
+    encoding = tiktoken.encoding_for_model(model)
+    num_token = len(encoding.encode(txt))
+    return num_token
