@@ -10,6 +10,7 @@ from sdkgenerator.utils import (
     generate_llm_response,
     TEMPLATES,
     is_all_steps_within_limit,
+    validate_openapi_spec
 )
 
 load_dotenv()
@@ -196,6 +197,8 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     """
     Generate full SDK for the API spec and return the path to the generated SDK file.
     """
+    validate_openapi_spec(file_path)
+
     api_spec, types_json = process_file(file_path)
 
     if not is_all_steps_within_limit(

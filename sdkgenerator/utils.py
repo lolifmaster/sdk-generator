@@ -9,6 +9,8 @@ import json
 from pathlib import Path
 import tiktoken
 from sdkgenerator.db import db
+from openapi_spec_validator import validate
+from openapi_spec_validator.readers import read_from_filename
 
 load_dotenv()
 
@@ -261,3 +263,18 @@ def is_all_steps_within_limit(
     return all(
         check_step_count(step, model=model, max_token=max_token) for step in steps
     )
+
+
+def validate_openapi_spec(file_path: Path):
+    """
+    Validate the OpenAPI specification file.
+
+    :param file_path: Path to the OpenAPI specification file.
+    :type file_path: Path
+    :return: None
+    """
+    try:
+        spec_dict, _ = read_from_filename(str(file_path))
+        validate(spec_dict)
+    except Exception as e:
+        raise Exception(f"Failed to validate OpenAPI spec: {e}")
