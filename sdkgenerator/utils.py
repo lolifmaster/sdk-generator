@@ -46,7 +46,8 @@ TEMPLATES: dict[Language, Template] = {
         """{types}"""
         
         - Use TypedDict for objects (not required fields should have NotRequired type).
-        - use Enums, Literals and other types where necessary.
+        - Use Literals for enums.
+        - Use other types as needed.
         - Ensure all types are defined.
         - Ensure all types are correct.
         ''',
@@ -119,7 +120,9 @@ def get_code_from_model_response(response):
     return code, file_extension
 
 
-def log_llm_response(payload: dict, response: dict, *, step: Step, sdk_name: str = None):
+def log_llm_response(
+    payload: dict, response: dict, *, step: Step, sdk_name: str = None
+):
     """
     Log the response from the language model to logs file.
 
@@ -135,12 +138,9 @@ def log_llm_response(payload: dict, response: dict, *, step: Step, sdk_name: str
     """
 
     # save the response to the database
-    db.insert_one({
-        "step": step,
-        "sdk_name": sdk_name,
-        "payload": payload,
-        "response": response
-    })
+    db.insert_one(
+        {"step": step, "sdk_name": sdk_name, "payload": payload, "response": response}
+    )
 
     with open(API_CALLS_DIR / "logs.txt", "a+", encoding="utf-8") as file:
         file.write(f"Step: {step}\n")
@@ -148,9 +148,7 @@ def log_llm_response(payload: dict, response: dict, *, step: Step, sdk_name: str
         file.write(f"Response: {json.dumps(response, indent=2)}\n-----------\n")
 
 
-def generate_llm_response(
-        payload: dict, *, step: Step, sdk_name: str
-):
+def generate_llm_response(payload: dict, *, step: Step, sdk_name: str):
     """
     Generate code for the API spec via the language model.
 
@@ -209,7 +207,57 @@ def split_openapi_spec(file_path: Path, output_dir_path: Path):
             json.dump(spec, file, indent=2)
 
 
-def count_token(txt, model):
+def count_token(txt: str, model: str):
     encoding = tiktoken.encoding_for_model(model)
     num_token = len(encoding.encode(txt))
     return num_token
+
+
+def check_step_count(txt: str, *, model: str, max_token: int) -> bool:
+    """
+    Check if the number of tokens in the text is within the limit for the step.
+
+    :param txt: The text to check.
+    :type txt: str
+    :param model: The model to use for tokenization.
+    :type model: str
+    :param max_token: The maximum number of tokens allowed.
+    :type max_token: int
+    :return: True if the number of tokens is within the limit, False otherwise.
+    :rtype: bool
+    """
+    return count_token(txt, model) <= max_token
+
+
+def is_all_steps_within_limit(
+    open_specs, types_json, *, model: str, max_token: int, lang: Language = "python"
+) -> bool:
+    """
+    Check if all steps are within the token limit.
+
+    :param open_specs: The openapi specs.
+    :type open_specs: str
+    :param types_json: The types json.
+    :type types_json: str
+    :param model: The model to use for tokenization.
+    :type model: str
+    :param max_token: The maximum number of tokens allowed.
+    :type max_token: int
+    :param lang: The language of the generated code. Default is "python".
+    :type lang: Language
+
+    :return: True if all steps are within the limit, False otherwise.
+
+    :rtype: bool
+    """
+
+    steps = []
+    types_prompt = TEMPLATES[lang]["types"].format(types=types_json)
+    initial_code_prompt = TEMPLATES[lang]["initial_code"].format(api_spec=open_specs)
+
+    steps.append(types_prompt)
+    steps.append(initial_code_prompt)
+
+    return all(
+        check_step_count(step, model=model, max_token=max_token) for step in steps
+    )

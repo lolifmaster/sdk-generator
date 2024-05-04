@@ -53,7 +53,7 @@ key_abbreviations = {
     "required": "req",
 }
 
-types_key_abbreviations ={
+types_key_abbreviations = {
     "properties": "props",
     "schemaName": "schName",
     "description": "desc",
@@ -105,7 +105,7 @@ def resolve_refs_types(openapi_spec, endpoint, types):
                 new_endpoint[key] = ref_name
                 types[ref_name] = ref_object
 
-            elif key not in {'description', 'example'}:
+            elif key not in {"description", "example"}:
                 new_endpoint[key] = resolve_refs_types(openapi_spec, value, types)
 
         return new_endpoint
@@ -143,10 +143,8 @@ def populate_keys(endpoint, path):
         request_body = endpoint.get("requestBody")
         if request_body and "content" in request_body:
             # Extract the schema of application/json request body
-            reqBody = request_body["content"].get(
-                "application/json"
-            )
-            if reqBody and 'schema' in reqBody:
+            reqBody = request_body["content"].get("application/json")
+            if reqBody and "schema" in reqBody:
                 extracted_endpoint_data["requestBody"] = reqBody["schema"]
             else:
                 extracted_endpoint_data["requestBody"] = None
@@ -166,9 +164,9 @@ def populate_keys(endpoint, path):
             for status_code, response in endpoint["responses"].items():
                 # Check if status_code starts with '4' or '5' (4xx or 5xx)
                 if (
-                        status_code.startswith("4")
-                        or status_code.startswith("5")
-                        or "def" in status_code
+                    status_code.startswith("4")
+                    or status_code.startswith("5")
+                    or "def" in status_code
                 ):
                     # Extract the schema or other relevant information from the response
                     bad_response_content = response
@@ -216,9 +214,9 @@ def remove_unnecessary_keys(endpoint):
                 if k == "enum" and not keys_to_keep["enums"]:
                     del current_data[k]
                 elif (
-                        k == "description"
-                        and len(parent_keys) > 0
-                        and not keys_to_keep["nested_descriptions"]
+                    k == "description"
+                    and len(parent_keys) > 0
+                    and not keys_to_keep["nested_descriptions"]
                 ):
                     del current_data[k]
                 # Otherwise, if the value is a dictionary or a list, add it to the stack for further processing
@@ -360,7 +358,7 @@ def minify(spec):
     for path, methods in spec["paths"].items():
         for method, endpoint in methods.items():
             if method not in methods_to_handle or (
-                    endpoint.get("deprecated", False) and not keys_to_keep["deprecated"]
+                endpoint.get("deprecated", False) and not keys_to_keep["deprecated"]
             ):
                 continue
 
@@ -368,8 +366,10 @@ def minify(spec):
             extracted_endpoint_data = populate_keys(endpoint, path)
 
             # Get types from schemas
-            if keys_to_keep["schemas"] and 'requestBody' in extracted_endpoint_data:
-                resolve_refs_types(spec, extracted_endpoint_data.get('requestBody'), types)
+            if keys_to_keep["schemas"] and "requestBody" in extracted_endpoint_data:
+                resolve_refs_types(
+                    spec, extracted_endpoint_data.get("requestBody"), types
+                )
                 types = abbreviate(types, types_key_abbreviations)
 
             # If key == None or key == ''

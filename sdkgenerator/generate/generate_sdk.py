@@ -1,4 +1,7 @@
+from pathlib import Path
+
 from dotenv import load_dotenv
+
 from sdkgenerator.manifier import process_file
 from sdkgenerator.utils import (
     get_code_from_model_response,
@@ -6,15 +9,13 @@ from sdkgenerator.utils import (
     GENERATED_SDK_DIR,
     generate_llm_response,
     TEMPLATES,
+    is_all_steps_within_limit,
 )
-from pathlib import Path
 
 load_dotenv()
 
 
-def generate_types(
-        types_json: Path, *, language: Language = "python"
-) -> str:
+def generate_types(types_json: Path, *, language: Language = "python") -> str:
     """
     Generate types for the API spec and return it as a string.
 
@@ -26,6 +27,7 @@ def generate_types(
         str: The generated types for the API spec.
     """
 
+    print("Generating types")
     response = generate_llm_response(
         payload={
             "providers": "openai",
@@ -33,7 +35,7 @@ def generate_types(
             "chatbot_global_action": f"You are a {language} developer, and you are writing types for an API",
             "previous_history": [],
             "temperature": 0.0,
-            "max_tokens": 4000,
+            "max_tokens": 5000,
             "settings": {"openai": "gpt-4"},
         },
         step="types",
@@ -50,7 +52,7 @@ def generate_types(
 
 
 def generate_initial_code(
-    api_spec: str, * types: str, sdk_name: str, language: Language = "python"
+    api_spec: str, *types: str, sdk_name: str, language: Language = "python"
 ) -> tuple[str, list]:
     """
     Generate code for the API spec and return it as a string.
@@ -64,23 +66,21 @@ def generate_initial_code(
         tuple[str, list]: The generated code for the API spec and the history of the conversation.
     """
 
+    print("Generating initial code")
     response = generate_llm_response(
         payload={
             "providers": "openai",
             "text": TEMPLATES[language]["initial_code"].format(api_spec=api_spec),
             "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
             "previous_history": [
-                {
-                    "role": "user",
-                    "message": "Generate types needed for the sdk"
-                },
+                {"role": "user", "message": "Generate types needed for the sdk"},
                 {
                     "role": "assistant",
-                    "message": f"Here are the types needed for the sdk stored in a file called types.py : '''{types}'''"
-                }
+                    "message": f"Here are the types needed for the sdk stored in a file called types.py : '''{types}'''",
+                },
             ],
             "temperature": 0.0,
-            "max_tokens": 4000,
+            "max_tokens": 5000,
             "settings": {"openai": "gpt-4"},
         },
         step="initial_code",
@@ -102,7 +102,11 @@ def generate_initial_code(
 
 
 def feedback_on_generated_code(
-    generated_code: str, previous_history: list, *, sdk_name: str, language: Language = "python"
+    generated_code: str,
+    previous_history: list,
+    *,
+    sdk_name: str,
+    language: Language = "python",
 ) -> str:
     """
     Generate Feedback on the generated code for the API spec and return it as a string.
@@ -116,6 +120,8 @@ def feedback_on_generated_code(
     Returns:
     str: The feedback on the generated code.
     """
+
+    print("Generating feedback")
     response = generate_llm_response(
         payload={
             "providers": "openai",
@@ -142,7 +148,11 @@ def feedback_on_generated_code(
 
 
 def generate_final_code(
-    feedback: str, previous_history: list, *, sdk_name: str, language: Language = "python"
+    feedback: str,
+    previous_history: list,
+    *,
+    sdk_name: str,
+    language: Language = "python",
 ) -> str:
     """
     Generate final code for the API spec and return it as a string.
@@ -157,6 +167,8 @@ def generate_final_code(
     str: The final code for the API spec.
     """
 
+    print("Generating final code")
+
     response = generate_llm_response(
         payload={
             "providers": "openai",
@@ -164,7 +176,7 @@ def generate_final_code(
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,
             "temperature": 0.2,
-            "max_tokens": 4000,
+            "max_tokens": 5000,
             "settings": {"openai": "gpt-4"},
         },
         step="final_code",
@@ -186,6 +198,11 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     """
     api_spec, types_json = process_file(file_path)
 
+    if not is_all_steps_within_limit(
+        api_spec, types_json, model="gpt-4", max_token=8_192, lang=language
+    ):
+        raise Exception("The token limit has been exceeded.")
+
     api_spec_name = file_path.stem.split(".")[0]
 
     types = generate_types(types_json, language=language)
@@ -199,12 +216,18 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     types_file = sdk_module / f"types{file_extension}"
     types_file.write_text(types_code)
 
-    initial_code, history = generate_initial_code(api_spec, language=language, sdk_name=api_spec_name)
+    initial_code, history = generate_initial_code(
+        api_spec, language=language, sdk_name=api_spec_name
+    )
     history = history[:-1]
 
-    feedback = feedback_on_generated_code(initial_code, history, language=language, sdk_name=api_spec_name)
+    feedback = feedback_on_generated_code(
+        initial_code, history, language=language, sdk_name=api_spec_name
+    )
 
-    final_code = generate_final_code(feedback, history, language=language, sdk_name=api_spec_name)
+    final_code = generate_final_code(
+        feedback, history, language=language, sdk_name=api_spec_name
+    )
 
     code, file_extension = get_code_from_model_response(final_code)
 
