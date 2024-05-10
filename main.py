@@ -4,7 +4,7 @@ import traceback
 
 
 def main():
-    test_repo_path = Path(__file__).parent / "data" / "eden"
+    test_repo_path = Path(__file__).parent / "data" / "specification-batch"
     for file in test_repo_path.iterdir():
         if not file.is_file():
             print(f"Skipping {file.stem} because it is not a file.")

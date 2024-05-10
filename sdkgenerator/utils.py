@@ -164,8 +164,8 @@ def generate_llm_response(payload: dict, *, step: Step, sdk_name: str):
 
     try:
         response = requests.post(EDEN_AI_API, headers=headers, json=payload)
-        log_llm_response(payload, response.json(), step=step, sdk_name=sdk_name)
         response.raise_for_status()
+        log_llm_response(payload, response.json(), step=step, sdk_name=sdk_name)
         return response.json()
     except Exception as e:
         print(e)
