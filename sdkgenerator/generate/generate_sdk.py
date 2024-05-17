@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -225,6 +226,13 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
 
     api_spec_name = file_path.stem.split(".")[0]
 
+    # save the api spec file
+    if os.environ.get("ENV") == 'development':
+        api_spec_file = GENERATED_SDK_DIR / api_spec_name
+        api_spec_file.mkdir(exist_ok=True)
+        api_spec_file = api_spec_file / "api_spec.txt"
+        api_spec_file.write_text(api_spec)
+
     types = generate_types(types_json, language=language)
     types_code, file_extension = get_code_from_model_response(types)
 
@@ -245,8 +253,13 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
         initial_code, history, language=language, sdk_name=api_spec_name
     )
 
+    final_code_prev_history = [
+        {"role": "user", "message": "Write me an sdk for my api"},
+        {"role": "assistant", "message": f"Here is the generated code for the sdk: '''{initial_code}'''"},
+    ]
+
     final_code = generate_final_code(
-        feedback, history, language=language, sdk_name=api_spec_name
+        feedback, final_code_prev_history, language=language, sdk_name=api_spec_name
     )
 
     code, file_extension = get_code_from_model_response(final_code)

@@ -45,38 +45,52 @@ TEMPLATES: dict[Language, Template] = {
     "python": {
         "types": '''Write the types in python specified in the following json (inside triple quotes):
         """{types}"""
-        
+        ##IMPORTANT:
         - Use TypedDict for objects (not required fields should have NotRequired type).
         - Use Literals for enums.
         - Use other types as needed.
         - Ensure all types are defined.
-        - Ensure all types are correct.''',
+        - Ensure all types are correct.
+        - No yapping.''',
         "initial_code": '''Write a Python client sdk for the following API (inside triple quotes):
             """{api_spec}"""
-            the ref types are found in types.py file (from types import *).
-            Sdk must use the requests library to make the requests.
-            Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
-            The requests must handle authenticated request with a _make_authenticated_request\n.
-            Use json for the request body.
-            The methods must return The requests library Response object.
+           
+            - Sdk must use the requests library to make the requests.
+            - Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
+            - The requests must handle authenticated request with a _make_authenticated_request\n.
+            - Use json for the request body.
+            - The methods must return The requests library Response object.
         
-            Ensure implementing all the methods.\n
-            No yapping.''',
+            ##IMPORTANT:
+            - The ref types are found in types.py file (from types import *).
+            - Ensure implementing all the methods.\n
+            - No yapping.''',
         "feedback": '''Write feedback on the following generated code (inside triple quotes) context (types are in types.py):
             """{generated_code}"""
             The feedback should be constructive and point out any issues with the code.
             The feedback should be detailed and provide suggestions for improvement.
             The feedback should be written as if you are reviewing the code.
+            Include any suggestions for improvement.
             
-            Ensure all issues are addressed.''',
-        "final_code": '''Write the final version of the Python client sdk looking at this feedback (inside triple quotes):
+            ##RULES:
+            - Ensure all methods are implemented.
+            - Ensure all methods are correct.
+            - Ensure all types are correct.
+            - I want docstrings for all methods (a small oneline docstring).
+            
+            ##IMPORTANT:
+            - I will use this feedback to improve the code.
+            - Ensure all issues are addressed.
+            - Ensure all suggestions are implemented.''',
+        "final_code": '''with the old initial code and the feedback, write the final code, here's the feedback:
             """{feedback}"""
             
-            the types needed are in the types file (from types import *).
-            Ensure all issues are addressed.
-            Give the whole file.
-            The ref types are found in types.py file.
-            No yapping.''',
+            ##IMPORTANT:
+            - Rewrite the whole code.
+            - Docstrings must be small and oneline.
+            - Ensure all issues are addressed.
+            - Give the whole file!!.
+            - No yapping.''',
     }
 }
 

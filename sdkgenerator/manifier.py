@@ -1,6 +1,5 @@
 import json
 import yaml
-from collections import defaultdict
 from datetime import datetime, date
 import re
 import string
@@ -70,6 +69,12 @@ types_key_abbreviations = {
 
 methods_to_handle = {"get", "post", "patch", "delete", "put"}
 
+security_types_to_handle = {
+    "http",
+    "apiKey",
+    "openIdConnect",
+}
+
 
 def load_spec(file_path: Path):
     with open(file_path, "r", encoding="utf-8") as file:
@@ -118,7 +123,10 @@ def resolve_refs_types(openapi_spec, endpoint, types):
 
 def populate_keys(endpoint, path):
     # Gets the main keys from the specs
-    extracted_endpoint_data = {"path": path, "operationId": endpoint.get("operationId")}
+    extracted_endpoint_data = {
+        "path": path,
+        "operationId": endpoint.get("operationId"),
+    }
 
     if keys_to_keep["parameters"]:
         # Extract parameters from the endpoint and specify if they are required
@@ -231,32 +239,24 @@ def remove_unnecessary_keys(endpoint):
     return endpoint
 
 
-def flatten_endpoint(endpoint):
+def flatten(endpoint) -> dict:
     if not isinstance(endpoint, dict):
         return endpoint
 
-    flattened_endpoint = {}
-
-    # Define the set of keys to keep without unwrapping
-    keep_keys = {"responses", "default", "200"}
+    flattened_dict = {}
 
     for key, value in endpoint.items():
         if isinstance(value, dict):
-            # Check if the dictionary has any of the keys that need to be kept
-            if key in keep_keys:
-                # Keep the inner dictionaries but under the current key
-                flattened_endpoint[key] = flatten_endpoint(value)
-            else:
-                # Keep unwrapping single-key dictionaries
-                while isinstance(value, dict) and len(value) == 1:
-                    key, value = next(iter(value.items()))
-                # Recursively flatten the resulting value
-                flattened_endpoint[key] = flatten_endpoint(value)
+            # Keep unwrapping single-key dictionaries
+            while isinstance(value, dict) and len(value) == 1:
+                key, value = next(iter(value.items()))
+            # Recursively flatten the resulting value
+            flattened_dict[key] = flatten(value)
         else:
             # If the value is not a dictionary, keep it as is
-            flattened_endpoint[key] = value
+            flattened_dict[key] = value
 
-    return flattened_endpoint
+    return flattened_dict
 
 
 def abbreviate(data, abbreviations):
@@ -311,7 +311,9 @@ def write_dict_to_text(data):
             # Depending on the data type, write the content
             if isinstance(value, (dict, list)):
                 # Append the key followed by its sub-elements
-                formatted_text_parts.append(key)
+                formatted_text_parts.append(
+                    key
+                )
                 formatted_text_parts.append(write_dict_to_text(value))
             else:
                 # Remove HTML tags and punctuation from value
@@ -337,21 +339,27 @@ def write_dict_to_text(data):
 
 def minify(spec):
     server_url = spec["servers"][0]["url"]
-    tag_summary_dict = {}
     types = {}
+    defined_security_schemes = spec.get("components", {}).get("securitySchemes", {})
+    security_schemes = {}
+    security = spec.get("security", {})
+    api_security_scopes = {}
 
-    if tags := spec.get("tags"):
-        for tag in tags:
-            # Extract name and description
-            name = tag.get("name")
-            description = tag.get("description")
-            # Add to the dictionary
-            if name and description:
-                tag_summary_dict[name] = description
+    # Process securitySchemes
+    if defined_security_schemes:
+        for scheme_name, scheme in defined_security_schemes.items():
+            if scheme["type"] in security_types_to_handle:
+                current_security = abbreviate(scheme, key_abbreviations)
+                current_security = flatten(current_security)
+                security_schemes[scheme_name] = current_security
 
-    # Dictionary with each unique tag as a key, and the value is a list of finalized endpoints with that tag
-    endpoints_by_tag = defaultdict(list)
-    endpoints_by_tag_metadata = defaultdict(list)
+    # Process security
+    if security:
+        for scheme, scopes in security.items():
+            api_security_scopes[scheme] = scopes
+
+    # List to store endpoints
+    endpoints_with_metadata = []
     for path, methods in spec["paths"].items():
         for method, endpoint in methods.items():
             if method not in methods_to_handle or (
@@ -376,7 +384,7 @@ def minify(spec):
             extracted_endpoint_data = remove_unnecessary_keys(extracted_endpoint_data)
 
             # Flattens to remove nested objects where the dict has only one key
-            extracted_endpoint_data = flatten_endpoint(extracted_endpoint_data)
+            extracted_endpoint_data = flatten(extracted_endpoint_data)
 
             # Abbreviate keys
             extracted_endpoint_data = abbreviate(
@@ -389,60 +397,86 @@ def minify(spec):
             else:
                 tags = [tag for tag in tags]
 
+            operation_id = endpoint.get("operationId", "")
+
             # For each tag, add the finalized endpoint to the corresponding list in the dictionary
-            for tag in tags:
-                endpoints_by_tag[tag].append(extracted_endpoint_data)
+            # for tag in tags:
+            #     endpoints_by_tag[tag].append(extracted_endpoint_data)
+            #
+            #     operation_id = endpoint.get("operationId", "")
+            #
+            #     content_string = write_dict_to_text(extracted_endpoint_data)
+            #
+            #     metadata = {
+            #         "tag": tag,
+            #         "operation_id": operation_id,
+            #         "server_url": f"{server_url}{path}",
+            #     }
+            #     endpoint_dict = {"metadata": metadata, "content": content_string}
+            #
+            #     endpoints_by_tag_metadata[tag].append(endpoint_dict)
 
-                operation_id = endpoint.get("operationId", "")
+            content_string = write_dict_to_text(extracted_endpoint_data)
 
-                content_string = write_dict_to_text(extracted_endpoint_data)
+            metadata = {
+                "security": endpoint.get("security"),
+                "method": method,
+                "tags": tags,
+                "operation_id": operation_id,
+            }
+            endpoint_dict = {"metadata": metadata, "content": content_string}
 
-                metadata = {
-                    "tag": tag,
-                    "operation_id": operation_id,
-                    "server_url": f"{server_url}{path}",
-                }
-                endpoint_dict = {"metadata": metadata, "content": content_string}
+            endpoints_with_metadata.append(endpoint_dict)
 
-                endpoints_by_tag_metadata[tag].append(endpoint_dict)
-
-    # Sort alphabetically by tag name
-    sorted_items = sorted(endpoints_by_tag.items())
-    endpoints_by_tag = defaultdict(list, sorted_items)
-    # Sort alphabetically by tag name
-    sorted_items = sorted(endpoints_by_tag_metadata.items())
-    endpoints_by_tag_metadata = defaultdict(list, sorted_items)
-
-    # In the case tag_summary_dict is empty or missing tags this adds them here
-    for tag in endpoints_by_tag.keys():
-        # If the tag is not already in tag_summary_dict, add it with an empty description
-        if tag not in tag_summary_dict:
-            tag_summary_dict[tag] = ""
-
-    return endpoints_by_tag_metadata, tag_summary_dict, server_url, types
+    return endpoints_with_metadata, server_url, types, api_security_scopes, security_schemes
 
 
 def extract_information(spec):
-    endpoints_by_tag_metadata, tag_summary_dict_output, server_url, types = minify(spec)
-    output_string = f"base_url:{server_url}!\n"
-    for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
-        # If we're adding tag descriptions, and they exist they're added here.
-        tag_description = tag_summary_dict_output.get(tag)
-        if keys_to_keep["tag_descriptions"] and tag_description:
-            tag_description = write_dict_to_text(tag_summary_dict_output.get(tag))
-            tag_string = f"{tag}! {tag_description}!\n"
-        else:
-            tag_string = f"{tag}!\n"
+    endpoints_with_metadata, server_url, types, api_security_scopes, security_schemes = minify(spec)
+    output_string = f"##IMPORTANT: base_url:{server_url}!\n---\n"
+    # for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
+    #     # If we're adding tag descriptions, and they exist they're added here.
+    #     tag_description = tag_summary_dict_output.get(tag)
+    #     if keys_to_keep["tag_descriptions"] and tag_description:
+    #         tag_description = write_dict_to_text(tag_summary_dict_output.get(tag))
+    #         tag_string = f"{tag}! {tag_description}!\n"
+    #     else:
+    #         tag_string = f"{tag}!\n"
+    #
+    #     tag_string += "---\n"
+    #
+    #     for endpoint in endpoints_with_tag:
+    #         # operation_id = endpoint.get("metadata", "").get("operation_id", "")
+    #         # tag_string += f"{operation_id}!"
+    #         tag_string += f"{endpoint.get('content')}\n"
+    #         tag_string += "---\n"
+    #
+    #     output_string += f"{tag_string}\n"
 
-        tag_string += "---\n"
+    output_string += f"##SECURITY SCHEMES\n"
+    for scheme_name, schema_object in security_schemes.items():
+        output_string += f"-{scheme_name}\n"
+        for key, value in schema_object.items():
+            output_string += f"{key}: {value}\n"
 
-        for endpoint in endpoints_with_tag:
-            # operation_id = endpoint.get("metadata", "").get("operation_id", "")
-            # tag_string += f"{operation_id}!"
-            tag_string += f"{endpoint.get('content')}\n"
-            tag_string += "---\n"
+    output_string += f"---\n##SECURITY SCOPES\n"
+    for scheme, scopes in api_security_scopes.items():
+        output_string += f"{scheme}: {scopes}\n"
 
-        output_string += f"{tag_string}\n"
+    output_string += f"---\n##ENDPOINTS\n---\n"
+
+    for endpoint in endpoints_with_metadata:
+        metadata = endpoint.get("metadata")
+        content = endpoint.get("content")
+
+        output_string += f"-method:{metadata.get('method')}\n"
+        security = metadata.get("security")
+        if security:
+            output_string += f"-security\n"
+            for schema in security:
+                for name, scopes in schema.items():
+                    output_string += f"{name}: {scopes}\n"
+        output_string += f"---\n{content}\n---\n"
 
     return output_string, types
 
