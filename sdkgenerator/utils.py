@@ -37,7 +37,6 @@ class Template(TypedDict):
     initial_code: str
     feedback: str
     final_code: str
-    # test: str
 
 
 Step = Literal["types", "initial_code", "feedback", "final_code"]
@@ -51,8 +50,7 @@ TEMPLATES: dict[Language, Template] = {
         - Use Literals for enums.
         - Use other types as needed.
         - Ensure all types are defined.
-        - Ensure all types are correct.
-        ''',
+        - Ensure all types are correct.''',
         "initial_code": '''Write a Python client sdk for the following API (inside triple quotes):
             """{api_spec}"""
             the ref types are found in types.py file (from types import *).
@@ -63,16 +61,14 @@ TEMPLATES: dict[Language, Template] = {
             The methods must return The requests library Response object.
         
             Ensure implementing all the methods.\n
-            No yapping.
-        ''',
+            No yapping.''',
         "feedback": '''Write feedback on the following generated code (inside triple quotes) context (types are in types.py):
             """{generated_code}"""
             The feedback should be constructive and point out any issues with the code.
             The feedback should be detailed and provide suggestions for improvement.
             The feedback should be written as if you are reviewing the code.
             
-            Ensure all issues are addressed.
-        ''',
+            Ensure all issues are addressed.''',
         "final_code": '''Write the final version of the Python client sdk looking at this feedback (inside triple quotes):
             """{feedback}"""
             
@@ -81,17 +77,6 @@ TEMPLATES: dict[Language, Template] = {
             Give the whole file.
             The ref types are found in types.py file.
             No yapping.''',
-        # TODO: Implement test template
-        # "test": """
-        #     Write unit tests for the following python client sdk class (inside triple quotes):
-        #     """{sdk}"""
-        #     Use unittest and mock.patch to mock the requests library.
-        #     The sdk class must be imported from the sdk file named {sdk_file_name} found in the same directory as the test file.
-        #     Write a test for each method in the sdk class.
-        #
-        #     Ensure all methods are tested.
-        #     No yapping.
-        # """,
     }
 }
 

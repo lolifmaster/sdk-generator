@@ -10,18 +10,18 @@ from sdkgenerator.utils import (
     generate_llm_response,
     TEMPLATES,
     is_all_steps_within_limit,
-    validate_openapi_spec
+    validate_openapi_spec,
 )
 
 load_dotenv()
 
 
-def generate_types(types_json: Path, *, language: Language = "python") -> str:
+def generate_types(types_json: str, *, language: Language = "python") -> str:
     """
     Generate types for the API spec and return it as a string.
 
     Args:
-    types_file_path: The types file path.
+    types_file_path: The types.
     language: The language of the generated code. Default is "python".
 
     Returns:
@@ -53,7 +53,7 @@ def generate_types(types_json: Path, *, language: Language = "python") -> str:
 
 
 def generate_initial_code(
-    api_spec: str, *types: str, sdk_name: str, language: Language = "python"
+    api_spec: str, types: str, sdk_name: str, language: Language = "python"
 ) -> tuple[str, list]:
     """
     Generate code for the API spec and return it as a string.
@@ -131,7 +131,7 @@ def feedback_on_generated_code(
             ),
             "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
             "previous_history": previous_history,
-            "temperature": 0.3,
+            "temperature": 0.2,
             "max_tokens": 2000,
             "settings": {"openai": "gpt-4"},
         },
@@ -193,18 +193,35 @@ def generate_final_code(
     return response["openai"]["generated_text"]
 
 
-def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
+def load_openapi_spec(
+    file_path: Path, *, language: Language = "python"
+) -> tuple[str, str]:
     """
-    Generate full SDK for the API spec and return the path to the generated SDK file.
+    Load, validate and process the OpenAPI spec file.
+
+    Args:
+    file_path: The file path to the OpenAPI spec.
+
+    Returns:
+        tuple[str, str]: The OpenAPI spec as a string, and the types as a string.
+
     """
     validate_openapi_spec(file_path)
-
     api_spec, types_json = process_file(file_path)
 
     if not is_all_steps_within_limit(
         api_spec, types_json, model="gpt-4", max_token=8_192, lang=language
     ):
         raise Exception("The token limit has been exceeded.")
+
+    return api_spec, types_json
+
+
+def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
+    """
+    Generate full SDK for the API spec and return the path to the generated SDK file.
+    """
+    api_spec, types_json = load_openapi_spec(file_path, language=language)
 
     api_spec_name = file_path.stem.split(".")[0]
 
@@ -220,7 +237,7 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     types_file.write_text(types_code)
 
     initial_code, history = generate_initial_code(
-        api_spec, language=language, sdk_name=api_spec_name
+        api_spec, types=types, language=language, sdk_name=api_spec_name
     )
     history = history[:-1]
 
