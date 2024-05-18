@@ -23,7 +23,7 @@ EDEN_AI_API = "https://api.edenai.run/v2/text/chat"
 Language = Literal["python"]
 
 # Precompile the regular expression for better performance
-code_block_pattern = re.compile(r"```(\w+)\n([\s\S]+?)\n```")
+code_block_pattern = re.compile(r"```(\w+)([\s\S]+?)```")
 
 language_to_extension = {
     "python": ".py",
@@ -43,7 +43,7 @@ Step = Literal["types", "initial_code", "feedback", "final_code"]
 
 TEMPLATES: dict[Language, Template] = {
     "python": {
-        "types": '''Write the types in python specified in the following json (inside triple quotes):
+        "types": '''Write the types in python specified in the following openapi specification types (inside triple quotes):
         """{types}"""
         ##IMPORTANT:
         - Use TypedDict for objects (not required fields should have NotRequired type).
@@ -51,7 +51,8 @@ TEMPLATES: dict[Language, Template] = {
         - Use other types as needed.
         - Ensure all types are defined.
         - Ensure all types are correct.
-        - No yapping.''',
+        - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
+        - No yapping just code!''',
         "initial_code": '''Write a Python client sdk for the following API (inside triple quotes):
             """{api_spec}"""
            
@@ -63,8 +64,10 @@ TEMPLATES: dict[Language, Template] = {
         
             ##IMPORTANT:
             - The ref types are found in types.py file (from types import *).
-            - Ensure implementing all the methods.\n
-            - No yapping.''',
+            - Ensure implementing all the methods.
+            - Dont give usage examples.
+            - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
+            - No yapping just code!''',
         "feedback": '''Write feedback on the following generated code (inside triple quotes) context (types are in types.py):
             """{generated_code}"""
             The feedback should be constructive and point out any issues with the code.
@@ -90,37 +93,36 @@ TEMPLATES: dict[Language, Template] = {
             - Rewrite the whole code.
             - Docstrings must be small and oneline.
             - Ensure all issues are addressed.
+            - Dont give usage examples.
             - Give the whole file!!.
-            - No yapping.''',
+            - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
+            - No yapping just code!''',
     }
 }
 
 
-def get_code_from_model_response(response):
+def get_code_from_model_response(response) -> tuple[str, str]:
     """
     Extracts the code from the response and returns it along with the file extension for the code.
 
     :param response: The response from the model.
     :type response: str
     :return: The generated code and its file extension.
-    :rtype: tuple (str or None, str or None)
+    :rtype: tuple (str, str)
     """
     if response is None or not isinstance(response, str):
-        return None, None
+        raise ValueError("Invalid response. Response must be a non-empty string.")
 
     code_blocks = code_block_pattern.findall(response)
 
     if not code_blocks:
-        raise ValueError("No code blocks found in the response")
-
-    if len(set(language_to_extension.get(block[0].lower(), ".txt") for block in code_blocks)) > 1:
-        raise ValueError("Code blocks are in different languages")
+        raise ValueError("No code blocks found in the response.")
 
     language_identifier, _ = code_blocks[0]
 
     file_extension = language_to_extension.get(language_identifier.lower(), ".txt")
 
-    code = "\n".join([block[1] for block in code_blocks]) if code_blocks else None
+    code = "".join([block[1] for block in code_blocks]).strip()
 
     return code, file_extension
 

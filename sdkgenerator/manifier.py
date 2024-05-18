@@ -57,7 +57,7 @@ types_key_abbreviations = {
     "number": "num",
     "object": "obj",
     "boolean": "bool",
-    "array": "arr",
+    "array": "array",
     "integer": "int",
     "default": "def",
     "required": "req",

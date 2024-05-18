@@ -12,13 +12,13 @@ from sdkgenerator.utils import (
     generate_llm_response,
     TEMPLATES,
     is_all_steps_within_limit,
-    validate_openapi_spec,
+    # validate_openapi_spec,
 )
 
 load_dotenv()
 
 
-def generate_types(types_json: str, *, language: Language = "python") -> str:
+def generate_types(types_json: str, *, language: Language = "python") -> tuple[str, str]:
     """
     Generate types for the API spec and return it as a string.
 
@@ -27,7 +27,7 @@ def generate_types(types_json: str, *, language: Language = "python") -> str:
     language: The language of the generated code. Default is "python".
 
     Returns:
-        str: The generated types for the API spec.
+        tuple[str, str]: The generated types for the API spec, and the file extension.
     """
 
     print("Generating types")
@@ -38,7 +38,7 @@ def generate_types(types_json: str, *, language: Language = "python") -> str:
             "chatbot_global_action": f"You are a {language} developer, and you are writing types for an API",
             "previous_history": [],
             "temperature": 0.0,
-            "max_tokens": 5000,
+            "max_tokens": 4000,
             "settings": {"openai": "gpt-4"},
         },
         step="types",
@@ -51,11 +51,11 @@ def generate_types(types_json: str, *, language: Language = "python") -> str:
     if "error" in response["openai"]:
         raise Exception(response["openai"]["error"])
 
-    return response["openai"]["generated_text"]
+    return get_code_from_model_response(response["openai"]["generated_text"])
 
 
 def generate_initial_code(
-    api_spec: str, types: str, sdk_name: str, language: Language = "python"
+        api_spec: str, types: str, sdk_name: str, language: Language = "python"
 ) -> tuple[str, list]:
     """
     Generate code for the API spec and return it as a string.
@@ -83,7 +83,7 @@ def generate_initial_code(
                 },
             ],
             "temperature": 0.0,
-            "max_tokens": 5000,
+            "max_tokens": 4000,
             "settings": {"openai": "gpt-4"},
         },
         step="initial_code",
@@ -99,17 +99,17 @@ def generate_initial_code(
     code, _ = get_code_from_model_response(response["openai"]["generated_text"])
 
     if not code:
-        raise Exception("The generated code is empty.")
+        raise Exception("The generated initial code is empty.")
 
     return code, response["openai"]["message"]
 
 
 def feedback_on_generated_code(
-    generated_code: str,
-    previous_history: list,
-    *,
-    sdk_name: str,
-    language: Language = "python",
+        generated_code: str,
+        previous_history: list,
+        *,
+        sdk_name: str,
+        language: Language = "python",
 ) -> str:
     """
     Generate Feedback on the generated code for the API spec and return it as a string.
@@ -151,12 +151,12 @@ def feedback_on_generated_code(
 
 
 def generate_final_code(
-    feedback: str,
-    previous_history: list,
-    *,
-    sdk_name: str,
-    language: Language = "python",
-) -> str:
+        feedback: str,
+        previous_history: list,
+        *,
+        sdk_name: str,
+        language: Language = "python",
+) -> tuple[str, str]:
     """
     Generate final code for the API spec and return it as a string.
 
@@ -167,7 +167,7 @@ def generate_final_code(
     sdk_name: The name of the SDK.
 
     Returns:
-    str: The final code for the API spec.
+        tuple[str, str]: The final code for the API spec, and the file extension.
     """
 
     print("Generating final code")
@@ -178,8 +178,8 @@ def generate_final_code(
             "text": TEMPLATES[language]["final_code"].format(feedback=feedback),
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,
-            "temperature": 0.2,
-            "max_tokens": 5000,
+            "temperature": 0.1,
+            "max_tokens": 4000,
             "settings": {"openai": "gpt-4"},
         },
         step="final_code",
@@ -192,11 +192,11 @@ def generate_final_code(
     if "error" in response["openai"]:
         raise Exception(response["openai"]["error"])
 
-    return response["openai"]["generated_text"]
+    return get_code_from_model_response(response["openai"]["generated_text"])
 
 
 def load_openapi_spec(
-    file_path: Path, *, language: Language = "python"
+        file_path: Path, *, language: Language = "python"
 ) -> tuple[str, dict]:
     """
     Load, validate and process the OpenAPI spec file.
@@ -240,8 +240,7 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
             json.dumps(types_json, indent=4)
         )
 
-    types = generate_types(str(types_json), language=language)
-    types_code, file_extension = get_code_from_model_response(types)
+    types_code, file_extension = generate_types(str(types_json), language=language)
 
     # create a module for the generated sdk
     sdk_module = GENERATED_SDK_DIR / api_spec_name
@@ -252,11 +251,9 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     types_file.write_text(types_code)
 
     initial_code, history = generate_initial_code(
-        api_spec, types=types, language=language, sdk_name=api_spec_name
+        api_spec, types=types_code, language=language, sdk_name=api_spec_name
     )
 
-    # check if the generated code is empty (maybe will create a sup function later but for now it works)
-    get_code_from_model_response(initial_code)
     history = history[:-1]
 
     feedback = feedback_on_generated_code(
@@ -268,11 +265,9 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
         {"role": "assistant", "message": f"Here is the generated code for the sdk: '''{initial_code}'''"},
     ]
 
-    final_code = generate_final_code(
+    code, file_extension = generate_final_code(
         feedback, final_code_prev_history, language=language, sdk_name=api_spec_name
     )
-
-    code, file_extension = get_code_from_model_response(final_code)
 
     # create the sdk file
     sdk_output_file = sdk_module / f"{api_spec_name}{file_extension}"

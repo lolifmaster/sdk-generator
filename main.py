@@ -14,6 +14,8 @@ def main():
             print(f"Skipping {file.stem} because it is not a JSON or YAML file.")
             continue
 
+        print(f"Generating SDK for {file.stem}...")
+
         try:
             generate_sdk(file, language="python")
         except Exception as e:
