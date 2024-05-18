@@ -23,7 +23,7 @@ EDEN_AI_API = "https://api.edenai.run/v2/text/chat"
 Language = Literal["python"]
 
 # Precompile the regular expression for better performance
-code_block_pattern = re.compile(r"```(\w+)([\s\S]+?)```")
+code_block_pattern = re.compile(r"```(\w+)\n([\s\S]+?)\n```")
 
 language_to_extension = {
     "python": ".py",
@@ -86,6 +86,7 @@ TEMPLATES: dict[Language, Template] = {
             """{feedback}"""
             
             ##IMPORTANT:
+            - The ref types are found in types.py file (from types import *).
             - Rewrite the whole code.
             - Docstrings must be small and oneline.
             - Ensure all issues are addressed.
@@ -110,13 +111,16 @@ def get_code_from_model_response(response):
     code_blocks = code_block_pattern.findall(response)
 
     if not code_blocks:
-        return None, None
+        raise ValueError("No code blocks found in the response")
+
+    if len(set(language_to_extension.get(block[0].lower(), ".txt") for block in code_blocks)) > 1:
+        raise ValueError("Code blocks are in different languages")
 
     language_identifier, _ = code_blocks[0]
 
     file_extension = language_to_extension.get(language_identifier.lower(), ".txt")
 
-    code = "".join([block[1] for block in code_blocks])
+    code = "\n".join([block[1] for block in code_blocks]) if code_blocks else None
 
     return code, file_extension
 

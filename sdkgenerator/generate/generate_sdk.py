@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 
@@ -196,7 +197,7 @@ def generate_final_code(
 
 def load_openapi_spec(
     file_path: Path, *, language: Language = "python"
-) -> tuple[str, str]:
+) -> tuple[str, dict]:
     """
     Load, validate and process the OpenAPI spec file.
 
@@ -207,7 +208,7 @@ def load_openapi_spec(
         tuple[str, str]: The OpenAPI spec as a string, and the types as a string.
 
     """
-    validate_openapi_spec(file_path)
+    # validate_openapi_spec(file_path)
     api_spec, types_json = process_file(file_path)
 
     if not is_all_steps_within_limit(
@@ -226,14 +227,20 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
 
     api_spec_name = file_path.stem.split(".")[0]
 
-    # save the api spec file
+    # save the api spec and types to a file
     if os.environ.get("ENV") == 'development':
         api_spec_file = GENERATED_SDK_DIR / api_spec_name
         api_spec_file.mkdir(exist_ok=True)
         api_spec_file = api_spec_file / "api_spec.txt"
         api_spec_file.write_text(api_spec)
 
-    types = generate_types(types_json, language=language)
+        types_file = GENERATED_SDK_DIR / api_spec_name
+        types_file = types_file / "types.json"
+        types_file.write_text(
+            json.dumps(types_json, indent=4)
+        )
+
+    types = generate_types(str(types_json), language=language)
     types_code, file_extension = get_code_from_model_response(types)
 
     # create a module for the generated sdk
@@ -247,6 +254,9 @@ def generate_sdk(file_path: Path, *, language: Language = "python") -> Path:
     initial_code, history = generate_initial_code(
         api_spec, types=types, language=language, sdk_name=api_spec_name
     )
+
+    # check if the generated code is empty (maybe will create a sup function later but for now it works)
+    get_code_from_model_response(initial_code)
     history = history[:-1]
 
     feedback = feedback_on_generated_code(

@@ -342,7 +342,7 @@ def minify(spec):
     types = {}
     defined_security_schemes = spec.get("components", {}).get("securitySchemes", {})
     security_schemes = {}
-    security = spec.get("security", {})
+    security: list[dict[str, list]] = spec.get("security", [])
     api_security_scopes = {}
 
     # Process securitySchemes
@@ -355,8 +355,9 @@ def minify(spec):
 
     # Process security
     if security:
-        for scheme, scopes in security.items():
-            api_security_scopes[scheme] = scopes
+        for item in security:
+            for scheme, scopes in item.items():
+                api_security_scopes[scheme] = scopes
 
     # List to store endpoints
     endpoints_with_metadata = []
