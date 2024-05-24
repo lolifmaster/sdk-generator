@@ -1,4 +1,6 @@
 import json
+from typing import Union
+
 import yaml
 from datetime import datetime, date
 import re
@@ -311,9 +313,7 @@ def write_dict_to_text(data):
             # Depending on the data type, write the content
             if isinstance(value, (dict, list)):
                 # Append the key followed by its sub-elements
-                formatted_text_parts.append(
-                    key
-                )
+                formatted_text_parts.append(key)
                 formatted_text_parts.append(write_dict_to_text(value))
             else:
                 # Remove HTML tags and punctuation from value
@@ -429,11 +429,23 @@ def minify(spec):
 
             endpoints_with_metadata.append(endpoint_dict)
 
-    return endpoints_with_metadata, server_url, types, api_security_scopes, security_schemes
+    return (
+        endpoints_with_metadata,
+        server_url,
+        types,
+        api_security_scopes,
+        security_schemes,
+    )
 
 
 def extract_information(spec):
-    endpoints_with_metadata, server_url, types, api_security_scopes, security_schemes = minify(spec)
+    (
+        endpoints_with_metadata,
+        server_url,
+        types,
+        api_security_scopes,
+        security_schemes,
+    ) = minify(spec)
     output_string = f"##IMPORTANT: base_url:{server_url}!\n---\n"
     # for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
     #     # If we're adding tag descriptions, and they exist they're added here.
@@ -482,7 +494,7 @@ def extract_information(spec):
     return output_string, types
 
 
-def process_file(file_path: Path):
+def process_file(file_path: Union[str, Path]):
     """
     Process an openapi specification file and save the minified spec to a text file.
     args: Tuple containing the file path (json or yaml), filename and target directory

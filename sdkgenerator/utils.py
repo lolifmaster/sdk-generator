@@ -39,6 +39,12 @@ class Template(TypedDict):
     final_code: str
 
 
+class TemplateWithoutTypes(TypedDict):
+    initial_code: str
+    feedback: str
+    final_code: str
+
+
 Step = Literal["types", "initial_code", "feedback", "final_code"]
 
 TEMPLATES: dict[Language, Template] = {
@@ -68,7 +74,55 @@ TEMPLATES: dict[Language, Template] = {
             - Dont give usage examples.
             - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
             - No yapping just code!''',
-        "feedback": '''Write feedback on the following generated code (inside triple quotes) context (types are in types.py):
+        "feedback": '''Write feedback on the following generated code:
+            code: """{generated_code}"""
+            The feedback should be constructive and point out any issues with the code.
+            The feedback should be detailed and provide suggestions for improvement.
+            The feedback should be written as if you are reviewing the code.
+            Include any suggestions for improvement.
+            
+            ##RULES:
+            - Ensure all methods are implemented.
+            - Ensure all methods are correct.
+            - Ensure all types are correct.
+            - I want docstrings for all methods (a small oneline docstring).
+            
+            ##IMPORTANT:
+            - I will use this feedback to improve the code.
+            - Ensure all issues are addressed.
+            - Ensure all suggestions are implemented.''',
+        "final_code": '''with the old initial code and the feedback, write the final code,
+            feedback: """{feedback}"""
+            
+            ##IMPORTANT:
+            - The ref types are found in types.py file (from types import *).
+            - Rewrite the whole code.
+            - Docstrings must be small and oneline.
+            - Ensure all issues are addressed.
+            - Dont give usage examples.
+            - Give the whole file!!.
+            - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
+            - No yapping just code!''',
+    }
+}
+
+TEMPLATES_WITHOUT_TYPES: dict[Language, TemplateWithoutTypes] = {
+    "python": {
+        "initial_code": '''Write a Python client sdk for the following API
+            specs: """{api_spec}"""
+           
+            - Sdk must use the requests library to make the requests.
+            - Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
+            - The requests must handle authenticated request with a _make_authenticated_request\n.
+            - Use json for the request body.
+            - The methods must return The requests library Response object.
+        
+            ##IMPORTANT:
+            - Ensure implementing all the methods.
+            - Dont give usage examples.
+            - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
+            - No yapping just code!''',
+        "feedback": '''Write feedback on the following generated code (inside triple quotes) context:
             """{generated_code}"""
             The feedback should be constructive and point out any issues with the code.
             The feedback should be detailed and provide suggestions for improvement.
@@ -87,16 +141,15 @@ TEMPLATES: dict[Language, Template] = {
             - Ensure all suggestions are implemented.''',
         "final_code": '''with the old initial code and the feedback, write the final code, here's the feedback:
             """{feedback}"""
-            
-            ##IMPORTANT:
-            - The ref types are found in types.py file (from types import *).
-            - Rewrite the whole code.
-            - Docstrings must be small and oneline.
-            - Ensure all issues are addressed.
-            - Dont give usage examples.
-            - Give the whole file!!.
-            - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
-            - No yapping just code!''',
+                
+                ##IMPORTANT:
+                - Rewrite the whole code.
+                - Docstrings must be small and oneline.
+                - Ensure all issues are addressed.
+                - Dont give usage examples.
+                - Give the whole file!!.
+                - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
+                - No yapping just code!''',
     }
 }
 
@@ -245,7 +298,7 @@ def is_all_steps_within_limit(
     :param open_specs: The openapi specs.
     :type open_specs: str
     :param types_json: The types json.
-    :type types_json: str
+    :type types_json: dict
     :param model: The model to use for tokenization.
     :type model: str
     :param max_token: The maximum number of tokens allowed.
