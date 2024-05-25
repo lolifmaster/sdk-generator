@@ -311,12 +311,11 @@ def is_all_steps_within_limit(
     :rtype: bool
     """
 
-    steps = []
-    types_prompt = TEMPLATES[lang]["types"].format(types=types_json)
-    initial_code_prompt = TEMPLATES[lang]["initial_code"].format(api_spec=open_specs)
-
-    steps.append(types_prompt)
-    steps.append(initial_code_prompt)
+    steps = [
+        TEMPLATES[lang]["types"].format(types=types_json),
+        TEMPLATES[lang]["initial_code"].format(api_spec=open_specs),
+        # no need to check for other steps because we already have set the limit in the request
+    ]
 
     return all(
         check_step_count(step, model=model, max_token=max_token) for step in steps
