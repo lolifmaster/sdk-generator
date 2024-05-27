@@ -372,11 +372,15 @@ def minify(spec):
             extracted_endpoint_data = populate_keys(endpoint, path)
 
             # Get types from schemas
-            if keys_to_keep["schemas"] and "requestBody" in extracted_endpoint_data:
-                resolve_refs_types(
-                    spec, extracted_endpoint_data.get("requestBody"), types
-                )
-                types = abbreviate(types, types_key_abbreviations)
+            if keys_to_keep["schemas"]:
+                if request_body := extracted_endpoint_data.get("requestBody"):
+                    resolve_refs_types(spec, request_body, types)
+
+                if parameters := extracted_endpoint_data.get("parameters"):
+                    resolve_refs_types(spec, parameters, types)
+
+                if types:
+                    types = abbreviate(types, types_key_abbreviations)
 
             # If key == None or key == ''
             extracted_endpoint_data = remove_empty_keys(extracted_endpoint_data)
@@ -446,7 +450,7 @@ def extract_information(spec):
         api_security_scopes,
         security_schemes,
     ) = minify(spec)
-    output_string = f"##IMPORTANT: base_url:{server_url}!\n---\n"
+    output_string = f"##IMPORTANT: base_url:{server_url}\n---\n"
     # for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
     #     # If we're adding tag descriptions, and they exist they're added here.
     #     tag_description = tag_summary_dict_output.get(tag)
@@ -466,15 +470,17 @@ def extract_information(spec):
     #
     #     output_string += f"{tag_string}\n"
 
-    output_string += f"##SECURITY SCHEMES\n"
-    for scheme_name, schema_object in security_schemes.items():
-        output_string += f"-{scheme_name}\n"
-        for key, value in schema_object.items():
-            output_string += f"{key}: {value}\n"
+    if security_schemes:
+        output_string += f"##SECURITY SCHEMES\n"
+        for scheme_name, schema_object in security_schemes.items():
+            output_string += f"-{scheme_name}\n"
+            for key, value in schema_object.items():
+                output_string += f"{key}: {value}\n"
 
-    output_string += f"---\n##SECURITY SCOPES\n"
-    for scheme, scopes in api_security_scopes.items():
-        output_string += f"{scheme}: {scopes}\n"
+    if api_security_scopes:
+        output_string += f"---\n##SECURITY SCOPES\n"
+        for scheme, scopes in api_security_scopes.items():
+            output_string += f"{scheme}: {scopes}\n"
 
     output_string += f"---\n##ENDPOINTS\n---\n"
 
@@ -489,7 +495,7 @@ def extract_information(spec):
             for schema in security:
                 for name, scopes in schema.items():
                     output_string += f"{name}: {scopes}\n"
-        output_string += f"---\n{content}\n---\n"
+        output_string += f"{content}\n---\n"
 
     return output_string, types
 
