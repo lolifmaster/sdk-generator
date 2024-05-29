@@ -42,7 +42,7 @@ class KonfigScraper:
             "a",
             {
                 "title": lambda x: x
-                                   and x.lower() in {"openapi.yaml", "openapi.yml", "openapi.json"}
+                and x.lower() in {"openapi.yaml", "openapi.yml", "openapi.json"}
             },
         )
 
@@ -77,7 +77,7 @@ class KonfigScraper:
     def save_cache(self):
         for file_url, file_info in self.cache.items():
             with open(
-                    self.output_path / f"{file_info['file_name']}.cache", "wb"
+                self.output_path / f"{file_info['file_name']}.cache", "wb"
             ) as file:
                 file.write(file_info["file_response"].content)
 
@@ -88,7 +88,7 @@ class KonfigScraper:
             )
             for file_url, file_info in self.cache.items():
                 with open(
-                        self.output_path / f"{file_info['file_name']}.cache", "wb"
+                    self.output_path / f"{file_info['file_name']}.cache", "wb"
                 ) as file:
                     file.write(file_info["file_response"].content)
             return

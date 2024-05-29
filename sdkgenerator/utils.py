@@ -61,19 +61,21 @@ TEMPLATES: dict[Language, Template] = {
         - No yapping just code!''',
         "initial_code": '''Write a Python client sdk for the following API (inside triple quotes):
             """{api_spec}"""
-           
-            - Sdk must use the requests library to make the requests.
-            - Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.
-            - The requests must handle authenticated request with a _make_authenticated_request\n.
-            - Use json for the request body.
-            - The methods must return The requests library Response object.
+            
+            
+            ##RULES:
+            {rules}
         
             ##IMPORTANT:
             - The ref types are found in types.py file (from types import *).
             - Ensure implementing all the methods.
             - Dont give usage examples.
             - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
-            - No yapping just code!''',
+            - No yapping just code!
+            
+            import requests
+            from types import *
+            ''',
         "feedback": '''Write feedback on the following generated code:
             code: """{generated_code}"""
             The feedback should be constructive and point out any issues with the code.
@@ -82,27 +84,39 @@ TEMPLATES: dict[Language, Template] = {
             Include any suggestions for improvement.
             
             ##RULES:
+            {rules}
+            
+            ##IMPORTANT:
             - Ensure all methods are implemented.
             - Ensure all methods are correct.
             - Ensure all types are correct.
-            - I want docstrings for all methods (a small oneline docstring).
-            
-            ##IMPORTANT:
+            - I want docstrings for all methods (a small oneline docstring)
             - I will use this feedback to improve the code.
             - Ensure all issues are addressed.
             - Ensure all suggestions are implemented.''',
         "final_code": '''with the old initial code and the feedback, write the final code,
             feedback: """{feedback}"""
             
+            ##RULES:
+            {rules}
+            
             ##IMPORTANT:
+            - Ensure all methods are implemented.
+            - Ensure all methods are correct.
+            - Ensure all types are correct.
+            - I want docstrings for all methods (a small oneline docstring)
             - The ref types are found in types.py file (from types import *).
             - Rewrite the whole code.
             - Docstrings must be small and oneline.
             - Ensure all issues are addressed.
             - Dont give usage examples.
-            - Give the whole file!!.
             - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
-            - No yapping just code!''',
+            - give whole new file!!.
+            - No yapping just code
+            
+            import requests
+            from types import *
+            ''',
     }
 }
 
@@ -147,7 +161,7 @@ TEMPLATES_WITHOUT_TYPES: dict[Language, TemplateWithoutTypes] = {
                 - Docstrings must be small and oneline.
                 - Ensure all issues are addressed.
                 - Dont give usage examples.
-                - Give the whole file!!.
+                - Give the whole new file!!.
                 - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```
                 - No yapping just code!''',
     }
@@ -251,14 +265,28 @@ def split_openapi_spec(file_path: Path, output_dir_path: Path):
     default_spec = spec.copy()
     del default_spec["paths"]
 
-    specs = {}
-    for path, methods in paths.items():
-        resource = path.split("/")[1]
-        if resource not in specs:
-            specs[resource] = default_spec.copy()
-            specs[resource]["paths"] = {}
+    max_level = 0
+    for path in paths:
+        level = len(path.split("/"))
+        if level > max_level:
+            max_level = level
 
-        specs[resource]["paths"][path] = methods
+    specs = {}
+    level = 1
+    while len(specs) < 2 and level < max_level:
+        specs = {}
+        for path, methods in paths.items():
+            resource = path.split("/")[level]
+            if resource not in specs:
+                specs[resource] = default_spec.copy()
+                specs[resource]["paths"] = {}
+
+            specs[resource]["paths"][path] = methods
+
+        level += 1
+
+    if not specs or len(specs) < 2:
+        raise ValueError("Failed to split the OpenAPI spec.")
 
     for resource, spec in specs.items():
         resource = resource.replace("{", "").replace("}", "")
@@ -290,11 +318,19 @@ def check_step_count(txt: str, *, model: str, max_token: int) -> bool:
 
 
 def is_all_steps_within_limit(
-    open_specs, types_json, *, model: str, max_token: int, lang: Language = "python"
+    open_specs,
+    types_json,
+    rules,
+    *,
+    model: str,
+    max_token: int,
+    lang: Language = "python",
 ) -> bool:
     """
     Check if all steps are within the token limit.
 
+    :param rules: The rules for the task.
+    :type rules: str
     :param open_specs: The openapi specs.
     :type open_specs: str
     :param types_json: The types json.
@@ -312,8 +348,8 @@ def is_all_steps_within_limit(
     """
 
     steps = [
-        TEMPLATES[lang]["types"].format(types=types_json),
-        TEMPLATES[lang]["initial_code"].format(api_spec=open_specs),
+        TEMPLATES[lang]["types"].format(types=types_json, rules=rules),
+        TEMPLATES[lang]["initial_code"].format(api_spec=open_specs, rules=rules),
         # no need to check for other steps because we already have set the limit in the request
     ]
 

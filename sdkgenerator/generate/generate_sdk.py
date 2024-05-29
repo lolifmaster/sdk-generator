@@ -14,10 +14,23 @@ from sdkgenerator.utils import (
     is_all_steps_within_limit,
     split_openapi_spec,
     TEMPLATES_WITHOUT_TYPES,
-    # validate_openapi_spec,
 )
 
 load_dotenv()
+MAX_PROMPT_LENGTH = 4500
+
+MAX_TOKENS = 5000
+
+# Mock user rules
+RULES = [
+    "Sdk must use the requests library to make the requests.",
+    "Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.",
+    "The requests must handle authenticated request with a _make_authenticated_request.",
+    "Use json for the request body.",
+    "The methods must return The requests library Response object.",
+]
+
+USER_RULES = "\n".join(RULES)
 
 
 def generate_types(
@@ -42,8 +55,8 @@ def generate_types(
             "chatbot_global_action": f"You are a {language} developer, and you are writing types for an API",
             "previous_history": [],
             "temperature": 0.0,
-            "max_tokens": 4000,
-            "settings": {"openai": "gpt-4"},
+            "max_tokens": MAX_TOKENS,
+            "settings": {"openai": "gpt-4-32k-0314"},
         },
         step="types",
         sdk_name="types",
@@ -77,7 +90,9 @@ def generate_initial_code(
     response = generate_llm_response(
         payload={
             "providers": "openai",
-            "text": TEMPLATES[language]["initial_code"].format(api_spec=api_spec),
+            "text": TEMPLATES[language]["initial_code"].format(
+                api_spec=api_spec, rules=USER_RULES
+            ),
             "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
             "previous_history": [
                 {"role": "user", "message": "Generate types needed for the sdk"},
@@ -86,9 +101,9 @@ def generate_initial_code(
                     "message": f"Here are the types needed for the sdk stored in a file called types.py : '''{types}'''",
                 },
             ],
-            "temperature": 0.0,
-            "max_tokens": 4000,
-            "settings": {"openai": "gpt-4"},
+            "temperature": 0.1,
+            "max_tokens": MAX_TOKENS,
+            "settings": {"openai": "gpt-4-32k-0314"},
         },
         step="initial_code",
         sdk_name=sdk_name,
@@ -133,7 +148,7 @@ def feedback_on_generated_code(
         payload={
             "providers": "openai",
             "text": TEMPLATES[language]["feedback"].format(
-                generated_code=generated_code
+                generated_code=generated_code, rules=USER_RULES
             ),
             "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
             "previous_history": previous_history,
@@ -179,12 +194,14 @@ def generate_final_code(
     response = generate_llm_response(
         payload={
             "providers": "openai",
-            "text": TEMPLATES[language]["final_code"].format(feedback=feedback),
+            "text": TEMPLATES[language]["final_code"].format(
+                feedback=feedback, rules=USER_RULES
+            ),
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,
             "temperature": 0.1,
-            "max_tokens": 4000,
-            "settings": {"openai": "gpt-4"},
+            "max_tokens": MAX_TOKENS,
+            "settings": {"openai": "gpt-4-32k-0314"},
         },
         step="final_code",
         sdk_name=sdk_name,
@@ -224,9 +241,9 @@ def generate_initial_code_without_types(
             ),
             "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
             "previous_history": [],
-            "temperature": 0.0,
-            "max_tokens": 4000,
-            "settings": {"openai": "gpt-4"},
+            "temperature": 0.1,
+            "max_tokens": MAX_TOKENS,
+            "settings": {"openai": "gpt-4-32k-0314"},
         },
         step="initial_code",
         sdk_name=sdk_name,
@@ -272,7 +289,7 @@ def feedback_on_generated_code_without_types(
             "previous_history": previous_history,
             "temperature": 0.2,
             "max_tokens": 2000,
-            "settings": {"openai": "gpt-4"},
+            "settings": {"openai": "gpt-4-32k-0314"},
         },
         step="feedback",
         sdk_name=sdk_name,
@@ -318,8 +335,8 @@ def generate_final_code_without_types(
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,
             "temperature": 0.1,
-            "max_tokens": 4000,
-            "settings": {"openai": "gpt-4"},
+            "max_tokens": MAX_TOKENS,
+            "settings": {"openai": "gpt-4-32k-0314"},
         },
         step="final_code",
         sdk_name=sdk_name,
@@ -443,27 +460,35 @@ def generate_sdk(
 
     api_spec_name = file_path.stem
 
+
+
+    if not is_all_steps_within_limit(
+        api_spec,
+        types_json,
+        USER_RULES,
+        model="gpt-4",
+        max_token=MAX_PROMPT_LENGTH,
+        lang=language,
+    ):
+        raise Exception("The generated code is too long, skipping in for training...")
+        # print("The generated code is too long, splitting the sdk into submodules...")
+        # sub_docs_dir = sdk_module / "sub_docs"
+        # sub_docs_dir.mkdir(exist_ok=True)
+        # split_openapi_spec(file_path, output_dir_path=sub_docs_dir)
+        #
+        # # sdks directory
+        # sub_sdks_dir = sdk_module / "sdks"
+        # sub_sdks_dir.mkdir(exist_ok=True)
+        #
+        # for sub_spec in sub_docs_dir.iterdir():
+        #     print(f"Generating SDK for {sub_spec.stem}...")
+        #     generate_sdk(sub_spec, output_dir=sub_sdks_dir, language=language)
+        #
+        # return sub_docs_dir
+
     # create a module for the generated sdk
     sdk_module = output_dir / api_spec_name
     sdk_module.mkdir(exist_ok=True)
-
-    if not is_all_steps_within_limit(
-        api_spec, types_json, model="gpt-4", max_token=8_192, lang=language
-    ):
-        print("The generated code is too long, splitting the sdk into submodules...")
-        sub_docs_dir = sdk_module / "sub_docs"
-        sub_docs_dir.mkdir(exist_ok=True)
-        split_openapi_spec(file_path, output_dir_path=sub_docs_dir)
-
-        # sdks directory
-        sub_sdks_dir = sdk_module / "sdks"
-        sub_sdks_dir.mkdir(exist_ok=True)
-
-        for sub_spec in sub_docs_dir.iterdir():
-            print(f"Generating SDK for {sub_spec.stem}...")
-            generate_sdk(sub_spec, output_dir=sub_sdks_dir, language=language)
-
-        return sub_docs_dir
 
     # save the api spec and types to a file
     if os.environ.get("ENV") == "development":
