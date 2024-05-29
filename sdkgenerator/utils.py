@@ -14,6 +14,13 @@ from openapi_spec_validator.readers import read_from_filename
 
 load_dotenv()
 
+
+# constants
+
+MAX_PROMPT_LENGTH = 4096
+MODEL = "gpt-4"
+MAX_TOKENS = 3500
+
 API_CALLS_DIR = pathlib.Path(__file__).parent.parent.absolute() / "api_calls"
 
 GENERATED_SDK_DIR = pathlib.Path(__file__).parent.parent.absolute() / "generated_sdk"
@@ -350,7 +357,8 @@ def is_all_steps_within_limit(
     steps = [
         TEMPLATES[lang]["types"].format(types=types_json, rules=rules),
         TEMPLATES[lang]["initial_code"].format(api_spec=open_specs, rules=rules),
-        # no need to check for other steps because we already have set the limit in the request
+        TEMPLATES[lang]["feedback"].format(generated_code="#" * MAX_TOKENS, rules=rules),
+        TEMPLATES[lang]["final_code"].format(feedback="#" * MAX_TOKENS, rules=rules),
     ]
 
     return all(

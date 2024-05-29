@@ -34,7 +34,7 @@ USER_RULES = "\n".join(RULES)
 
 
 def generate_types(
-    types_json: str, *, language: Language = "python"
+        types_json: str, *, language: Language = "python"
 ) -> tuple[str, str]:
     """
     Generate types for the API spec and return it as a string.
@@ -72,7 +72,7 @@ def generate_types(
 
 
 def generate_initial_code(
-    api_spec: str, types: str, sdk_name: str, language: Language = "python"
+        api_spec: str, types: str, sdk_name: str, language: Language = "python"
 ) -> tuple[str, list]:
     """
     Generate code for the API spec and return it as a string.
@@ -124,11 +124,11 @@ def generate_initial_code(
 
 
 def feedback_on_generated_code(
-    generated_code: str,
-    previous_history: list,
-    *,
-    sdk_name: str,
-    language: Language = "python",
+        generated_code: str,
+        previous_history: list,
+        *,
+        sdk_name: str,
+        language: Language = "python",
 ) -> str:
     """
     Generate Feedback on the generated code for the API spec and return it as a string.
@@ -170,11 +170,11 @@ def feedback_on_generated_code(
 
 
 def generate_final_code(
-    feedback: str,
-    previous_history: list,
-    *,
-    sdk_name: str,
-    language: Language = "python",
+        feedback: str,
+        previous_history: list,
+        *,
+        sdk_name: str,
+        language: Language = "python",
 ) -> tuple[str, str]:
     """
     Generate final code for the API spec and return it as a string.
@@ -217,7 +217,7 @@ def generate_final_code(
 
 
 def generate_initial_code_without_types(
-    api_spec: str, sdk_name: str, language: Language = "python"
+        api_spec: str, sdk_name: str, language: Language = "python"
 ) -> str:
     """
     Generate code for the API spec and return it as a string.
@@ -264,11 +264,11 @@ def generate_initial_code_without_types(
 
 
 def feedback_on_generated_code_without_types(
-    generated_code: str,
-    previous_history: list,
-    *,
-    sdk_name: str,
-    language: Language = "python",
+        generated_code: str,
+        previous_history: list,
+        *,
+        sdk_name: str,
+        language: Language = "python",
 ) -> str:
     """
     Generate Feedback on the generated code for the API spec and return it as a string.
@@ -305,11 +305,11 @@ def feedback_on_generated_code_without_types(
 
 
 def generate_final_code_without_types(
-    feedback: str,
-    previous_history: list,
-    *,
-    sdk_name: str,
-    language: Language = "python",
+        feedback: str,
+        previous_history: list,
+        *,
+        sdk_name: str,
+        language: Language = "python",
 ) -> tuple[str, str]:
     """
     Generate final code for the API spec and return it as a string.
@@ -352,12 +352,12 @@ def generate_final_code_without_types(
 
 
 def pipeline_with_types(
-    api_spec: str,
-    types_json: dict,
-    *,
-    sdk_module: Path,
-    language: Language = "python",
-    api_spec_name: str,
+        api_spec: str,
+        types_json: dict,
+        *,
+        sdk_module: Path,
+        language: Language = "python",
+        api_spec_name: str,
 ):
     types_code, file_extension = generate_types(str(types_json), language=language)
 
@@ -391,10 +391,10 @@ def pipeline_with_types(
 
 
 def pipeline_without_types(
-    api_spec: str,
-    *,
-    language: Language = "python",
-    api_spec_name: str,
+        api_spec: str,
+        *,
+        language: Language = "python",
+        api_spec_name: str,
 ):
     initial_code = generate_initial_code_without_types(
         api_spec, language=language, sdk_name=api_spec_name
@@ -448,10 +448,10 @@ def load_openapi_spec(file_path: Path) -> tuple[str, dict]:
 
 
 def generate_sdk(
-    file_path: Path,
-    *,
-    output_dir: Path = GENERATED_SDK_DIR,
-    language: Language = "python",
+        file_path: Path,
+        *,
+        output_dir: Path = GENERATED_SDK_DIR,
+        language: Language = "python",
 ) -> Path:
     """
     Generate full SDK for the API spec and return the path to the generated SDK file.
@@ -460,35 +460,35 @@ def generate_sdk(
 
     api_spec_name = file_path.stem
 
-
-
-    if not is_all_steps_within_limit(
-        api_spec,
-        types_json,
-        USER_RULES,
-        model="gpt-4",
-        max_token=MAX_PROMPT_LENGTH,
-        lang=language,
-    ):
-        raise Exception("The generated code is too long, skipping in for training...")
-        # print("The generated code is too long, splitting the sdk into submodules...")
-        # sub_docs_dir = sdk_module / "sub_docs"
-        # sub_docs_dir.mkdir(exist_ok=True)
-        # split_openapi_spec(file_path, output_dir_path=sub_docs_dir)
-        #
-        # # sdks directory
-        # sub_sdks_dir = sdk_module / "sdks"
-        # sub_sdks_dir.mkdir(exist_ok=True)
-        #
-        # for sub_spec in sub_docs_dir.iterdir():
-        #     print(f"Generating SDK for {sub_spec.stem}...")
-        #     generate_sdk(sub_spec, output_dir=sub_sdks_dir, language=language)
-        #
-        # return sub_docs_dir
-
     # create a module for the generated sdk
     sdk_module = output_dir / api_spec_name
     sdk_module.mkdir(exist_ok=True)
+
+    if not is_all_steps_within_limit(
+            api_spec,
+            types_json,
+            USER_RULES,
+            model="gpt-4",
+            max_token=MAX_PROMPT_LENGTH,
+            lang=language,
+    ):
+        if os.environ.get("ENV") == "development":
+            raise Exception("The api specs are too long, skipping in for training...")
+        else:
+            print("The api specs are too long, splitting the sdk into submodules...")
+            sub_docs_dir = sdk_module / "sub_docs"
+            sub_docs_dir.mkdir(exist_ok=True)
+            split_openapi_spec(file_path, output_dir_path=sub_docs_dir)
+
+            # sdks directory
+            sub_sdks_dir = sdk_module / "sdks"
+            sub_sdks_dir.mkdir(exist_ok=True)
+
+            for sub_spec in sub_docs_dir.iterdir():
+                print(f"Generating SDK for {sub_spec.stem}...")
+                generate_sdk(sub_spec, output_dir=sub_sdks_dir, language=language)
+
+            return sub_docs_dir
 
     # save the api spec and types to a file
     if os.environ.get("ENV") == "development":
