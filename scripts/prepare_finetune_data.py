@@ -50,7 +50,8 @@ pipeline = [
     },
 ]
 
-if __name__ == "__main__":
+
+def generate_finetune_data():
     data = list(db.aggregate(pipeline))
 
     output_file = Path(__file__).parent.parent / "data" / "finetune_data.jsonl"
@@ -71,4 +72,8 @@ if __name__ == "__main__":
             }
             f.write(json.dumps(row) + "\n")
 
-    print(f"{len(data)} example written to {output_file}")
+    return output_file
+
+
+if __name__ == "__main__":
+    generate_finetune_data()
