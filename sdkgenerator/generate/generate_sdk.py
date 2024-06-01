@@ -1,363 +1,39 @@
 import json
 import os
 from pathlib import Path
-
 from dotenv import load_dotenv
 
-from sdkgenerator.manifier import process_file
 from sdkgenerator.utils import (
-    get_code_from_model_response,
-    Language,
-    GENERATED_SDK_DIR,
-    generate_llm_response,
-    TEMPLATES,
     is_all_steps_within_limit,
     split_openapi_spec,
-    TEMPLATES_WITHOUT_TYPES,
+    load_openapi_spec,
+)
+from sdkgenerator.types import Language
+from sdkgenerator.constants import (
+    GENERATED_SDK_DIR,
+    MAX_PROMPT_LENGTH,
+)
+from sdkgenerator.generators import (
+    generate_types,
+    generate_initial_code,
+    feedback_on_generated_code,
+    generate_final_code,
+    generate_initial_code_without_types,
+    feedback_on_generated_code_without_types,
+    generate_final_code_without_types,
 )
 
 load_dotenv()
-MAX_PROMPT_LENGTH = 4500
-
-MAX_TOKENS = 5000
-
-# Mock user rules
-RULES = [
-    "Sdk must use the requests library to make the requests.",
-    "Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.",
-    "The requests must handle authenticated request with a _make_authenticated_request.",
-    "Use json for the request body.",
-    "The methods must return The requests library Response object.",
-]
-
-USER_RULES = "\n".join(RULES)
-
-
-def generate_types(
-        types_json: str, *, language: Language = "python"
-) -> tuple[str, str]:
-    """
-    Generate types for the API spec and return it as a string.
-
-    Args:
-    types_file_path: The types.
-    language: The language of the generated code. Default is "python".
-
-    Returns:
-        tuple[str, str]: The generated types for the API spec, and the file extension.
-    """
-
-    print("Generating types")
-    response = generate_llm_response(
-        payload={
-            "providers": "openai",
-            "text": TEMPLATES[language]["types"].format(types=types_json),
-            "chatbot_global_action": f"You are a {language} developer, and you are writing types for an API",
-            "previous_history": [],
-            "temperature": 0.0,
-            "max_tokens": MAX_TOKENS,
-            "settings": {"openai": "gpt-4-32k-0314"},
-        },
-        step="types",
-        sdk_name="types",
-    )
-
-    if response is None:
-        raise Exception("Failed to generate types")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return get_code_from_model_response(response["openai"]["generated_text"])
-
-
-def generate_initial_code(
-        api_spec: str, types: str, sdk_name: str, language: Language = "python"
-) -> tuple[str, list]:
-    """
-    Generate code for the API spec and return it as a string.
-
-    Args:
-    api_spec: The API spec.
-    sdk_name: The name of the SDK.
-    language: The language of the generated code. Default is "python".
-
-    Returns:
-        tuple[str, list]: The generated code for the API spec and the history of the conversation.
-    """
-
-    print("Generating initial code")
-    response = generate_llm_response(
-        payload={
-            "providers": "openai",
-            "text": TEMPLATES[language]["initial_code"].format(
-                api_spec=api_spec, rules=USER_RULES
-            ),
-            "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
-            "previous_history": [
-                {"role": "user", "message": "Generate types needed for the sdk"},
-                {
-                    "role": "assistant",
-                    "message": f"Here are the types needed for the sdk stored in a file called types.py : '''{types}'''",
-                },
-            ],
-            "temperature": 0.1,
-            "max_tokens": MAX_TOKENS,
-            "settings": {"openai": "gpt-4-32k-0314"},
-        },
-        step="initial_code",
-        sdk_name=sdk_name,
-    )
-
-    if response is None:
-        raise Exception("Failed to generate code")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    code, _ = get_code_from_model_response(response["openai"]["generated_text"])
-
-    if not code:
-        raise Exception("The generated initial code is empty.")
-
-    return code, response["openai"]["message"]
-
-
-def feedback_on_generated_code(
-        generated_code: str,
-        previous_history: list,
-        *,
-        sdk_name: str,
-        language: Language = "python",
-) -> str:
-    """
-    Generate Feedback on the generated code for the API spec and return it as a string.
-
-    Args:
-    generated_code: The generated code for the API spec.
-    previous_history: The previous history of the conversation.
-    language: The language of the generated code. Default is "python".
-    sdk_name: The name of the SDK.
-
-    Returns:
-    str: The feedback on the generated code.
-    """
-
-    print("Generating feedback")
-    response = generate_llm_response(
-        payload={
-            "providers": "openai",
-            "text": TEMPLATES[language]["feedback"].format(
-                generated_code=generated_code, rules=USER_RULES
-            ),
-            "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
-            "previous_history": previous_history,
-            "temperature": 0.2,
-            "max_tokens": 2000,
-            "settings": {"openai": "gpt-4"},
-        },
-        step="feedback",
-        sdk_name=sdk_name,
-    )
-
-    if response is None:
-        raise Exception("Failed to generate feedback")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return response["openai"]["generated_text"]
-
-
-def generate_final_code(
-        feedback: str,
-        previous_history: list,
-        *,
-        sdk_name: str,
-        language: Language = "python",
-) -> tuple[str, str]:
-    """
-    Generate final code for the API spec and return it as a string.
-
-    Args:
-    initial_code: The initial code for the API spec.
-    feedback: The feedback on the initial code.
-    language: The language of the generated code. Default is "python".
-    sdk_name: The name of the SDK.
-
-    Returns:
-        tuple[str, str]: The final code for the API spec, and the file extension.
-    """
-
-    print("Generating final code")
-
-    response = generate_llm_response(
-        payload={
-            "providers": "openai",
-            "text": TEMPLATES[language]["final_code"].format(
-                feedback=feedback, rules=USER_RULES
-            ),
-            "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
-            "previous_history": previous_history,
-            "temperature": 0.1,
-            "max_tokens": MAX_TOKENS,
-            "settings": {"openai": "gpt-4-32k-0314"},
-        },
-        step="final_code",
-        sdk_name=sdk_name,
-    )
-
-    if response is None:
-        raise Exception("Failed to generate final code")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return get_code_from_model_response(response["openai"]["generated_text"])
-
-
-def generate_initial_code_without_types(
-        api_spec: str, sdk_name: str, language: Language = "python"
-) -> str:
-    """
-    Generate code for the API spec and return it as a string.
-
-    Args:
-    api_spec: The API spec.
-    sdk_name: The name of the SDK.
-    language: The language of the generated code. Default is "python".
-
-    Returns:
-        str: The generated code for the API spec.
-
-    """
-
-    print("Generating initial code")
-    response = generate_llm_response(
-        payload={
-            "providers": "openai",
-            "text": TEMPLATES_WITHOUT_TYPES[language]["initial_code"].format(
-                api_spec=api_spec
-            ),
-            "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
-            "previous_history": [],
-            "temperature": 0.1,
-            "max_tokens": MAX_TOKENS,
-            "settings": {"openai": "gpt-4-32k-0314"},
-        },
-        step="initial_code",
-        sdk_name=sdk_name,
-    )
-
-    if response is None:
-        raise Exception("Failed to generate code")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    code, _ = get_code_from_model_response(response["openai"]["generated_text"])
-
-    if not code:
-        raise Exception("The generated initial code is empty.")
-
-    return code
-
-
-def feedback_on_generated_code_without_types(
-        generated_code: str,
-        previous_history: list,
-        *,
-        sdk_name: str,
-        language: Language = "python",
-) -> str:
-    """
-    Generate Feedback on the generated code for the API spec and return it as a string.
-
-    Args: generated_code: The generated code for the API spec. previous_history: The previous history of the conversation. language: The language of the generated code. Default is "python". sdk_name: The name of the SDK.
-
-    Returns: str: The feedback on the generated code.
-    """
-
-    print("Generating feedback")
-    response = generate_llm_response(
-        payload={
-            "providers": "openai",
-            "text": TEMPLATES_WITHOUT_TYPES[language]["feedback"].format(
-                generated_code=generated_code
-            ),
-            "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
-            "previous_history": previous_history,
-            "temperature": 0.2,
-            "max_tokens": 2000,
-            "settings": {"openai": "gpt-4-32k-0314"},
-        },
-        step="feedback",
-        sdk_name=sdk_name,
-    )
-
-    if response is None:
-        raise Exception("Failed to generate feedback")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return response["openai"]["generated_text"]
-
-
-def generate_final_code_without_types(
-        feedback: str,
-        previous_history: list,
-        *,
-        sdk_name: str,
-        language: Language = "python",
-) -> tuple[str, str]:
-    """
-    Generate final code for the API spec and return it as a string.
-
-    Args:
-    initial_code: The initial code for the API spec.
-    feedback: The feedback on the initial code.
-    language: The language of the generated code. Default is "python".
-    sdk_name: The name of the SDK.
-
-    Returns:
-        tuple[str, str]: The final code for the API spec, and the file extension.
-    """
-
-    print("Generating final code")
-
-    response = generate_llm_response(
-        payload={
-            "providers": "openai",
-            "text": TEMPLATES_WITHOUT_TYPES[language]["final_code"].format(
-                feedback=feedback
-            ),
-            "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
-            "previous_history": previous_history,
-            "temperature": 0.1,
-            "max_tokens": MAX_TOKENS,
-            "settings": {"openai": "gpt-4-32k-0314"},
-        },
-        step="final_code",
-        sdk_name=sdk_name,
-    )
-
-    if response is None:
-        raise Exception("Failed to generate final code")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return get_code_from_model_response(response["openai"]["generated_text"])
 
 
 def pipeline_with_types(
-        api_spec: str,
-        types_json: dict,
-        *,
-        sdk_module: Path,
-        language: Language = "python",
-        api_spec_name: str,
+    api_spec: str,
+    types_json: dict,
+    *,
+    user_rules: list[str],
+    sdk_module: Path,
+    language: Language = "python",
+    api_spec_name: str,
 ):
     types_code, file_extension = generate_types(str(types_json), language=language)
 
@@ -365,14 +41,20 @@ def pipeline_with_types(
     types_file = sdk_module / f"types{file_extension}"
     types_file.write_text(types_code)
 
+    rules = "#RULES\n" + "\n".join(user_rules) if user_rules else ""
+
     initial_code, history = generate_initial_code(
-        api_spec, types=types_code, language=language, sdk_name=api_spec_name
+        api_spec,
+        types=types_code,
+        sdk_name=api_spec_name,
+        rules=rules,
+        language=language,
     )
 
     history = history[:-1]
 
     feedback = feedback_on_generated_code(
-        initial_code, history, language=language, sdk_name=api_spec_name
+        initial_code, history, sdk_name=api_spec_name, rules=rules, language=language
     )
 
     final_code_prev_history = [
@@ -384,17 +66,21 @@ def pipeline_with_types(
     ]
 
     code, file_extension = generate_final_code(
-        feedback, final_code_prev_history, language=language, sdk_name=api_spec_name
+        feedback,
+        final_code_prev_history,
+        rules=rules,
+        sdk_name=api_spec_name,
+        language=language,
     )
 
     return code, file_extension
 
 
 def pipeline_without_types(
-        api_spec: str,
-        *,
-        language: Language = "python",
-        api_spec_name: str,
+    api_spec: str,
+    *,
+    language: Language = "python",
+    api_spec_name: str,
 ):
     initial_code = generate_initial_code_without_types(
         api_spec, language=language, sdk_name=api_spec_name
@@ -431,27 +117,13 @@ def pipeline_without_types(
     return code, file_extension
 
 
-def load_openapi_spec(file_path: Path) -> tuple[str, dict]:
-    """
-    Load, validate and process the OpenAPI spec file.
-
-    Args:
-    file_path: The file path to the OpenAPI spec.
-
-    Returns:
-        tuple[str, str]: The OpenAPI spec as a string, and the types as a string.
-
-    """
-    api_spec, types_json = process_file(file_path)
-
-    return api_spec, types_json
-
-
 def generate_sdk(
-        file_path: Path,
-        *,
-        output_dir: Path = GENERATED_SDK_DIR,
-        language: Language = "python",
+    file_path: Path,
+    /,
+    *,
+    output_dir: Path = GENERATED_SDK_DIR,
+    language: Language = "python",
+    user_rules: list[str],
 ) -> Path:
     """
     Generate full SDK for the API spec and return the path to the generated SDK file.
@@ -465,12 +137,13 @@ def generate_sdk(
     sdk_module.mkdir(exist_ok=True)
 
     if not is_all_steps_within_limit(
-            api_spec,
-            types_json,
-            USER_RULES,
-            model="gpt-4",
-            max_token=MAX_PROMPT_LENGTH,
-            lang=language,
+        api_spec,
+        types_json,
+        user_rules=user_rules,
+        model="gpt-4",
+        max_token=MAX_PROMPT_LENGTH,
+        lang=language,
+        with_types=not not types_json,
     ):
         if os.environ.get("ENV") == "development":
             raise Exception("The api specs are too long, skipping in for training...")
@@ -486,7 +159,12 @@ def generate_sdk(
 
             for sub_spec in sub_docs_dir.iterdir():
                 print(f"Generating SDK for {sub_spec.stem}...")
-                generate_sdk(sub_spec, output_dir=sub_sdks_dir, language=language)
+                generate_sdk(
+                    sub_spec,
+                    output_dir=sub_sdks_dir,
+                    user_rules=user_rules,
+                    language=language,
+                )
 
             return sub_docs_dir
 
@@ -506,8 +184,9 @@ def generate_sdk(
             api_spec,
             types_json,
             sdk_module=sdk_module,
-            language=language,
             api_spec_name=api_spec_name,
+            user_rules=user_rules,
+            language=language,
         )
     else:
         code, file_extension = pipeline_without_types(

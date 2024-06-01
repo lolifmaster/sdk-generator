@@ -1,6 +1,8 @@
 import json
 import os
 import argparse
+
+import requests
 from dotenv import load_dotenv
 from openai import OpenAI
 from openai.types import FileObject
@@ -10,12 +12,15 @@ from prepare_finetune_data import generate_finetune_data
 
 load_dotenv()
 
-# Define the path to store files
 file_metadata_path = (
     Path(__file__).parent.parent / "data" / "fine-tuning" / "uploaded_file.json"
 )
 fine_tune_job_path = (
     Path(__file__).parent.parent / "data" / "fine-tuning" / "fine_tune_job.json"
+)
+
+job_details_path = (
+    Path(__file__).parent.parent / "data" / "fine-tuning" / "job_details.json"
 )
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -54,8 +59,29 @@ def create_fine_tune_model():
 
     job_metadata = response.json()
 
-    pprint(f'Fine-tuning job created. Job metadata: {job_metadata}')
+    pprint(f"Fine-tuning job created. Job metadata: {job_metadata}")
     fine_tune_job_path.write_text(json.dumps(job_metadata, indent=4))
+
+
+def get_fine_tune_job():
+    """Retrieves the fine-tuning job metadata."""
+    try:
+        job_id = json.loads(fine_tune_job_path.read_text())["id"]
+    except KeyError:
+        raise ValueError("Fine-tuning job metadata does not contain the job ID.")
+    job_details = client.fine_tuning.jobs.retrieve(job_id).dict()
+
+    # Checkpoints
+    checkpoints = requests.get(
+        f"https://api.openai.com/v1/fine_tuning/jobs/{job_id}/checkpoints",
+        headers={"Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"},
+    ).json()
+
+    details = {
+        "job_details": job_details,
+        "checkpoints": checkpoints.get("data", []),
+    }
+    job_details_path.write_text(json.dumps(details, indent=4))
 
 
 def main():
@@ -70,11 +96,16 @@ def main():
         action="store_true",
         help="Start fine-tuning using existing fine-tuning data",
     )
+    parser.add_argument(
+        "--details",
+        action="store_true",
+        help="Retrieve the fine-tuning job metadata",
+    )
 
     args = parser.parse_args()
 
-    if args.new and args.train:
-        parser.error("Arguments --new and --train are mutually exclusive.")
+    if sum([args.new, args.train, args.details]) > 1:
+        parser.error("Only one of --new, --train, or --job can be specified.")
 
     if args.new:
         create_fine_tune_file()
@@ -86,8 +117,10 @@ def main():
                 "File metadata does not exist. Please run the script with --new to generate fine-tuning data."
             )
         create_fine_tune_model()
+    elif args.details:
+        get_fine_tune_job()
     else:
-        parser.error("One of --new or --train must be specified.")
+        parser.print_help()
 
 
 if __name__ == "__main__":

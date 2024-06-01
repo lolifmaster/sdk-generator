@@ -1,8 +1,9 @@
+from pathlib import Path
 import os
 import shutil
 
 
-def move_files(source_directory, target_directory):
+def move_files(source_directory: Path | str, target_directory: Path | str):
     for root, dirs, files in os.walk(source_directory):
         for file in files:
             if file.endswith("swagger.yaml"):
@@ -16,10 +17,14 @@ def move_files(source_directory, target_directory):
             shutil.copy(str(old_file_path), str(new_file_path))
 
 
-source = "../data/openapi-directory-main/APIs"
-target = "../data/specifications"
+if __name__ == "__main__":
+    source = Path(__file__).parent.parent / "data" / "openapi-directory-main" / "APIs"
+    target = Path(__file__).parent.parent / "data" / "specifications"
 
-# Ensure the target directory exists
-os.makedirs(target, exist_ok=True)
+    if not source.exists():
+        raise FileNotFoundError(f"Source directory {source} does not exist.")
 
-move_files(source, target)
+    # Create the target directory if it does not exist
+    target.mkdir(parents=True, exist_ok=True)
+
+    move_files(source, target)
