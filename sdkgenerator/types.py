@@ -17,3 +17,8 @@ class TemplateWithoutTypes(TypedDict):
 Step = Literal["types", "initial_code", "feedback", "final_code"]
 
 Language = Literal["python"]
+
+
+class Agent(TypedDict):
+    model: str
+    custom: bool

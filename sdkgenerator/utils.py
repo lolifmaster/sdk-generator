@@ -11,9 +11,13 @@ import tiktoken
 # from openapi_spec_validator.readers import read_from_filename
 
 from sdkgenerator.logger import log_llm_response
-from sdkgenerator.constants import MAX_TOKENS, EDEN_AI_API, AGENT
+from sdkgenerator.constants import (
+    EDEN_AI_API,
+    OPENAI_API,
+)
 from sdkgenerator.templates import TEMPLATES, TEMPLATES_WITHOUT_TYPES
 from sdkgenerator.types import Language, Step
+from sdkgenerator.config import AGENT, MAX_TOKENS, TEMPERATURE
 
 load_dotenv()
 
@@ -52,21 +56,97 @@ def get_code_from_model_response(response) -> tuple[str, str]:
     return code, file_extension
 
 
-def generate_llm_response(payload: dict, *, step: Step, sdk_name: str):
+def generate_llm_response(
+    payload: dict, *, step: Step, sdk_name: str
+) -> tuple[str, list]:
     """
     Generate code for the API spec via the language model.
 
     :return: The response from the language model.
     """
-    headers = {
-        "Authorization": f"Bearer {os.getenv('EDEN_AI_AUTH_TOKEN')}",
-        "Content-Type": "application/json",
-    }
+    if AGENT[step]["custom"]:
+        headers = {
+            "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}",
+            "Content-Type": "application/json",
+        }
 
-    response = requests.post(EDEN_AI_API, headers=headers, json=payload)
-    response.raise_for_status()
-    log_llm_response(payload, response.json(), step=step, sdk_name=sdk_name)
-    return response.json()
+        prev_history = [{
+            "role": step["role"],
+            "content": step["message"],
+        } for step in payload["previous_history"]]
+
+        body = {
+            "model": AGENT[step]["model"],
+            "max_tokens": MAX_TOKENS[step],
+            "temperature": TEMPERATURE[step],
+            "top_p": 1,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": payload["chatbot_global_action"],
+                }
+            ]
+            + prev_history
+            + [
+                {
+                    "role": "user",
+                    "content": payload["text"],
+                }
+            ],
+        }
+
+        response = requests.post(
+            OPENAI_API,
+            headers=headers,
+            json=body,
+        )
+        response.raise_for_status()
+        log_llm_response(body, response.json(), step=step, sdk_name=sdk_name)
+
+        data = response.json()
+
+        message = data["choices"][0]["message"]["content"]
+        history = [
+            {
+                "role": "user",
+                "message": payload["text"],
+            },
+            {
+                "role": "assistant",
+                "message": message,
+            },
+        ]
+
+    else:
+        headers = {
+            "Authorization": f"Bearer {os.getenv('EDEN_AI_AUTH_TOKEN')}",
+            "Content-Type": "application/json",
+        }
+
+        body = payload | {
+            "temperature": TEMPERATURE[step],
+            "max_tokens": MAX_TOKENS[step],
+            "settings": {"openai": AGENT[step]["model"]},
+        }
+
+        response = requests.post(
+            EDEN_AI_API,
+            headers=headers,
+            json=body,
+        )
+
+        response.raise_for_status()
+        log_llm_response(body, response.json(), step=step, sdk_name=sdk_name)
+
+        data = response.json()
+
+        if "error" in data["openai"]:
+            raise Exception(data["openai"]["error"])
+
+        message = data["openai"]["generated_text"]
+        history = data["openai"]["message"]
+
+    return message, history
 
 
 def split_openapi_spec(file_path: Path, output_dir_path: Path):

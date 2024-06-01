@@ -1,7 +1,6 @@
 from sdkgenerator.types import Language
 from sdkgenerator.utils import get_code_from_model_response, generate_llm_response
 from sdkgenerator.templates import TEMPLATES, TEMPLATES_WITHOUT_TYPES
-from sdkgenerator.constants import MAX_TOKENS, TEMPERATURE, AGENT
 
 
 def generate_types(
@@ -19,29 +18,18 @@ def generate_types(
     """
 
     print("Generating types")
-    response = generate_llm_response(
+    message, _ = generate_llm_response(
         payload={
             "providers": "openai",
             "text": TEMPLATES[language]["types"].format(types=types_json),
             "chatbot_global_action": f"You are a {language} developer, and you are writing types for an API",
             "previous_history": [],
-            "temperature": TEMPERATURE["types"],
-            "max_tokens": MAX_TOKENS['types'],
-            "settings": {
-                "openai": AGENT['types']['model'],
-            },
         },
         step="types",
         sdk_name="types",
     )
 
-    if response is None:
-        raise Exception("Failed to generate types")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return get_code_from_model_response(response["openai"]["generated_text"])
+    return get_code_from_model_response(message)
 
 
 def generate_initial_code(
@@ -61,7 +49,7 @@ def generate_initial_code(
     """
 
     print("Generating initial code")
-    response = generate_llm_response(
+    message, history = generate_llm_response(
         payload={
             "providers": "openai",
             "text": TEMPLATES[language]["initial_code"].format(
@@ -75,28 +63,17 @@ def generate_initial_code(
                     "message": f"Here are the types needed for the sdk stored in a file called types.py : '''{types}'''",
                 },
             ],
-            "temperature": TEMPERATURE["initial_code"],
-            "max_tokens": MAX_TOKENS['initial_code'],
-            "settings": {
-                "openai": AGENT['initial_code']['model']
-            },
         },
         step="initial_code",
         sdk_name=sdk_name,
     )
 
-    if response is None:
-        raise Exception("Failed to generate code")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    code, _ = get_code_from_model_response(response["openai"]["generated_text"])
+    code, _ = get_code_from_model_response(message)
 
     if not code:
         raise Exception("The generated initial code is empty.")
 
-    return code, response["openai"]["message"]
+    return code, history
 
 
 def feedback_on_generated_code(
@@ -122,7 +99,7 @@ def feedback_on_generated_code(
     """
 
     print("Generating feedback")
-    response = generate_llm_response(
+    message, _ = generate_llm_response(
         payload={
             "providers": "openai",
             "text": TEMPLATES[language]["feedback"].format(
@@ -130,23 +107,12 @@ def feedback_on_generated_code(
             ),
             "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
             "previous_history": previous_history,
-            "temperature": TEMPERATURE["feedback"],
-            "max_tokens": MAX_TOKENS['feedback'],
-            "settings": {
-                "openai": AGENT['feedback']['model']
-            },
         },
         step="feedback",
         sdk_name=sdk_name,
     )
 
-    if response is None:
-        raise Exception("Failed to generate feedback")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return response["openai"]["generated_text"]
+    return message
 
 
 def generate_final_code(
@@ -173,7 +139,7 @@ def generate_final_code(
 
     print("Generating final code")
 
-    response = generate_llm_response(
+    message, _ = generate_llm_response(
         payload={
             "providers": "openai",
             "text": TEMPLATES[language]["final_code"].format(
@@ -181,23 +147,12 @@ def generate_final_code(
             ),
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,
-            "temperature": TEMPERATURE["final_code"],
-            "max_tokens": MAX_TOKENS['final_code'],
-            "settings": {
-                "openai": AGENT['final_code']['model']
-            },
         },
         step="final_code",
         sdk_name=sdk_name,
     )
 
-    if response is None:
-        raise Exception("Failed to generate final code")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return get_code_from_model_response(response["openai"]["generated_text"])
+    return get_code_from_model_response(message)
 
 
 def generate_initial_code_without_types(
@@ -218,7 +173,7 @@ def generate_initial_code_without_types(
     """
 
     print("Generating initial code")
-    response = generate_llm_response(
+    message, _ = generate_llm_response(
         payload={
             "providers": "openai",
             "text": TEMPLATES_WITHOUT_TYPES[language]["initial_code"].format(
@@ -227,23 +182,12 @@ def generate_initial_code_without_types(
             ),
             "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
             "previous_history": [],
-            "temperature": TEMPERATURE["initial_code"],
-            "max_tokens": MAX_TOKENS['initial_code'],
-            "settings": {
-                "openai": AGENT['initial_code']['model']
-            },
         },
         step="initial_code",
         sdk_name=sdk_name,
     )
 
-    if response is None:
-        raise Exception("Failed to generate code")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    code, _ = get_code_from_model_response(response["openai"]["generated_text"])
+    code, _ = get_code_from_model_response(message)
 
     if not code:
         raise Exception("The generated initial code is empty.")
@@ -272,7 +216,7 @@ def feedback_on_generated_code_without_types(
     """
 
     print("Generating feedback")
-    response = generate_llm_response(
+    message, _ = generate_llm_response(
         payload={
             "providers": "openai",
             "text": TEMPLATES_WITHOUT_TYPES[language]["feedback"].format(
@@ -281,23 +225,12 @@ def feedback_on_generated_code_without_types(
             ),
             "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
             "previous_history": previous_history,
-            "temperature": TEMPERATURE["feedback"],
-            "max_tokens": MAX_TOKENS['feedback'],
-            "settings": {
-                "openai": AGENT['feedback']['model']
-            },
         },
         step="feedback",
         sdk_name=sdk_name,
     )
 
-    if response is None:
-        raise Exception("Failed to generate feedback")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return response["openai"]["generated_text"]
+    return message
 
 
 def generate_final_code_without_types(
@@ -324,7 +257,7 @@ def generate_final_code_without_types(
 
     print("Generating final code")
 
-    response = generate_llm_response(
+    message, _ = generate_llm_response(
         payload={
             "providers": "openai",
             "text": TEMPLATES_WITHOUT_TYPES[language]["final_code"].format(
@@ -333,20 +266,9 @@ def generate_final_code_without_types(
             ),
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,
-            "temperature": TEMPERATURE["final_code"],
-            "max_tokens": MAX_TOKENS['final_code'],
-            "settings": {
-                "openai": AGENT['final_code']['model']
-            },
         },
         step="final_code",
         sdk_name=sdk_name,
     )
 
-    if response is None:
-        raise Exception("Failed to generate final code")
-
-    if "error" in response["openai"]:
-        raise Exception(response["openai"]["error"])
-
-    return get_code_from_model_response(response["openai"]["generated_text"])
+    return get_code_from_model_response(message)
