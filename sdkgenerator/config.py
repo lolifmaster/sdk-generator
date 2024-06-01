@@ -9,8 +9,8 @@ TEMPERATURE: dict[Step, float] = {
 
 AGENT: dict[Step, Agent] = {
     "types": {
-        "model": "ft:gpt-3.5-turbo-0125:eden-ai::9UxoYDO3",
-        "custom": True,
+        "model": "gpt-4-32k-0314",
+        "custom": False,
     },
     "initial_code": {
         "model": "ft:gpt-3.5-turbo-0125:eden-ai::9UxoYDO3",
