@@ -13,7 +13,7 @@ client = MongoClient(uri)
 
 try:
     client.admin.command("ping")
-    db = client["sdk-gen"]["train_data"]
+    db = client["sdk-gen"]["responses"]
     print("Database connected successfully. (MongoDB)")
 except Exception as e:
     print(e)
