@@ -1,5 +1,6 @@
 import re
 import os
+
 import requests
 from dotenv import load_dotenv
 import yaml
@@ -370,7 +371,7 @@ def validate_openapi_spec(openapi_spec: dict, allowed_methods=None):
                             f"Invalid OpenAPI spec file. Missing schema for requestBody in {method} {path}."
                         )
 
-            return True
+    return True
 
 
 def load_file(file_path: Path) -> dict:
