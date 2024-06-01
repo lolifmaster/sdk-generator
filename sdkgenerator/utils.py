@@ -71,10 +71,13 @@ def generate_llm_response(
             "Content-Type": "application/json",
         }
 
-        prev_history = [{
-            "role": step["role"],
-            "content": step["message"],
-        } for step in payload["previous_history"]]
+        prev_history = [
+            {
+                "role": step["role"],
+                "content": step["message"],
+            }
+            for step in payload["previous_history"]
+        ]
 
         body = {
             "model": AGENT[step]["model"],
@@ -354,18 +357,18 @@ def validate_openapi_spec(openapi_spec: dict, allowed_methods=None):
 
             if params := details.get("parameters"):
                 for param in params:
-                    if not param.get("name"):
+                    if not param.get("name") and not param.get("$ref"):
                         raise ValueError(
                             f"Invalid OpenAPI spec file. Missing name for parameter in {method} {path}."
                         )
 
             if request_body := details.get("requestBody"):
-                if not request_body.get("content"):
+                if not request_body.get("content") and not request_body.get("$ref"):
                     raise ValueError(
                         f"Invalid OpenAPI spec file. Missing content for requestBody in {method} {path}."
                     )
 
-                for content_type, content in request_body["content"].items():
+                for content_type, content in request_body.get("content", {}).items():
                     if not content.get("schema"):
                         raise ValueError(
                             f"Invalid OpenAPI spec file. Missing schema for requestBody in {method} {path}."

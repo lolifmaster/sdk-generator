@@ -68,6 +68,20 @@ types_key_abbreviations = {
     "maximum": "max",
 }
 
+types_keys_to_remove = {
+    "description",
+    "example",
+    "title",
+    "pattern",
+}
+
+security_keys_to_remove = {
+    "description",
+    "example",
+    "title",
+    "pattern",
+}
+
 methods_to_handle = {"get", "post", "patch", "delete", "put"}
 
 security_types_to_handle = {
@@ -77,10 +91,10 @@ security_types_to_handle = {
 }
 
 
-def resolve_refs_types(openapi_spec, endpoint, types):
-    if isinstance(endpoint, dict):
-        new_endpoint = {}
-        for key, value in endpoint.items():
+def resolve_refs_types(openapi_spec, ref, types):
+    if isinstance(ref, dict):
+        new_ref = {}
+        for key, value in ref.items():
             if key == "$ref":
                 ref_name = value.split("/")[-1]
                 if ref_name in types:
@@ -95,24 +109,33 @@ def resolve_refs_types(openapi_spec, endpoint, types):
                 ref_object = resolve_refs_types(openapi_spec, ref_object, types)
 
                 # Add the resolved object to the types dictionary
-                new_endpoint[key] = ref_name
+                new_ref[key] = ref_name
                 types[ref_name] = ref_object
 
-            elif key not in {"description", "example"}:
-                new_endpoint[key] = resolve_refs_types(openapi_spec, value, types)
+            elif key not in types_keys_to_remove:
+                new_ref[key] = resolve_refs_types(openapi_spec, value, types)
 
-        return new_endpoint
+        return new_ref
 
-    elif isinstance(endpoint, list):
+    elif isinstance(ref, list):
         # Recursively search in lists
-        return [resolve_refs_types(openapi_spec, item, types) for item in endpoint]
+        return [resolve_refs_types(openapi_spec, item, types) for item in ref]
 
     else:
         # Base case: return the endpoint as is if it's neither a dictionary nor a list
-        return endpoint
+        return ref
 
 
-def populate_keys(endpoint, path):
+def resolve_refs_request_body(openapi_spec, ref) -> dict:
+    ref_path = ref.split("/")[1:]
+    ref_object = openapi_spec
+    for p in ref_path:
+        ref_object = ref_object.get(p, {})
+
+    return ref_object
+
+
+def populate_keys(endpoint, path, openapi_spec):
     # Gets the main keys from the specs
     extracted_endpoint_data = {
         "path": path,
@@ -140,10 +163,19 @@ def populate_keys(endpoint, path):
         if request_body and "content" in request_body:
             # Extract the schema of application/json request body
             reqBody = request_body["content"].get("application/json")
-            if reqBody and "schema" in reqBody:
-                extracted_endpoint_data["requestBody"] = reqBody["schema"]
-            else:
-                extracted_endpoint_data["requestBody"] = None
+        elif request_body and "$ref" in request_body:
+            reqBody = (
+                resolve_refs_request_body(openapi_spec, request_body["$ref"])
+                .get("content", {})
+                .get("application/json")
+            )
+        else:
+            reqBody = None
+
+        if reqBody and "schema" in reqBody:
+            extracted_endpoint_data["requestBody"] = reqBody["schema"]
+        else:
+            extracted_endpoint_data["requestBody"] = None
 
     if keys_to_keep["good_responses"] or keys_to_keep["bad_responses"]:
         extracted_endpoint_data["responses"] = {}
@@ -193,18 +225,13 @@ def remove_empty_keys(endpoint):
 
 
 def remove_unnecessary_keys(endpoint):
-    # Stack for storing references to nested dictionaries/lists and their parent keys
     stack = [(endpoint, [])]
 
-    # Continue until there is no more data to process
     while stack:
         current_data, parent_keys = stack.pop()
 
-        # If current_data is a dictionary
         if isinstance(current_data, dict):
-            # Iterate over a copy of the keys, as we may modify the dictionary during iteration
             for k in list(current_data.keys()):
-                # Check if this key should be removed based on settings and context
                 if k == "example" and not keys_to_keep["examples"]:
                     del current_data[k]
                 if k == "enum" and not keys_to_keep["enums"]:
@@ -215,14 +242,10 @@ def remove_unnecessary_keys(endpoint):
                     and not keys_to_keep["nested_descriptions"]
                 ):
                     del current_data[k]
-                # Otherwise, if the value is a dictionary or a list, add it to the stack for further processing
-                # Check if the key still exists before accessing it
                 if k in current_data and isinstance(current_data[k], (dict, list)):
                     stack.append((current_data[k], parent_keys + [k]))
 
-        # If current_data is a list
         elif isinstance(current_data, list):
-            # Add each item to the stack for further processing
             for item in current_data:
                 if isinstance(item, (dict, list)):
                     stack.append((item, parent_keys + ["list"]))
@@ -334,21 +357,23 @@ def minify(spec):
     security: list[dict[str, list]] = spec.get("security", [])
     api_security_scopes = {}
 
-    # Process securitySchemes
     if defined_security_schemes:
         for scheme_name, scheme in defined_security_schemes.items():
             if scheme["type"] in security_types_to_handle:
-                current_security = abbreviate(scheme, key_abbreviations)
+                current_security = {
+                    key: value
+                    for key, value in scheme.items()
+                    if key not in security_keys_to_remove
+                }
+                current_security = abbreviate(current_security, key_abbreviations)
                 current_security = flatten(current_security)
                 security_schemes[scheme_name] = current_security
 
-    # Process security
     if security:
         for item in security:
             for scheme, scopes in item.items():
                 api_security_scopes[scheme] = scopes
 
-    # List to store endpoints
     endpoints_with_metadata = []
     for path, methods in spec["paths"].items():
         for method, endpoint in methods.items():
@@ -358,7 +383,7 @@ def minify(spec):
                 continue
 
             # Populate output list with desired keys
-            extracted_endpoint_data = populate_keys(endpoint, path)
+            extracted_endpoint_data = populate_keys(endpoint, path, spec)
 
             # Get types from schemas
             if keys_to_keep["schemas"]:
