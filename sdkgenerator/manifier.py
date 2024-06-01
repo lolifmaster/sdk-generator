@@ -1,11 +1,10 @@
 import json
 from typing import Union
-
-import yaml
 from datetime import datetime, date
 import re
 import string
 from pathlib import Path
+from sdkgenerator.utils import load_spec
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -76,16 +75,6 @@ security_types_to_handle = {
     "apiKey",
     "openIdConnect",
 }
-
-
-def load_spec(file_path: Path):
-    with open(file_path, "r", encoding="utf-8") as file:
-        if file_path.suffix == ".json":
-            return json.load(file)
-        elif file_path.suffix in {".yaml", ".yml"}:
-            return yaml.safe_load(file)
-        else:
-            raise ValueError(f"Unsupported file format for {file_path}")
 
 
 def resolve_refs_types(openapi_spec, endpoint, types):

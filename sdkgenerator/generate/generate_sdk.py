@@ -6,12 +6,11 @@ from dotenv import load_dotenv
 from sdkgenerator.utils import (
     is_all_steps_within_limit,
     split_openapi_spec,
-    load_openapi_spec,
+    get_api_data,
 )
 from sdkgenerator.types import Language
 from sdkgenerator.constants import (
     GENERATED_SDK_DIR,
-    MAX_PROMPT_LENGTH,
 )
 from sdkgenerator.generators import (
     generate_types,
@@ -79,11 +78,14 @@ def pipeline_with_types(
 def pipeline_without_types(
     api_spec: str,
     *,
-    language: Language = "python",
     api_spec_name: str,
+    user_rules: list[str],
+    language: Language = "python",
 ):
+    rules = "#RULES\n" + "\n".join(user_rules) if user_rules else ""
+
     initial_code = generate_initial_code_without_types(
-        api_spec, language=language, sdk_name=api_spec_name
+        api_spec, language=language, sdk_name=api_spec_name, rules=rules
     )
 
     feedback_prev_history = [
@@ -99,7 +101,11 @@ def pipeline_without_types(
 
     # we can add user rules here
     feedback = feedback_on_generated_code_without_types(
-        initial_code, feedback_prev_history, language=language, sdk_name=api_spec_name
+        initial_code,
+        feedback_prev_history,
+        language=language,
+        sdk_name=api_spec_name,
+        rules=rules,
     )
 
     final_code_prev_history = [
@@ -111,7 +117,11 @@ def pipeline_without_types(
     ]
 
     code, file_extension = generate_final_code_without_types(
-        feedback, final_code_prev_history, language=language, sdk_name=api_spec_name
+        feedback,
+        final_code_prev_history,
+        language=language,
+        sdk_name=api_spec_name,
+        rules=rules,
     )
 
     return code, file_extension
@@ -128,7 +138,7 @@ def generate_sdk(
     """
     Generate full SDK for the API spec and return the path to the generated SDK file.
     """
-    api_spec, types_json = load_openapi_spec(file_path)
+    api_spec, types_json = get_api_data(file_path)
 
     api_spec_name = file_path.stem
 
@@ -140,10 +150,7 @@ def generate_sdk(
         api_spec,
         types_json,
         user_rules=user_rules,
-        model="gpt-4",
-        max_token=MAX_PROMPT_LENGTH,
         lang=language,
-        with_types=not not types_json,
     ):
         if os.environ.get("ENV") == "development":
             raise Exception("The api specs are too long, skipping in for training...")
@@ -190,7 +197,10 @@ def generate_sdk(
         )
     else:
         code, file_extension = pipeline_without_types(
-            api_spec, language=language, api_spec_name=api_spec_name
+            api_spec,
+            api_spec_name=api_spec_name,
+            user_rules=user_rules,
+            language=language,
         )
 
     # create the sdk file

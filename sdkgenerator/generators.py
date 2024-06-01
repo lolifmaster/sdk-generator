@@ -193,7 +193,7 @@ def generate_final_code(
 
 
 def generate_initial_code_without_types(
-    api_spec: str, sdk_name: str, language: Language = "python"
+    api_spec: str, sdk_name: str, rules: str, language: Language = "python"
 ) -> str:
     """
     Generate code for the API spec and return it as a string.
@@ -201,6 +201,7 @@ def generate_initial_code_without_types(
     Args:
     api_spec: The API spec.
     sdk_name: The name of the SDK.
+    rules: The rules for the SDK.
     language: The language of the generated code. Default is "python".
 
     Returns:
@@ -213,7 +214,8 @@ def generate_initial_code_without_types(
         payload={
             "providers": "openai",
             "text": TEMPLATES_WITHOUT_TYPES[language]["initial_code"].format(
-                api_spec=api_spec
+                api_spec=api_spec,
+                rules=rules,
             ),
             "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
             "previous_history": [],
@@ -244,13 +246,18 @@ def feedback_on_generated_code_without_types(
     previous_history: list,
     *,
     sdk_name: str,
+    rules: str,
     language: Language = "python",
 ) -> str:
     """
     Generate Feedback on the generated code for the API spec and return it as a string.
 
-    Args: generated_code: The generated code for the API spec. previous_history: The previous history of the conversation. language: The language of the generated code. Default is "python". sdk_name: The name of the SDK.
-
+    Args:
+        :arg generated_code: The generated code for the API spec.
+        :arg previous_history: The previous history of the conversation.
+        :arg sdk_name: The name of the SDK.
+        :arg rules: The rules for the SDK.
+        :arg language: The language of the generated code. Default is "python".
     Returns: str: The feedback on the generated code.
     """
 
@@ -259,7 +266,8 @@ def feedback_on_generated_code_without_types(
         payload={
             "providers": "openai",
             "text": TEMPLATES_WITHOUT_TYPES[language]["feedback"].format(
-                generated_code=generated_code
+                generated_code=generated_code,
+                rules=rules,
             ),
             "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
             "previous_history": previous_history,
@@ -285,16 +293,18 @@ def generate_final_code_without_types(
     previous_history: list,
     *,
     sdk_name: str,
+    rules: str,
     language: Language = "python",
 ) -> tuple[str, str]:
     """
     Generate final code for the API spec and return it as a string.
 
     Args:
-    initial_code: The initial code for the API spec.
-    feedback: The feedback on the initial code.
-    language: The language of the generated code. Default is "python".
-    sdk_name: The name of the SDK.
+        :arg feedback: The feedback on the initial code.
+        :arg previous_history: The previous history of the conversation.
+        :arg sdk_name: The name of the SDK.
+        :arg rules: The rules for the SDK.
+        :arg language: The language of the generated code. Default is "python".
 
     Returns:
         tuple[str, str]: The final code for the API spec, and the file extension.
@@ -306,7 +316,8 @@ def generate_final_code_without_types(
         payload={
             "providers": "openai",
             "text": TEMPLATES_WITHOUT_TYPES[language]["final_code"].format(
-                feedback=feedback
+                feedback=feedback,
+                rules=rules,
             ),
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,

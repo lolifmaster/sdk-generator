@@ -6,12 +6,13 @@ import yaml
 import json
 from pathlib import Path
 import tiktoken
-from openapi_spec_validator import validate
-from openapi_spec_validator.readers import read_from_filename
+
+# from openapi_spec_validator import validate // TOO STRICT VALIDATION
+# from openapi_spec_validator.readers import read_from_filename
 
 from sdkgenerator.logger import log_llm_response
 from sdkgenerator.manifier import process_file
-from sdkgenerator.constants import MAX_TOKENS, EDEN_AI_API
+from sdkgenerator.constants import MAX_TOKENS, EDEN_AI_API, AGENT
 from sdkgenerator.templates import TEMPLATES, TEMPLATES_WITHOUT_TYPES
 from sdkgenerator.types import Language, Step
 
@@ -24,22 +25,6 @@ language_to_extension = {
 }
 
 extension_to_language = {v: k for k, v in language_to_extension.items()}
-
-
-def load_openapi_spec(file_path: Path) -> tuple[str, dict]:
-    """
-    Load, validate and process the OpenAPI spec file.
-
-    Args:
-    file_path: The file path to the OpenAPI spec.
-
-    Returns:
-        tuple[str, str]: The OpenAPI spec as a string, and the types as a string.
-
-    """
-    api_spec, types_json = process_file(file_path)
-
-    return api_spec, types_json
 
 
 def get_code_from_model_response(response) -> tuple[str, str]:
@@ -164,24 +149,18 @@ def check_step_count(txt: str, *, model: str, max_token: int) -> bool:
 
 
 def is_all_steps_within_limit(
-        open_specs: str,
-        types_json: dict,
-        *,
-        user_rules: list[str],
-        with_types: bool,
-        model: str,
-        max_token: int,
-        lang: Language = "python",
+    open_specs: str,
+    types_json: dict,
+    *,
+    user_rules: list[str],
+    lang: Language = "python",
 ) -> bool:
     """
     Check if all steps are within the token limit.
 
     :param open_specs: The OpenAPI specification as a string.
     :param types_json: The types as a JSON string.
-    :param with_types: Whether to include types in the generated code.
     :param user_rules: The rules to apply.
-    :param model: The model to use for tokenization.
-    :param max_token: The maximum number of tokens allowed.
     :param lang: The language to use.
 
     :return: True if all steps are within the limit, False otherwise.
@@ -189,46 +168,175 @@ def is_all_steps_within_limit(
     :rtype: bool
     """
     rules = "#RULES\n" + "\n".join(user_rules) if user_rules else ""
+    with_types = not not types_json
 
     if with_types:
-        steps = [
-            TEMPLATES[lang]["types"].format(types=types_json, rules=rules),
-            TEMPLATES[lang]["initial_code"].format(api_spec=open_specs, rules=rules),
-            TEMPLATES[lang]["feedback"].format(
-                generated_code="#" * MAX_TOKENS, rules=rules
-            ),
-            TEMPLATES[lang]["final_code"].format(
-                feedback="#" * MAX_TOKENS, rules=rules
-            ),
+        steps: list[dict] = [
+            {
+                "step": "types",
+                "prompt": TEMPLATES[lang]["types"].format(
+                    types=types_json, rules=rules
+                ),
+            },
+            {
+                "step": "initial_code",
+                "prompt": TEMPLATES[lang]["initial_code"].format(
+                    api_spec=open_specs, rules=rules
+                ),
+            },
+            {
+                "step": "feedback",
+                "prompt": TEMPLATES[lang]["feedback"].format(
+                    generated_code="#" * MAX_TOKENS["feedback"], rules=rules
+                ),
+            },
+            {
+                "step": "final_code",
+                "prompt": TEMPLATES[lang]["final_code"].format(
+                    feedback="#" * MAX_TOKENS["final_code"], rules=rules
+                ),
+            },
         ]
     else:
-        steps = [
-            TEMPLATES_WITHOUT_TYPES[lang]["initial_code"].format(
-                api_spec=open_specs, rules=rules
-            ),
-            TEMPLATES_WITHOUT_TYPES[lang]["feedback"].format(
-                generated_code="#" * MAX_TOKENS, rules=rules
-            ),
-            TEMPLATES_WITHOUT_TYPES[lang]["final_code"].format(
-                feedback="#" * MAX_TOKENS, rules=rules
-            ),
+        steps: list[dict] = [
+            {
+                "name": "initial_code",
+                "prompt": TEMPLATES_WITHOUT_TYPES[lang]["initial_code"].format(
+                    api_spec=open_specs, rules=rules
+                ),
+            },
+            {
+                "name": "feedback",
+                "prompt": TEMPLATES_WITHOUT_TYPES[lang]["feedback"].format(
+                    generated_code="#" * MAX_TOKENS["feedback"], rules=rules
+                ),
+            },
+            {
+                "name": "final_code",
+                "prompt": TEMPLATES_WITHOUT_TYPES[lang]["final_code"].format(
+                    feedback="#" * MAX_TOKENS["final_code"], rules=rules
+                ),
+            },
         ]
 
     return all(
-        check_step_count(step, model=model, max_token=max_token) for step in steps
+        check_step_count(
+            step["prompt"],
+            model=AGENT[step["name"]]["model"],
+            max_token=MAX_TOKENS[step["name"]],
+        )
+        for step in steps
     )
 
 
-def validate_openapi_spec(file_path: Path):
+def validate_openapi_spec(openapi_spec: dict, allowed_methods=None):
     """
     Validate the OpenAPI specification file.
 
-    :param file_path: Path to the OpenAPI specification file.
-    :type file_path: Path
+    :param openapi_spec: The OpenAPI specification as a dictionary.
+    :type openapi_spec: dict
+    :param allowed_methods: The allowed HTTP methods.
+
     :return: None
     """
-    try:
-        spec_dict, _ = read_from_filename(str(file_path))
-        validate(spec_dict)
-    except Exception as e:
-        raise Exception(f"Failed to validate OpenAPI spec: {e}")
+    if allowed_methods is None:
+        allowed_methods = {
+            "get",
+            "post",
+            "put",
+            "delete",
+            "patch",
+            "head",
+            "options",
+            "trace",
+            "connect",
+        }
+    if not openapi_spec:
+        raise ValueError("Empty OpenAPI spec file.")
+
+    if not isinstance(openapi_spec, dict):
+        raise ValueError("Invalid OpenAPI spec file. Must be a dictionary.")
+
+    server = openapi_spec.get("servers", []).pop().get("url", "")
+    if not server:
+        raise ValueError("Invalid OpenAPI spec file. Missing server URL.")
+
+    paths = openapi_spec.get("paths", {})
+    if not paths:
+        raise ValueError("Invalid OpenAPI spec file. Missing paths.")
+
+    for path, methods in paths.items():
+        for method, details in methods.items():
+            if method not in allowed_methods:
+                raise ValueError(
+                    f"Invalid OpenAPI spec file. Invalid method {method} for {path}."
+                )
+            if not details.get("operationId"):
+                raise ValueError(
+                    f"Invalid OpenAPI spec file. Missing operationId for {method} {path}."
+                )
+
+            if params := details.get("parameters"):
+                for param in params:
+                    if not param.get("name"):
+                        raise ValueError(
+                            f"Invalid OpenAPI spec file. Missing name for parameter in {method} {path}."
+                        )
+
+            if request_body := details.get("requestBody"):
+                if not request_body.get("content"):
+                    raise ValueError(
+                        f"Invalid OpenAPI spec file. Missing content for requestBody in {method} {path}."
+                    )
+
+                for content_type, content in request_body["content"].items():
+                    if not content.get("schema"):
+                        raise ValueError(
+                            f"Invalid OpenAPI spec file. Missing schema for requestBody in {method} {path}."
+                        )
+
+            return True
+
+
+def load_file(file_path: Path) -> dict:
+    with open(file_path, "r", encoding="utf-8") as file:
+        if file_path.suffix == ".json":
+            return json.load(file)
+        elif file_path.suffix in {".yaml", ".yml"}:
+            return yaml.safe_load(file)
+        else:
+            raise ValueError(f"Unsupported file format for {file_path}")
+
+
+def load_spec(file_path: Path) -> dict:
+    """
+    Load and verify the OpenAPI spec file.
+
+    :param file_path: The file path to the OpenAPI spec.
+    :type file_path: Path
+    :return: The OpenAPI spec as a string.
+    :rtype: str
+    """
+
+    file = load_file(file_path)
+
+    if not validate_openapi_spec(file):
+        raise ValueError("Invalid OpenAPI spec file.")
+
+    return file
+
+
+def get_api_data(file_path: Path) -> tuple[str, dict]:
+    """
+    Load, validate and process the OpenAPI spec file.
+
+    Args:
+    file_path: The file path to the OpenAPI spec.
+
+    Returns:
+        tuple[str, str]: The OpenAPI spec as a string, and the types as a string.
+
+    """
+    api_spec, types_json = process_file(file_path)
+
+    return api_spec, types_json
