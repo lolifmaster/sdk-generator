@@ -26,8 +26,10 @@ def generate_types(
             "chatbot_global_action": f"You are a {language} developer, and you are writing types for an API",
             "previous_history": [],
             "temperature": TEMPERATURE["types"],
-            "max_tokens": MAX_TOKENS,
-            "settings": AGENT["types"],
+            "max_tokens": MAX_TOKENS['types'],
+            "settings": {
+                "openai": AGENT['types']['model'],
+            },
         },
         step="types",
         sdk_name="types",
@@ -74,8 +76,10 @@ def generate_initial_code(
                 },
             ],
             "temperature": TEMPERATURE["initial_code"],
-            "max_tokens": MAX_TOKENS,
-            "settings": AGENT["initial_code"],
+            "max_tokens": MAX_TOKENS['initial_code'],
+            "settings": {
+                "openai": AGENT['initial_code']['model']
+            },
         },
         step="initial_code",
         sdk_name=sdk_name,
@@ -127,8 +131,10 @@ def feedback_on_generated_code(
             "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
             "previous_history": previous_history,
             "temperature": TEMPERATURE["feedback"],
-            "max_tokens": 2000,
-            "settings": {"openai": "gpt-4"},
+            "max_tokens": MAX_TOKENS['feedback'],
+            "settings": {
+                "openai": AGENT['feedback']['model']
+            },
         },
         step="feedback",
         sdk_name=sdk_name,
@@ -176,8 +182,10 @@ def generate_final_code(
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,
             "temperature": TEMPERATURE["final_code"],
-            "max_tokens": MAX_TOKENS,
-            "settings": AGENT["final_code"],
+            "max_tokens": MAX_TOKENS['final_code'],
+            "settings": {
+                "openai": AGENT['final_code']['model']
+            },
         },
         step="final_code",
         sdk_name=sdk_name,
@@ -220,8 +228,10 @@ def generate_initial_code_without_types(
             "chatbot_global_action": f"You are a {language} developer, and you are writing a client sdk for an API",
             "previous_history": [],
             "temperature": TEMPERATURE["initial_code"],
-            "max_tokens": MAX_TOKENS,
-            "settings": AGENT["initial_code"],
+            "max_tokens": MAX_TOKENS['initial_code'],
+            "settings": {
+                "openai": AGENT['initial_code']['model']
+            },
         },
         step="initial_code",
         sdk_name=sdk_name,
@@ -272,8 +282,10 @@ def feedback_on_generated_code_without_types(
             "chatbot_global_action": f"You are a {language} developer reviewing code for an SDK",
             "previous_history": previous_history,
             "temperature": TEMPERATURE["feedback"],
-            "max_tokens": 2000,
-            "settings": AGENT["feedback"],
+            "max_tokens": MAX_TOKENS['feedback'],
+            "settings": {
+                "openai": AGENT['feedback']['model']
+            },
         },
         step="feedback",
         sdk_name=sdk_name,
@@ -322,8 +334,10 @@ def generate_final_code_without_types(
             "chatbot_global_action": f"You are a {language} developer, and you are refining a generated code",
             "previous_history": previous_history,
             "temperature": TEMPERATURE["final_code"],
-            "max_tokens": MAX_TOKENS,
-            "settings": AGENT["final_code"],
+            "max_tokens": MAX_TOKENS['final_code'],
+            "settings": {
+                "openai": AGENT['final_code']['model']
+            },
         },
         step="final_code",
         sdk_name=sdk_name,

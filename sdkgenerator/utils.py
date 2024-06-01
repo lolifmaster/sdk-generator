@@ -11,7 +11,6 @@ import tiktoken
 # from openapi_spec_validator.readers import read_from_filename
 
 from sdkgenerator.logger import log_llm_response
-from sdkgenerator.manifier import process_file
 from sdkgenerator.constants import MAX_TOKENS, EDEN_AI_API, AGENT
 from sdkgenerator.templates import TEMPLATES, TEMPLATES_WITHOUT_TYPES
 from sdkgenerator.types import Language, Step
@@ -59,19 +58,15 @@ def generate_llm_response(payload: dict, *, step: Step, sdk_name: str):
 
     :return: The response from the language model.
     """
-
     headers = {
         "Authorization": f"Bearer {os.getenv('EDEN_AI_AUTH_TOKEN')}",
         "Content-Type": "application/json",
     }
 
-    try:
-        response = requests.post(EDEN_AI_API, headers=headers, json=payload)
-        response.raise_for_status()
-        log_llm_response(payload, response.json(), step=step, sdk_name=sdk_name)
-        return response.json()
-    except Exception as e:
-        print(e)
+    response = requests.post(EDEN_AI_API, headers=headers, json=payload)
+    response.raise_for_status()
+    log_llm_response(payload, response.json(), step=step, sdk_name=sdk_name)
+    return response.json()
 
 
 def split_openapi_spec(file_path: Path, output_dir_path: Path):
@@ -173,25 +168,25 @@ def is_all_steps_within_limit(
     if with_types:
         steps: list[dict] = [
             {
-                "step": "types",
+                "name": "types",
                 "prompt": TEMPLATES[lang]["types"].format(
                     types=types_json, rules=rules
                 ),
             },
             {
-                "step": "initial_code",
+                "name": "initial_code",
                 "prompt": TEMPLATES[lang]["initial_code"].format(
                     api_spec=open_specs, rules=rules
                 ),
             },
             {
-                "step": "feedback",
+                "name": "feedback",
                 "prompt": TEMPLATES[lang]["feedback"].format(
                     generated_code="#" * MAX_TOKENS["feedback"], rules=rules
                 ),
             },
             {
-                "step": "final_code",
+                "name": "final_code",
                 "prompt": TEMPLATES[lang]["final_code"].format(
                     feedback="#" * MAX_TOKENS["final_code"], rules=rules
                 ),
@@ -324,19 +319,3 @@ def load_spec(file_path: Path) -> dict:
         raise ValueError("Invalid OpenAPI spec file.")
 
     return file
-
-
-def get_api_data(file_path: Path) -> tuple[str, dict]:
-    """
-    Load, validate and process the OpenAPI spec file.
-
-    Args:
-    file_path: The file path to the OpenAPI spec.
-
-    Returns:
-        tuple[str, str]: The OpenAPI spec as a string, and the types as a string.
-
-    """
-    api_spec, types_json = process_file(file_path)
-
-    return api_spec, types_json
