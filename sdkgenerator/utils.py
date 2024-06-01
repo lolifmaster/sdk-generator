@@ -18,7 +18,7 @@ from sdkgenerator.constants import (
 )
 from sdkgenerator.templates import TEMPLATES, TEMPLATES_WITHOUT_TYPES
 from sdkgenerator.types import Language, Step
-from sdkgenerator.config import AGENT, MAX_TOKENS, TEMPERATURE
+from sdkgenerator.config import AGENT, MAX_TOKENS, TEMPERATURE, MAX_PROMPT_LENGTH
 
 load_dotenv()
 
@@ -205,26 +205,21 @@ def split_openapi_spec(file_path: Path, output_dir_path: Path):
             json.dump(spec, file, indent=2)
 
 
-def count_token(txt: str, model: str):
-    encoding = tiktoken.encoding_for_model(model)
-    num_token = len(encoding.encode(txt))
-    return num_token
-
-
-def check_step_count(txt: str, *, model: str, max_token: int) -> bool:
+def check_step_count(txt: str, *, step: Step) -> bool:
     """
     Check if the number of tokens in the text is within the limit for the step.
 
     :param txt: The text to check.
     :type txt: str
-    :param model: The model to use for tokenization.
-    :type model: str
-    :param max_token: The maximum number of tokens allowed.
-    :type max_token: int
+    :param step: The step to check.
+    :type step: Step
     :return: True if the number of tokens is within the limit, False otherwise.
     :rtype: bool
     """
-    return count_token(txt, model) <= max_token
+    model = AGENT[step]["model"]
+    encoding = tiktoken.encoding_for_model(model)
+    num_token = len(encoding.encode(txt))
+    return num_token <= MAX_PROMPT_LENGTH[step]
 
 
 def is_all_steps_within_limit(
@@ -266,13 +261,13 @@ def is_all_steps_within_limit(
             {
                 "name": "feedback",
                 "prompt": TEMPLATES[lang]["feedback"].format(
-                    generated_code="#" * MAX_TOKENS["feedback"], rules=rules
+                    generated_code="# " * MAX_TOKENS["feedback"], rules=rules
                 ),
             },
             {
                 "name": "final_code",
                 "prompt": TEMPLATES[lang]["final_code"].format(
-                    feedback="#" * MAX_TOKENS["final_code"], rules=rules
+                    feedback="# " * MAX_TOKENS["final_code"], rules=rules
                 ),
             },
         ]
@@ -301,8 +296,7 @@ def is_all_steps_within_limit(
     return all(
         check_step_count(
             step["prompt"],
-            model=AGENT[step["name"]]["model"],
-            max_token=MAX_TOKENS[step["name"]],
+            step=step["name"],
         )
         for step in steps
     )
