@@ -1,10 +1,10 @@
 import json
-from typing import Union
 from datetime import datetime, date
 import re
 import string
 from pathlib import Path
 import yaml
+
 from sdkgenerator.utils import validate_openapi_spec
 
 
@@ -92,7 +92,15 @@ security_types_to_handle = {
 }
 
 
-def resolve_refs_types(openapi_spec, ref, types):
+def resolve_refs_types(
+    openapi_spec, ref, types, keys_to_remove=None, resolving_refs=None
+):
+    if keys_to_remove is None:
+        keys_to_remove = types_keys_to_remove
+
+    if resolving_refs is None:
+        resolving_refs = set()
+
     if isinstance(ref, dict):
         new_ref = {}
         for key, value in ref.items():
@@ -101,26 +109,44 @@ def resolve_refs_types(openapi_spec, ref, types):
                 if ref_name in types:
                     return ref_name
 
+                # Check if this reference is currently being resolved
+                if ref_name in resolving_refs:
+                    return ref_name
+
+                resolving_refs.add(ref_name)
+
                 ref_path = value.split("/")[1:]
                 ref_object = openapi_spec
                 for p in ref_path:
                     ref_object = ref_object.get(p, {})
 
                 # Recursively resolve references inside the ref_object
-                ref_object = resolve_refs_types(openapi_spec, ref_object, types)
+                ref_object = resolve_refs_types(
+                    openapi_spec, ref_object, types, keys_to_remove, resolving_refs
+                )
 
                 # Add the resolved object to the types dictionary
-                new_ref[key] = ref_name
                 types[ref_name] = ref_object
 
-            elif key not in types_keys_to_remove:
-                new_ref[key] = resolve_refs_types(openapi_spec, value, types)
+                resolving_refs.remove(ref_name)
+
+                return ref_name  # Return the ref_name here instead of new_ref
+
+            elif key not in keys_to_remove:
+                new_ref[key] = resolve_refs_types(
+                    openapi_spec, value, types, keys_to_remove, resolving_refs
+                )
 
         return new_ref
 
     elif isinstance(ref, list):
         # Recursively search in lists
-        return [resolve_refs_types(openapi_spec, item, types) for item in ref]
+        return [
+            resolve_refs_types(
+                openapi_spec, item, types, keys_to_remove, resolving_refs
+            )
+            for item in ref
+        ]
 
     else:
         # Base case: return the endpoint as is if it's neither a dictionary nor a list
@@ -332,7 +358,10 @@ def write_dict_to_text(data):
                 # Remove HTML tags and punctuation from value
                 value = remove_html_tags_and_punctuation(str(value))
                 # Append the key-value pair
-                formatted_text_parts.append(f"{key}: {value}")
+                if key == 'ref':
+                    formatted_text_parts.append(f"{key}: #{value.split('/')[-1]}")
+                else:
+                    formatted_text_parts.append(f"{key}: {value}")
     # Check if data is a list
     elif isinstance(data, list):
         # Append each element in the list
@@ -515,7 +544,7 @@ def extract_information(spec):
     return output_string, types
 
 
-def load_file(file_path: Path) -> dict:
+def load_file(file_path: Path | str) -> dict:
     with open(file_path, "r", encoding="utf-8") as file:
         if file_path.suffix == ".json":
             return json.load(file)
@@ -525,32 +554,14 @@ def load_file(file_path: Path) -> dict:
             raise ValueError(f"Unsupported file format for {file_path}")
 
 
-def load_spec(file_path: Path) -> dict:
+def process_file(spec: dict) -> tuple[str, dict]:
     """
-    Load and verify the OpenAPI spec file.
+    Process the OpenAPI spec file.
 
-    :param file_path: The file path to the OpenAPI spec.
-    :type file_path: Path
-    :return: The OpenAPI spec as a string.
-    :rtype: str
+    :arg spec: The OpenAPI spec as a dictionary.
+
+    :return tuple: The processed OpenAPI spec as a string, and the types as a dict.
     """
-
-    file = load_file(file_path)
-
-    if not validate_openapi_spec(file):
-        raise ValueError("Invalid OpenAPI spec file.")
-
-    return file
-
-
-def process_file(file_path: Union[str, Path]):
-    """
-    Process an openapi specification file and save the minified spec to a text file.
-    args: Tuple containing the file path (json or yaml), filename and target directory
-    return: None
-    """
-
-    spec = load_spec(file_path)
     return extract_information(spec)
 
 
@@ -565,6 +576,8 @@ def get_api_data(file_path: Path) -> tuple[str, dict]:
         tuple[str, str]: The OpenAPI spec as a string, and the types as a string.
 
     """
-    api_spec, types_json = process_file(file_path)
+    file = load_file(file_path)
+    validate_openapi_spec(file)
+    api_spec, types_json = process_file(file)
 
     return api_spec, types_json

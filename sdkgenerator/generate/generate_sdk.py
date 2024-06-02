@@ -146,6 +146,17 @@ def generate_sdk(
     sdk_module = output_dir / api_spec_name
     sdk_module.mkdir(exist_ok=True)
 
+    # save the api spec and types to a file
+    if os.environ.get("ENV") == "development":
+        api_spec_file = output_dir / api_spec_name
+        api_spec_file.mkdir(exist_ok=True)
+        api_spec_file = api_spec_file / "api_spec.txt"
+        api_spec_file.write_text(api_spec)
+
+        types_file = output_dir / api_spec_name
+        types_file = types_file / "types.json"
+        types_file.write_text(json.dumps(types_json, indent=4))
+
     if not is_all_steps_within_limit(
         api_spec,
         types_json,
@@ -174,17 +185,6 @@ def generate_sdk(
                 )
 
             return sub_docs_dir
-
-    # save the api spec and types to a file
-    if os.environ.get("ENV") == "development":
-        api_spec_file = output_dir / api_spec_name
-        api_spec_file.mkdir(exist_ok=True)
-        api_spec_file = api_spec_file / "api_spec.txt"
-        api_spec_file.write_text(api_spec)
-
-        types_file = output_dir / api_spec_name
-        types_file = types_file / "types.json"
-        types_file.write_text(json.dumps(types_json, indent=4))
 
     if types_json:
         code, file_extension = pipeline_with_types(
