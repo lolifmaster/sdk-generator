@@ -18,11 +18,12 @@ class DateTimeEncoder(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
-keys_to_keep = {
+keys_to_keep_or_remove = {
     "parameters": True,
+    "responses": False,
     "good_responses": False,
     "bad_responses": False,
-    "request_bodies": True,
+    "requestBody": True,
     "schemas": True,
     "endpoint_descriptions": False,
     "endpoint_summaries": True,
@@ -31,6 +32,12 @@ keys_to_keep = {
     "examples": False,
     "tag_descriptions": False,
     "deprecated": False,
+    "pattern": False,
+    "operationId": True,
+    "summary": False,
+    "tags": False,
+    "security": False,
+    "description": False,
 }
 
 key_abbreviations = {
@@ -93,7 +100,7 @@ security_types_to_handle = {
 
 
 def resolve_refs_types(
-    openapi_spec, ref, types, keys_to_remove=None, resolving_refs=None
+        openapi_spec, ref, types, keys_to_remove=None, resolving_refs=None
 ):
     if keys_to_remove is None:
         keys_to_remove = types_keys_to_remove
@@ -162,14 +169,13 @@ def resolve_refs_request_body(openapi_spec, ref) -> dict:
     return ref_object
 
 
-def populate_keys(endpoint, path, openapi_spec):
+def populate_keys(endpoint, openapi_spec):
     # Gets the main keys from the specs
-    extracted_endpoint_data = {
-        "path": path,
-        "operationId": endpoint.get("operationId"),
-    }
+    extracted_endpoint_data = {}
+    if keys_to_keep_or_remove['operationId']:
+        extracted_endpoint_data['operationId'] = endpoint.get('operationId')
 
-    if keys_to_keep["parameters"]:
+    if keys_to_keep_or_remove["parameters"]:
         # Extract parameters from the endpoint and specify if they are required
         extracted_params = endpoint.get("parameters")
         if extracted_params:
@@ -179,13 +185,13 @@ def populate_keys(endpoint, path, openapi_spec):
                 else:
                     param["required"] = "False"
             extracted_endpoint_data["parameters"] = extracted_params
-    if keys_to_keep["endpoint_summaries"]:
+    if keys_to_keep_or_remove["endpoint_summaries"]:
         extracted_endpoint_data["summary"] = endpoint.get("summary")
 
-    if keys_to_keep["endpoint_descriptions"]:
+    if keys_to_keep_or_remove["endpoint_descriptions"]:
         extracted_endpoint_data["description"] = endpoint.get("description")
 
-    if keys_to_keep["request_bodies"]:
+    if keys_to_keep_or_remove["requestBody"]:
         request_body = endpoint.get("requestBody")
         if request_body and "content" in request_body:
             # Extract the schema of application/json request body
@@ -204,31 +210,35 @@ def populate_keys(endpoint, path, openapi_spec):
         else:
             extracted_endpoint_data["requestBody"] = None
 
-    if keys_to_keep["good_responses"] or keys_to_keep["bad_responses"]:
+    if keys_to_keep_or_remove["responses"]:
         extracted_endpoint_data["responses"] = {}
 
-    if keys_to_keep["good_responses"]:
-        if "responses" in endpoint and "200" in endpoint["responses"]:
-            extracted_endpoint_data["responses"]["200"] = endpoint["responses"].get(
-                "200"
-            )
+        if keys_to_keep_or_remove["good_responses"]:
+            if "responses" in endpoint and "200" in endpoint["responses"]:
+                extracted_endpoint_data["responses"]["200"] = endpoint["responses"].get(
+                    "200"
+                )
 
-    if keys_to_keep["bad_responses"]:
-        if "responses" in endpoint:
-            # Loop through all the responses
-            for status_code, response in endpoint["responses"].items():
-                # Check if status_code starts with '4' or '5' (4xx or 5xx)
-                if (
-                    status_code.startswith("4")
-                    or status_code.startswith("5")
-                    or "def" in status_code
-                ):
-                    # Extract the schema or other relevant information from the response
-                    bad_response_content = response
-                    if bad_response_content is not None:
-                        extracted_endpoint_data["responses"][
-                            f"{status_code}"
-                        ] = bad_response_content
+        if keys_to_keep_or_remove["bad_responses"]:
+            if "responses" in endpoint:
+                # Loop through all the responses
+                for status_code, response in endpoint["responses"].items():
+                    # Check if status_code starts with '4' or '5' (4xx or 5xx)
+                    if (
+                            status_code.startswith("4")
+                            or status_code.startswith("5")
+                            or "def" in status_code
+                    ):
+                        # Extract the schema or other relevant information from the response
+                        bad_response_content = response
+                        if bad_response_content is not None:
+                            extracted_endpoint_data["responses"][
+                                f"{status_code}"
+                            ] = bad_response_content
+
+    for key, value in endpoint.items():
+        if key not in keys_to_keep_or_remove:
+            extracted_endpoint_data[key] = value
 
     return extracted_endpoint_data
 
@@ -259,14 +269,14 @@ def remove_unnecessary_keys(endpoint):
 
         if isinstance(current_data, dict):
             for k in list(current_data.keys()):
-                if k == "example" and not keys_to_keep["examples"]:
+                if k == "example" and not keys_to_keep_or_remove["examples"]:
                     del current_data[k]
-                if k == "enum" and not keys_to_keep["enums"]:
+                if k == "enum" and not keys_to_keep_or_remove["enums"]:
                     del current_data[k]
                 elif (
-                    k == "description"
-                    and len(parent_keys) > 0
-                    and not keys_to_keep["nested_descriptions"]
+                        k == "description"
+                        and len(parent_keys) > 0
+                        and not keys_to_keep_or_remove["nested_descriptions"]
                 ):
                     del current_data[k]
                 if k in current_data and isinstance(current_data[k], (dict, list)):
@@ -307,7 +317,7 @@ def abbreviate(data, abbreviations):
             abbreviations.get(key, key): abbreviate(
                 abbreviations.get(str(value), value), abbreviations
             )
-            for key, value in data.items()
+            for key, value in data.items() if keys_to_keep_or_remove.get(key, True)
         }
     elif isinstance(data, list):
         # Recursively process list items
@@ -333,6 +343,8 @@ def write_dict_to_text(data):
             "|",
             ".",
             ",",
+            "{",
+            "}",
         }
         # Remove punctuation characters
         return "".join(
@@ -358,7 +370,7 @@ def write_dict_to_text(data):
                 # Remove HTML tags and punctuation from value
                 value = remove_html_tags_and_punctuation(str(value))
                 # Append the key-value pair
-                if key == 'ref':
+                if key == "ref":
                     formatted_text_parts.append(f"{key}: #{value.split('/')[-1]}")
                 else:
                     formatted_text_parts.append(f"{key}: {value}")
@@ -404,19 +416,42 @@ def minify(spec):
             for scheme, scopes in item.items():
                 api_security_scopes[scheme] = scopes
 
-    endpoints_with_metadata = []
+    paths_with_metadata = {}
     for path, methods in spec["paths"].items():
+        paths_with_metadata[path] = {
+            'parameters': [],
+            'endpoints': []
+        }
+        if 'parameters' in methods:
+            parameters = methods['parameters']
+            for parameter in parameters:
+                if isinstance(parameter, dict):
+                    if '$ref' not in parameter:
+                        parameter = remove_empty_keys(parameter)
+                        parameter = remove_unnecessary_keys(parameter)
+                        if 'required' in parameter:
+                            parameter['required'] = str(parameter['required'])
+                        else:
+                            parameter['required'] = "False"
+                        parameter = abbreviate(parameter, key_abbreviations)
+                        parameter = write_dict_to_text(parameter)
+                        paths_with_metadata[path]['parameters'].append(parameter)
+                    else:
+                        resolve_refs_types(spec, parameter, types)
+                        ref_name = f"#{parameter['$ref'].split('/')[-1]}"
+                        paths_with_metadata[path]['parameters'].append(ref_name)
+
         for method, endpoint in methods.items():
             if method not in methods_to_handle or (
-                endpoint.get("deprecated", False) and not keys_to_keep["deprecated"]
+                    endpoint.get("deprecated", False) and not keys_to_keep_or_remove["deprecated"]
             ):
                 continue
 
             # Populate output list with desired keys
-            extracted_endpoint_data = populate_keys(endpoint, path, spec)
+            extracted_endpoint_data = populate_keys(endpoint, spec)
 
             # Get types from schemas
-            if keys_to_keep["schemas"]:
+            if keys_to_keep_or_remove["schemas"]:
                 if request_body := extracted_endpoint_data.get("requestBody"):
                     resolve_refs_types(spec, request_body, types)
 
@@ -475,10 +510,10 @@ def minify(spec):
             }
             endpoint_dict = {"metadata": metadata, "content": content_string}
 
-            endpoints_with_metadata.append(endpoint_dict)
+            paths_with_metadata[path]['endpoints'].append(endpoint_dict)
 
     return (
-        endpoints_with_metadata,
+        paths_with_metadata,
         server_url,
         types,
         api_security_scopes,
@@ -488,17 +523,17 @@ def minify(spec):
 
 def extract_information(spec):
     (
-        endpoints_with_metadata,
+        paths_with_metadata,
         server_url,
         types,
         api_security_scopes,
         security_schemes,
     ) = minify(spec)
-    output_string = f"##IMPORTANT: base_url:{server_url}\n---\n"
+    output_string = f"###IMPORTANT: base_url:{server_url}\n---\n"
     # for tag, endpoints_with_tag in endpoints_by_tag_metadata.items():
     #     # If we're adding tag descriptions, and they exist they're added here.
     #     tag_description = tag_summary_dict_output.get(tag)
-    #     if keys_to_keep["tag_descriptions"] and tag_description:
+    #     if keys_to_keep_or_remove["tag_descriptions"] and tag_description:
     #         tag_description = write_dict_to_text(tag_summary_dict_output.get(tag))
     #         tag_string = f"{tag}! {tag_description}!\n"
     #     else:
@@ -515,31 +550,53 @@ def extract_information(spec):
     #     output_string += f"{tag_string}\n"
 
     if security_schemes:
-        output_string += f"##SECURITY SCHEMES\n"
+        output_string += f"###SECURITY SCHEMES\n"
         for scheme_name, schema_object in security_schemes.items():
             output_string += f"-{scheme_name}\n"
             for key, value in schema_object.items():
                 output_string += f"{key}: {value}\n"
 
     if api_security_scopes:
-        output_string += f"---\n##SECURITY SCOPES\n"
+        output_string += f"---\n###SECURITY SCOPES\n"
         for scheme, scopes in api_security_scopes.items():
             output_string += f"{scheme}: {scopes}\n"
 
-    output_string += f"---\n##ENDPOINTS\n---\n"
+    output_string += f"---\n###ENDPOINTS\n"
+    for path, path_data in paths_with_metadata.items():
+        output_string += f"##path: {path}\n"
 
-    for endpoint in endpoints_with_metadata:
-        metadata = endpoint.get("metadata")
-        content = endpoint.get("content")
+        if path_data['parameters']:
+            output_string += f"#parameters\n"
+            for parameter in path_data['parameters']:
+                output_string += f"{parameter}\n"
 
-        output_string += f"-method:{metadata.get('method')}\n"
-        security = metadata.get("security")
-        if security:
-            output_string += f"-security\n"
-            for schema in security:
-                for name, scopes in schema.items():
-                    output_string += f"{name}: {scopes}\n"
-        output_string += f"{content}\n---\n"
+        for endpoint in path_data['endpoints']:
+            metadata = endpoint.get("metadata")
+            content = endpoint.get("content")
+
+            output_string += f"#method:{metadata.get('method')}\n"
+            security = metadata.get("security")
+            if security:
+                output_string += f"-security\n"
+                for schema in security:
+                    for name, scopes in schema.items():
+                        output_string += f"{name}: {scopes}\n"
+                output_string += "-\n"
+            output_string += f"{content}\n"
+        output_string += "---\n"
+
+    # for endpoint in endpoints_with_metadata:
+    #     metadata = endpoint.get("metadata")
+    #     content = endpoint.get("content")
+    #
+    #     output_string += f"-method:{metadata.get('method')}\n"
+    #     security = metadata.get("security")
+    #     if security:
+    #         output_string += f"-security\n"
+    #         for schema in security:
+    #             for name, scopes in schema.items():
+    #                 output_string += f"{name}: {scopes}\n"
+    #     output_string += f"{content}\n---\n"
 
     return output_string, types
 
