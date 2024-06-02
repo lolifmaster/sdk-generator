@@ -440,7 +440,7 @@ def minify(spec):
                     else:
                         resolve_refs_types(spec, parameter, types)
                         ref_name = f"#{parameter['$ref'].split('/')[-1]}"
-                        paths_with_metadata[path]['parameters'].append(ref_name)
+                        paths_with_metadata[path]['parameters'].append(f'ref: {ref_name}')
 
         for method, endpoint in methods.items():
             if method not in methods_to_handle or (
