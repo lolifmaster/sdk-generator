@@ -38,6 +38,7 @@ keys_to_keep_or_remove = {
     "tags": False,
     "security": False,
     "description": False,
+    'servers': True,
 }
 
 key_abbreviations = {
@@ -237,7 +238,7 @@ def populate_keys(endpoint, openapi_spec):
                             ] = bad_response_content
 
     for key, value in endpoint.items():
-        if key not in keys_to_keep_or_remove:
+        if key not in extracted_endpoint_data and keys_to_keep_or_remove.get(key, False):
             extracted_endpoint_data[key] = value
 
     return extracted_endpoint_data
