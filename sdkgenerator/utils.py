@@ -302,28 +302,28 @@ def is_all_steps_within_limit(
     )
 
 
-def validate_openapi_spec(openapi_spec: dict, allowed_methods=None):
+def validate_openapi_spec(openapi_spec: dict):
     """
     Validate the OpenAPI specification file.
 
     :param openapi_spec: The OpenAPI specification as a dictionary.
     :type openapi_spec: dict
-    :param allowed_methods: The allowed HTTP methods.
+
+    :raises ValueError: If the OpenAPI specification is invalid.
 
     :return: None
     """
-    if allowed_methods is None:
-        allowed_methods = {
-            "get",
-            "post",
-            "put",
-            "delete",
-            "patch",
-            "head",
-            "options",
-            "trace",
-            "connect",
-        }
+    http_methods = {
+        "get",
+        "post",
+        "put",
+        "delete",
+        "patch",
+        "head",
+        "options",
+        "trace",
+        "connect",
+    }
     if not openapi_spec:
         raise ValueError("Empty OpenAPI spec file.")
 
@@ -333,7 +333,6 @@ def validate_openapi_spec(openapi_spec: dict, allowed_methods=None):
     if "servers" not in openapi_spec or not openapi_spec["servers"]:
         raise ValueError("Invalid OpenAPI spec file. Missing servers.")
     server = openapi_spec["servers"][0]["url"]
-    print(server)
     if not server:
         raise ValueError("Invalid OpenAPI spec file. Missing server URL.")
 
@@ -343,10 +342,8 @@ def validate_openapi_spec(openapi_spec: dict, allowed_methods=None):
 
     for path, methods in paths.items():
         for method, details in methods.items():
-            if method not in allowed_methods:
-                raise ValueError(
-                    f"Invalid OpenAPI spec file. Invalid method {method} for {path}."
-                )
+            if method.lower() not in http_methods:
+                continue
             if not details.get("operationId"):
                 raise ValueError(
                     f"Invalid OpenAPI spec file. Missing operationId for {method} {path}."
