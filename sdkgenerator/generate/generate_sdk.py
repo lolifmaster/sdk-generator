@@ -3,8 +3,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-from sdkgenerator.extraction import get_api_data
-
+from sdkgenerator.manifier import get_api_data
 from sdkgenerator.utils import (
     is_all_steps_within_limit,
     split_openapi_spec,

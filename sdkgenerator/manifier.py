@@ -4,7 +4,8 @@ from datetime import datetime, date
 import re
 import string
 from pathlib import Path
-from sdkgenerator.utils import load_spec
+import yaml
+from sdkgenerator.utils import validate_openapi_spec
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -514,6 +515,34 @@ def extract_information(spec):
     return output_string, types
 
 
+def load_file(file_path: Path) -> dict:
+    with open(file_path, "r", encoding="utf-8") as file:
+        if file_path.suffix == ".json":
+            return json.load(file)
+        elif file_path.suffix in {".yaml", ".yml"}:
+            return yaml.safe_load(file)
+        else:
+            raise ValueError(f"Unsupported file format for {file_path}")
+
+
+def load_spec(file_path: Path) -> dict:
+    """
+    Load and verify the OpenAPI spec file.
+
+    :param file_path: The file path to the OpenAPI spec.
+    :type file_path: Path
+    :return: The OpenAPI spec as a string.
+    :rtype: str
+    """
+
+    file = load_file(file_path)
+
+    if not validate_openapi_spec(file):
+        raise ValueError("Invalid OpenAPI spec file.")
+
+    return file
+
+
 def process_file(file_path: Union[str, Path]):
     """
     Process an openapi specification file and save the minified spec to a text file.
@@ -523,3 +552,19 @@ def process_file(file_path: Union[str, Path]):
 
     spec = load_spec(file_path)
     return extract_information(spec)
+
+
+def get_api_data(file_path: Path) -> tuple[str, dict]:
+    """
+    Load, validate and process the OpenAPI spec file.
+
+    Args:
+    file_path: The file path to the OpenAPI spec.
+
+    Returns:
+        tuple[str, str]: The OpenAPI spec as a string, and the types as a string.
+
+    """
+    api_spec, types_json = process_file(file_path)
+
+    return api_spec, types_json

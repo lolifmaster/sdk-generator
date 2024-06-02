@@ -330,7 +330,10 @@ def validate_openapi_spec(openapi_spec: dict, allowed_methods=None):
     if not isinstance(openapi_spec, dict):
         raise ValueError("Invalid OpenAPI spec file. Must be a dictionary.")
 
-    server = openapi_spec.get("servers", []).pop().get("url", "")
+    if "servers" not in openapi_spec or not openapi_spec["servers"]:
+        raise ValueError("Invalid OpenAPI spec file. Missing servers.")
+    server = openapi_spec["servers"][0]["url"]
+    print(server)
     if not server:
         raise ValueError("Invalid OpenAPI spec file. Missing server URL.")
 
@@ -369,31 +372,3 @@ def validate_openapi_spec(openapi_spec: dict, allowed_methods=None):
                         )
 
     return True
-
-
-def load_file(file_path: Path) -> dict:
-    with open(file_path, "r", encoding="utf-8") as file:
-        if file_path.suffix == ".json":
-            return json.load(file)
-        elif file_path.suffix in {".yaml", ".yml"}:
-            return yaml.safe_load(file)
-        else:
-            raise ValueError(f"Unsupported file format for {file_path}")
-
-
-def load_spec(file_path: Path) -> dict:
-    """
-    Load and verify the OpenAPI spec file.
-
-    :param file_path: The file path to the OpenAPI spec.
-    :type file_path: Path
-    :return: The OpenAPI spec as a string.
-    :rtype: str
-    """
-
-    file = load_file(file_path)
-
-    if not validate_openapi_spec(file):
-        raise ValueError("Invalid OpenAPI spec file.")
-
-    return file

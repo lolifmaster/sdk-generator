@@ -5,4 +5,3 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from sdkgenerator import *
 from sdkgenerator.db import db
-
