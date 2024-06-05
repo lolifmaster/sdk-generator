@@ -52,7 +52,7 @@ pipeline = [
 
 
 def generate_finetune_data():
-    data = list(db.aggregate(pipeline))
+    data = list(db['train_data'].aggregate(pipeline))
 
     output_file = Path(__file__).parent.parent / "data" / "finetune_data.jsonl"
 

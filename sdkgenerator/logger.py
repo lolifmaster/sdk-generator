@@ -22,11 +22,15 @@ def log_llm_response(
     """
 
     # save the response to the database
-    db.insert_one(
-        {"step": step, "sdk_name": sdk_name, "payload": payload, "response": response}
-    )
+    try:
+        db["responses"].insert_one(
+            {"step": step, "sdk_name": sdk_name, "payload": payload, "response": response}
+        )
 
-    with open(API_CALLS_DIR / "logs.txt", "a+", encoding="utf-8") as file:
-        file.write(f"Step: {step}\n")
-        file.write(f"Payload: {json.dumps(payload, indent=2)}\n")
-        file.write(f"Response: {json.dumps(response, indent=2)}\n-----------\n")
+        # save the response to the logs file
+        with open(API_CALLS_DIR / "logs.txt", "a+", encoding="utf-8") as file:
+            file.write(f"Step: {step}\n")
+            file.write(f"Payload: {json.dumps(payload, indent=2)}\n")
+            file.write(f"Response: {json.dumps(response, indent=2)}\n-----------\n")
+    except Exception as e:
+        print(f"Error logging response: {e}")
