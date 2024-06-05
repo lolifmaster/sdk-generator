@@ -38,7 +38,7 @@ keys_to_keep_or_remove = {
     "tags": False,
     "security": False,
     "description": False,
-    'servers': True,
+    "servers": True,
 }
 
 key_abbreviations = {
@@ -101,7 +101,7 @@ security_types_to_handle = {
 
 
 def resolve_refs_types(
-        openapi_spec, ref, types, keys_to_remove=None, resolving_refs=None
+    openapi_spec, ref, types, keys_to_remove=None, resolving_refs=None
 ):
     if keys_to_remove is None:
         keys_to_remove = types_keys_to_remove
@@ -173,8 +173,8 @@ def resolve_refs_request_body(openapi_spec, ref) -> dict:
 def populate_keys(endpoint, openapi_spec):
     # Gets the main keys from the specs
     extracted_endpoint_data = {}
-    if keys_to_keep_or_remove['operationId']:
-        extracted_endpoint_data['operationId'] = endpoint.get('operationId')
+    if keys_to_keep_or_remove["operationId"]:
+        extracted_endpoint_data["operationId"] = endpoint.get("operationId")
 
     if keys_to_keep_or_remove["parameters"]:
         # Extract parameters from the endpoint and specify if they are required
@@ -226,9 +226,9 @@ def populate_keys(endpoint, openapi_spec):
                 for status_code, response in endpoint["responses"].items():
                     # Check if status_code starts with '4' or '5' (4xx or 5xx)
                     if (
-                            status_code.startswith("4")
-                            or status_code.startswith("5")
-                            or "def" in status_code
+                        status_code.startswith("4")
+                        or status_code.startswith("5")
+                        or "def" in status_code
                     ):
                         # Extract the schema or other relevant information from the response
                         bad_response_content = response
@@ -238,7 +238,9 @@ def populate_keys(endpoint, openapi_spec):
                             ] = bad_response_content
 
     for key, value in endpoint.items():
-        if key not in extracted_endpoint_data and keys_to_keep_or_remove.get(key, False):
+        if key not in extracted_endpoint_data and keys_to_keep_or_remove.get(
+            key, False
+        ):
             extracted_endpoint_data[key] = value
 
     return extracted_endpoint_data
@@ -275,9 +277,9 @@ def remove_unnecessary_keys(endpoint):
                 if k == "enum" and not keys_to_keep_or_remove["enums"]:
                     del current_data[k]
                 elif (
-                        k == "description"
-                        and len(parent_keys) > 0
-                        and not keys_to_keep_or_remove["nested_descriptions"]
+                    k == "description"
+                    and len(parent_keys) > 0
+                    and not keys_to_keep_or_remove["nested_descriptions"]
                 ):
                     del current_data[k]
                 if k in current_data and isinstance(current_data[k], (dict, list)):
@@ -318,7 +320,8 @@ def abbreviate(data, abbreviations):
             abbreviations.get(key, key): abbreviate(
                 abbreviations.get(str(value), value), abbreviations
             )
-            for key, value in data.items() if keys_to_keep_or_remove.get(key, True)
+            for key, value in data.items()
+            if keys_to_keep_or_remove.get(key, True)
         }
     elif isinstance(data, list):
         # Recursively process list items
@@ -419,32 +422,32 @@ def minify(spec):
 
     paths_with_metadata = {}
     for path, methods in spec["paths"].items():
-        paths_with_metadata[path] = {
-            'parameters': [],
-            'endpoints': []
-        }
-        if 'parameters' in methods:
-            parameters = methods['parameters']
+        paths_with_metadata[path] = {"parameters": [], "endpoints": []}
+        if "parameters" in methods:
+            parameters = methods["parameters"]
             for parameter in parameters:
                 if isinstance(parameter, dict):
-                    if '$ref' not in parameter:
+                    if "$ref" not in parameter:
                         parameter = remove_empty_keys(parameter)
                         parameter = remove_unnecessary_keys(parameter)
-                        if 'required' in parameter:
-                            parameter['required'] = str(parameter['required'])
+                        if "required" in parameter:
+                            parameter["required"] = str(parameter["required"])
                         else:
-                            parameter['required'] = "False"
+                            parameter["required"] = "False"
                         parameter = abbreviate(parameter, key_abbreviations)
                         parameter = write_dict_to_text(parameter)
-                        paths_with_metadata[path]['parameters'].append(parameter)
+                        paths_with_metadata[path]["parameters"].append(parameter)
                     else:
                         resolve_refs_types(spec, parameter, types)
                         ref_name = f"#{parameter['$ref'].split('/')[-1]}"
-                        paths_with_metadata[path]['parameters'].append(f'ref: {ref_name}')
+                        paths_with_metadata[path]["parameters"].append(
+                            f"ref: {ref_name}"
+                        )
 
         for method, endpoint in methods.items():
             if method not in methods_to_handle or (
-                    endpoint.get("deprecated", False) and not keys_to_keep_or_remove["deprecated"]
+                endpoint.get("deprecated", False)
+                and not keys_to_keep_or_remove["deprecated"]
             ):
                 continue
 
@@ -511,7 +514,7 @@ def minify(spec):
             }
             endpoint_dict = {"metadata": metadata, "content": content_string}
 
-            paths_with_metadata[path]['endpoints'].append(endpoint_dict)
+            paths_with_metadata[path]["endpoints"].append(endpoint_dict)
 
     return (
         paths_with_metadata,
@@ -566,12 +569,12 @@ def extract_information(spec):
     for path, path_data in paths_with_metadata.items():
         output_string += f"##path: {path}\n"
 
-        if path_data['parameters']:
+        if path_data["parameters"]:
             output_string += f"#parameters\n"
-            for parameter in path_data['parameters']:
+            for parameter in path_data["parameters"]:
                 output_string += f"{parameter}\n"
 
-        for endpoint in path_data['endpoints']:
+        for endpoint in path_data["endpoints"]:
             metadata = endpoint.get("metadata")
             content = endpoint.get("content")
 

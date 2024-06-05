@@ -24,7 +24,12 @@ def log_llm_response(
     # save the response to the database
     try:
         db["responses"].insert_one(
-            {"step": step, "sdk_name": sdk_name, "payload": payload, "response": response}
+            {
+                "step": step,
+                "sdk_name": sdk_name,
+                "payload": payload,
+                "response": response,
+            }
         )
 
         # save the response to the logs file
