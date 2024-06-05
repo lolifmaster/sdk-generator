@@ -3,10 +3,10 @@ import zipfile
 import gradio as gr
 from gradio.utils import NamedString
 from sdkgenerator.generate import generate_sdk
+from sdkgenerator.types import Language
 
 
-# Define a function to process the OpenAPI specification file
-def process_openapi_file(openapi_file: NamedString, user_input: str):
+def process_openapi_file(openapi_file: NamedString, user_input: str, language: Language = "python"):
     UPLOAD_DIR = Path(__file__).parent / "GUI_uploads"
     UPLOAD_DIR.mkdir(exist_ok=True)
 
@@ -19,7 +19,7 @@ def process_openapi_file(openapi_file: NamedString, user_input: str):
     uploaded_file_path.write_text(openapi_content.decode("utf-8"))
 
     sdk_folder, sdk_output_file, types_file = generate_sdk(
-        uploaded_file_path, user_rules=user_input, language="python"
+        uploaded_file_path, user_rules=user_input, language=language
     )
 
     sdk_path = COMPRESSED_SDKS / f"{sdk_folder.stem}_sdk.zip"
@@ -49,8 +49,22 @@ def process_openapi_file(openapi_file: NamedString, user_input: str):
 # Create the Gradio interface
 interface = gr.Interface(
     fn=process_openapi_file,
-    inputs=["file", "text"],
-    outputs=["text", "text", "file"],
+    inputs=["file", "text", gr.Dropdown(
+        label="Language", choices=["python"], value='python'
+    )],
+    outputs=[
+        gr.TextArea(
+            label="SDK Code",
+        )
+        ,
+        gr.TextArea(
+            label="Shared Types"
+        )
+        ,
+        gr.File(
+            label="Generated sdk zip file"
+        )
+    ],
     title="SDK Generator",
     description="Generate SDKs from OpenAPI specifications.",
 )
