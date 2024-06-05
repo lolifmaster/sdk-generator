@@ -3,13 +3,7 @@ from pathlib import Path
 import traceback
 
 # Mock user rules
-RULES = [
-    "Sdk must use the requests library to make the requests.",
-    "Sdk must be a class with methods for each endpoint in the API, choose a name for the method based on what it does.",
-    "The requests must handle authenticated request with a _make_authenticated_request.",
-    "Use json for the request body.",
-    "The methods must return The requests library Response object.",
-]
+user_rules = "1. Use the requests library: All HTTP requests within the SDK must be made using the 'requests' library.\n2. Class structure: The SDK must be a class, with each method representing an endpoint in the API. Choose method names that reflect the action or resource they interact with.\n3. Authenticated requests: Implement a method '_make_authenticated_request' to handle authenticated requests.\n4. JSON request body: Use JSON format for the body of all requests.\n5. Return type: All methods must return the 'Response' object from the 'requests' library."
 
 
 def main():
@@ -26,7 +20,7 @@ def main():
         print(f"Generating SDK for {file.stem}...")
 
         try:
-            generate_sdk(file, user_rules=RULES, language="python")
+            generate_sdk(file, user_rules=user_rules, language="python")
         except Exception as e:
             print(f"Failed to generate SDK for {file.stem}: {e}")
             print(traceback.format_exc())

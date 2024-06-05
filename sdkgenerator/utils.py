@@ -225,7 +225,7 @@ def is_all_steps_within_limit(
     open_specs: str,
     types_json: dict,
     *,
-    user_rules: list[str],
+    user_rules: str,
     lang: Language = "python",
 ) -> bool:
     """
@@ -240,7 +240,7 @@ def is_all_steps_within_limit(
 
     :rtype: bool
     """
-    rules = "#RULES\n" + "\n".join(user_rules) if user_rules else ""
+    rules = "#RULES:\n" + user_rules if user_rules else ""
     with_types = not not types_json
 
     if with_types:

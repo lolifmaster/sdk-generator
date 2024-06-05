@@ -29,18 +29,18 @@ def pipeline_with_types(
     api_spec: str,
     types_json: dict,
     *,
-    user_rules: list[str],
+    user_rules: str,
     sdk_module: Path,
     language: Language = "python",
     api_spec_name: str,
-):
+) -> tuple[str, str, Path]:
     types_code, file_extension = generate_types(str(types_json), language=language)
 
     # create the types file
     types_file = sdk_module / f"types{file_extension}"
     types_file.write_text(types_code)
 
-    rules = "#RULES\n" + "\n".join(user_rules) if user_rules else ""
+    rules = "#RULES\n:" + user_rules.strip() if user_rules.strip() else ""
 
     initial_code, history = generate_initial_code(
         api_spec,
@@ -72,17 +72,17 @@ def pipeline_with_types(
         language=language,
     )
 
-    return code, file_extension
+    return code, file_extension, types_file
 
 
 def pipeline_without_types(
     api_spec: str,
     *,
     api_spec_name: str,
-    user_rules: list[str],
+    user_rules: str,
     language: Language = "python",
 ):
-    rules = "#RULES\n" + "\n".join(user_rules) if user_rules else ""
+    rules = "#RULES\n:" + user_rules.strip() if user_rules.strip() else ""
 
     initial_code = generate_initial_code_without_types(
         api_spec, language=language, sdk_name=api_spec_name, rules=rules
@@ -133,8 +133,8 @@ def generate_sdk(
     *,
     output_dir: Path = GENERATED_SDK_DIR,
     language: Language = "python",
-    user_rules: list[str],
-) -> Path:
+    user_rules: str,
+) -> tuple[Path, Path | None, Path | None]:
     """
     Generate full SDK for the API spec and return the path to the generated SDK file.
     """
@@ -184,10 +184,10 @@ def generate_sdk(
                     language=language,
                 )
 
-            return sub_docs_dir
+            return sub_docs_dir, None, None
 
     if types_json:
-        code, file_extension = pipeline_with_types(
+        code, file_extension, types_file = pipeline_with_types(
             api_spec,
             types_json,
             sdk_module=sdk_module,
@@ -195,6 +195,11 @@ def generate_sdk(
             user_rules=user_rules,
             language=language,
         )
+        # create the sdk file
+        sdk_output_file = sdk_module / f"{api_spec_name}{file_extension}"
+        sdk_output_file.write_text(code)
+
+        return sdk_module, sdk_output_file, types_file
     else:
         code, file_extension = pipeline_without_types(
             api_spec,
@@ -203,8 +208,8 @@ def generate_sdk(
             language=language,
         )
 
-    # create the sdk file
-    sdk_output_file = sdk_module / f"{api_spec_name}{file_extension}"
-    sdk_output_file.write_text(code)
+        # create the sdk file
+        sdk_output_file = sdk_module / f"{api_spec_name}{file_extension}"
+        sdk_output_file.write_text(code)
 
-    return sdk_output_file
+        return sdk_module, sdk_output_file, None

@@ -1,42 +1,58 @@
-import gradio as gr
-import time
-from sdkgenerator.manifier import get_api_data
 from pathlib import Path
+import zipfile
+import gradio as gr
 from gradio.utils import NamedString
-
-
-def generate_sdk(message):
-    for step in range(5):
-        time.sleep(1)
-        yield f"step {step + 1} of 5"
-    yield f"done! {message}"
+from sdkgenerator.generate import generate_sdk
 
 
 # Define a function to process the OpenAPI specification file
-def process_openapi_file(openapi_file_name: NamedString, user_input: str):
+def process_openapi_file(openapi_file: NamedString, user_input: str):
     UPLOAD_DIR = Path(__file__).parent / "GUI_uploads"
     UPLOAD_DIR.mkdir(exist_ok=True)
 
-    GENERATED_SDK_DIR = Path(__file__).parent / "GUI_generated_sdks"
-    GENERATED_SDK_DIR.mkdir(exist_ok=True)
+    COMPRESSED_SDKS = Path(__file__).parent / "compressed_sdks"
+    COMPRESSED_SDKS.mkdir(exist_ok=True)
+    with open(openapi_file.name, "rb") as file:
+        openapi_content = file.read()
 
-    uploaded_file_path = UPLOAD_DIR / Path(openapi_file_name.name).name
+    uploaded_file_path = UPLOAD_DIR / Path(openapi_file.name).name
+    uploaded_file_path.write_text(openapi_content.decode("utf-8"))
 
-    api_specs, types = get_api_data(uploaded_file_path)
+    sdk_folder, sdk_output_file, types_file = generate_sdk(
+        uploaded_file_path, user_rules=user_input, language="python"
+    )
 
-    generated_sdk_path = GENERATED_SDK_DIR / f"{uploaded_file_path.stem}.txt"
-    generated_sdk_path.write_text(api_specs)
+    sdk_path = COMPRESSED_SDKS / f"{sdk_folder.stem}_sdk.zip"
+    zipped_sdk = zipfile.ZipFile(sdk_path, "w")
 
-    return api_specs, f"SDK generated at {user_input}"
+    for file in sdk_folder.rglob("*"):
+        zipped_sdk.write(file, file.relative_to(sdk_folder))
+
+    if not sdk_folder.is_dir():
+        raise Exception("No sdk returned")
+
+    zipped_sdk = zipfile.ZipFile(UPLOAD_DIR / "sdk.zip", "w")
+
+    for file in sdk_folder.rglob("*"):
+        zipped_sdk.write(file, file.relative_to(sdk_folder))
+
+    sdk_code = sdk_output_file.read_text()
+
+    if types_file and types_file.is_file():
+        types_code = types_file.read_text()
+
+        return sdk_code, types_code, str(sdk_path.absolute())
+
+    return sdk_code, "No shared types generated.", str(sdk_path.absolute())
 
 
 # Create the Gradio interface
 interface = gr.Interface(
     fn=process_openapi_file,
     inputs=["file", "text"],
-    outputs=["text", "text"],
-    title="OpenAPI Processor",
-    description="Upload an OpenAPI specification file to process it.",  # Optional: Description
+    outputs=["text", "text", "file"],
+    title="SDK Generator",
+    description="Generate SDKs from OpenAPI specifications.",
 )
 
 # Launch the interface
