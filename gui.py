@@ -6,7 +6,9 @@ from sdkgenerator.generate import generate_sdk
 from sdkgenerator.types import Language
 
 
-def process_openapi_file(openapi_file: NamedString, user_input: str, language: Language = "python"):
+def process_openapi_file(
+    openapi_file: NamedString, user_input: str, language: Language = "python"
+):
     UPLOAD_DIR = Path(__file__).parent / "GUI_uploads"
     UPLOAD_DIR.mkdir(exist_ok=True)
 
@@ -49,21 +51,17 @@ def process_openapi_file(openapi_file: NamedString, user_input: str, language: L
 # Create the Gradio interface
 interface = gr.Interface(
     fn=process_openapi_file,
-    inputs=["file", "text", gr.Dropdown(
-        label="Language", choices=["python"], value='python'
-    )],
+    inputs=[
+        "file",
+        "text",
+        gr.Dropdown(label="Language", choices=["python"], value="python"),
+    ],
     outputs=[
         gr.TextArea(
             label="SDK Code",
-        )
-        ,
-        gr.TextArea(
-            label="Shared Types"
-        )
-        ,
-        gr.File(
-            label="Generated sdk zip file"
-        )
+        ),
+        gr.TextArea(label="Shared Types"),
+        gr.File(label="Generated sdk zip file"),
     ],
     title="SDK Generator",
     description="Generate SDKs from OpenAPI specifications.",

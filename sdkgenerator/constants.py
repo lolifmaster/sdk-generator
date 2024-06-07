@@ -2,7 +2,7 @@ import pathlib
 
 
 API_CALLS_DIR = pathlib.Path(__file__).parent.parent.absolute() / "api_calls"
-
+DATA_DIR = pathlib.Path(__file__).parent.parent.absolute() / "data"
 GENERATED_SDK_DIR = pathlib.Path(__file__).parent.parent.absolute() / "generated_sdk"
 
 EDEN_AI_API = "https://api.edenai.run/v2/text/chat"
