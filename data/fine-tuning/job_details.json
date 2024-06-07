@@ -1,0 +1,73 @@
+{
+    "job_details": {
+        "id": "ftjob-msa4gxnXEDQZq709rE9y2GZX",
+        "created_at": 1717166286,
+        "error": {
+            "code": null,
+            "message": null,
+            "param": null
+        },
+        "fine_tuned_model": "ft:gpt-3.5-turbo-0125:eden-ai::9UxoYDO3",
+        "finished_at": 1717166792,
+        "hyperparameters": {
+            "n_epochs": 4,
+            "batch_size": 1,
+            "learning_rate_multiplier": 2
+        },
+        "model": "gpt-3.5-turbo-0125",
+        "object": "fine_tuning.job",
+        "organization_id": "org-TX8lX5CiTdnObb5wxAAmeZZU",
+        "result_files": [
+            "file-yIVTLG95SFLwehLW0XS4RAeD"
+        ],
+        "seed": 1074179681,
+        "status": "succeeded",
+        "trained_tokens": 681020,
+        "training_file": "file-UJCgtRFIRPZfQ2RcPE32PZF4",
+        "validation_file": null,
+        "estimated_finish": null,
+        "integrations": [],
+        "user_provided_suffix": null
+    },
+    "checkpoints": [
+        {
+            "object": "fine_tuning.job.checkpoint",
+            "id": "ftckpt_U9fIoX6V5wDUBlZSbe4ZvufY",
+            "created_at": 1717166789,
+            "fine_tuned_model_checkpoint": "ft:gpt-3.5-turbo-0125:eden-ai::9UxoYDO3",
+            "fine_tuning_job_id": "ftjob-msa4gxnXEDQZq709rE9y2GZX",
+            "metrics": {
+                "step": 88,
+                "train_loss": 0.027674762532114983,
+                "train_mean_token_accuracy": 0.9881080985069275
+            },
+            "step_number": 88
+        },
+        {
+            "object": "fine_tuning.job.checkpoint",
+            "id": "ftckpt_CBmbM1TYNsA9kriXMfaK9QKI",
+            "created_at": 1717166713,
+            "fine_tuned_model_checkpoint": "ft:gpt-3.5-turbo-0125:eden-ai::9UxoYi6P:ckpt-step-66",
+            "fine_tuning_job_id": "ftjob-msa4gxnXEDQZq709rE9y2GZX",
+            "metrics": {
+                "step": 66,
+                "train_loss": 0.008930117823183537,
+                "train_mean_token_accuracy": 0.9961152672767639
+            },
+            "step_number": 66
+        },
+        {
+            "object": "fine_tuning.job.checkpoint",
+            "id": "ftckpt_HRYRvG5iU2Jxi5saSYGxWHY7",
+            "created_at": 1717166637,
+            "fine_tuned_model_checkpoint": "ft:gpt-3.5-turbo-0125:eden-ai::9UxoYPRe:ckpt-step-44",
+            "fine_tuning_job_id": "ftjob-msa4gxnXEDQZq709rE9y2GZX",
+            "metrics": {
+                "step": 44,
+                "train_loss": 0.024469036608934402,
+                "train_mean_token_accuracy": 0.9922688007354736
+            },
+            "step_number": 44
+        }
+    ]
+}

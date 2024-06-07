@@ -1,7 +1,11 @@
 import yaml
 from sdkgenerator.types import Step, Agent
+from pathlib import Path
 
-with open("generator.config.yaml", "r") as file:
+# Load the configuration file
+config_path = Path(__file__).parent.parent / "generator.config.yaml"
+
+with open(config_path, "r") as file:
     config = yaml.safe_load(file)
 
 TEMPERATURE: dict[Step, float] = config["TEMPERATURE"]

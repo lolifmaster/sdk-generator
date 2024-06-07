@@ -19,10 +19,10 @@ AGENT:
     custom: True
 
 MAX_PROMPT_LENGTH:
-  types: 4096
-  initial_code: 4096
-  feedback: 4096
-  final_code: 4096
+  types: 6000
+  initial_code: 6000
+  feedback: 6000
+  final_code: 6000
 
 MAX_TOKENS:
   types: 4096

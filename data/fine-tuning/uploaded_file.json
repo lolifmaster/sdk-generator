@@ -1,0 +1,9 @@
+{
+  "id":"file-UJCgtRFIRPZfQ2RcPE32PZF4",
+  "bytes":756998,"created_at":1717165083,
+  "filename":"finetune_data.jsonl",
+  "object":"file",
+  "purpose":"fine-tune",
+  "status":"processed",
+  "status_details":null
+}
