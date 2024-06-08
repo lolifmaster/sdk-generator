@@ -29,3 +29,5 @@ MAX_TOKENS:
   initial_code: 4096
   feedback: 4096
   final_code: 4096
+
+TESTING: True

@@ -1,6 +1,7 @@
 from sdkgenerator.db import db
 from sdkgenerator.constants import API_CALLS_DIR
 from sdkgenerator.types import Step
+from sdkgenerator.config import AGENT
 import json
 
 
@@ -29,6 +30,7 @@ def log_llm_response(
                 "sdk_name": sdk_name,
                 "payload": payload,
                 "response": response,
+                "custom": AGENT[step]['custom']
             }
         )
 
