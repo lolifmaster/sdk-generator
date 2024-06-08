@@ -1,0 +1,554 @@
+{
+    "CurrencyTag": {
+        "enum": [
+            "crypto",
+            "erc20",
+            "ethereum",
+            "fiat"
+        ],
+        "type": "str"
+    },
+    "CurrencyCode": {
+        "type": "str"
+    },
+    "ClientValue": {
+        "type": "int"
+    },
+    "InputAmount": {
+        "type": "str"
+    },
+    "PlaceOrderRequestInputCommon": {
+        "props": {
+            "amount": {
+                "$ref": "InputAmount"
+            },
+            "currency": "CurrencyCode"
+        },
+        "req": [
+            "currency"
+        ],
+        "type": "obj"
+    },
+    "CountryCode": {
+        "type": "str"
+    },
+    "PlaceOrderRequestInputBankAccount": {
+        "allOf": [
+            {
+                "$ref": "PlaceOrderRequestInputCommon"
+            },
+            {
+                "props": {
+                    "iban": {
+                        "type": "str"
+                    },
+                    "owner": {
+                        "props": {
+                            "address": {
+                                "type": "str"
+                            },
+                            "address_complement": {
+                                "type": "str"
+                            },
+                            "city": {
+                                "type": "str"
+                            },
+                            "country": {
+                                "$ref": "CountryCode"
+                            },
+                            "name": {
+                                "type": "str"
+                            },
+                            "state": {
+                                "type": "str"
+                            },
+                            "zip": {
+                                "type": "str"
+                            }
+                        },
+                        "type": "obj"
+                    },
+                    "type": {
+                        "enum": [
+                            "bank_account"
+                        ],
+                        "type": "str"
+                    }
+                },
+                "req": [
+                    "type"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "PlaceOrderRequestInputBityAccount": {
+        "allOf": [
+            "PlaceOrderRequestInputCommon",
+            {
+                "props": {
+                    "type": {
+                        "enum": [
+                            "bity_account"
+                        ],
+                        "type": "str"
+                    }
+                },
+                "req": [
+                    "type"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "PlaceOrderRequestInputCryptoAddress": {
+        "allOf": [
+            "PlaceOrderRequestInputCommon",
+            {
+                "props": {
+                    "crypto_address": {
+                        "type": "str"
+                    },
+                    "type": {
+                        "enum": [
+                            "crypto_address"
+                        ],
+                        "type": "str"
+                    }
+                },
+                "req": [
+                    "type"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "PlaceOrderRequestInputOnlineInstantPayment": {
+        "allOf": [
+            "PlaceOrderRequestInputCommon",
+            {
+                "props": {
+                    "type": {
+                        "enum": [
+                            "online_instant_payment"
+                        ],
+                        "type": "str"
+                    }
+                },
+                "type": "obj"
+            }
+        ]
+    },
+    "PlaceOrderRequestInput": {
+        "oneOf": [
+            {
+                "$ref": "PlaceOrderRequestInputBankAccount"
+            },
+            {
+                "$ref": "PlaceOrderRequestInputBityAccount"
+            },
+            {
+                "$ref": "PlaceOrderRequestInputCryptoAddress"
+            },
+            {
+                "$ref": "PlaceOrderRequestInputOnlineInstantPayment"
+            }
+        ]
+    },
+    "OutputAmount": {
+        "type": "str"
+    },
+    "PlaceOrderRequestOutputCommon": {
+        "props": {
+            "amount": {
+                "$ref": "OutputAmount"
+            },
+            "currency": "CurrencyCode"
+        },
+        "req": [
+            "currency"
+        ],
+        "type": "obj"
+    },
+    "PostalAddressLegacy": {
+        "props": {
+            "address": {
+                "type": "str"
+            },
+            "address_complement": {
+                "type": "str"
+            },
+            "city": {
+                "type": "str"
+            },
+            "country": "CountryCode",
+            "state": {
+                "type": "str"
+            },
+            "zip": {
+                "type": "str"
+            }
+        },
+        "type": "obj"
+    },
+    "PostalAddressStructured": {
+        "props": {
+            "building_name": {
+                "type": "str"
+            },
+            "building_number": {
+                "type": "str"
+            },
+            "country": "CountryCode",
+            "country_subdivision": {
+                "type": "str"
+            },
+            "department": {
+                "type": "str"
+            },
+            "district_name": {
+                "type": "str"
+            },
+            "floor": {
+                "type": "str"
+            },
+            "post_box": {
+                "type": "str"
+            },
+            "post_code": {
+                "type": "str"
+            },
+            "room": {
+                "type": "str"
+            },
+            "street_name": {
+                "type": "str"
+            },
+            "subdepartment": {
+                "type": "str"
+            },
+            "town_location_name": {
+                "type": "str"
+            },
+            "town_name": {
+                "type": "str"
+            }
+        },
+        "type": "obj"
+    },
+    "PostalAddress": {
+        "anyOf": [
+            {
+                "$ref": "PostalAddressLegacy"
+            },
+            {
+                "$ref": "PostalAddressStructured"
+            }
+        ]
+    },
+    "QrReference": {
+        "type": "str"
+    },
+    "StructuredCreditorReference": {
+        "type": "str"
+    },
+    "PlaceOrderRequestOutputBankAccount": {
+        "allOf": [
+            {
+                "$ref": "PlaceOrderRequestOutputCommon"
+            },
+            {
+                "props": {
+                    "bic_swift": {
+                        "type": "str"
+                    },
+                    "iban": {
+                        "type": "str"
+                    },
+                    "owner": {
+                        "allOf": [
+                            {
+                                "props": {
+                                    "name": {
+                                        "type": "str"
+                                    }
+                                },
+                                "type": "obj"
+                            },
+                            {
+                                "$ref": "PostalAddress"
+                            }
+                        ]
+                    },
+                    "qr_reference": {
+                        "$ref": "QrReference"
+                    },
+                    "reference": {
+                        "type": "str"
+                    },
+                    "structured_creditor_reference": {
+                        "$ref": "StructuredCreditorReference"
+                    },
+                    "type": {
+                        "enum": [
+                            "bank_account"
+                        ],
+                        "type": "str"
+                    },
+                    "ultimate_debtor": {
+                        "allOf": [
+                            {
+                                "props": {
+                                    "name": {
+                                        "type": "str"
+                                    }
+                                },
+                                "type": "obj"
+                            },
+                            "PostalAddress"
+                        ]
+                    }
+                },
+                "req": [
+                    "iban",
+                    "owner",
+                    "type"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "PlaceOrderRequestOutputBityAccount": {
+        "allOf": [
+            "PlaceOrderRequestOutputCommon",
+            {
+                "props": {
+                    "type": {
+                        "enum": [
+                            "bity_account"
+                        ],
+                        "type": "str"
+                    }
+                },
+                "type": "obj"
+            }
+        ]
+    },
+    "PlaceOrderRequestOutputCryptoAddress": {
+        "allOf": [
+            "PlaceOrderRequestOutputCommon",
+            {
+                "props": {
+                    "crypto_address": {
+                        "type": "str"
+                    },
+                    "type": {
+                        "enum": [
+                            "crypto_address"
+                        ],
+                        "type": "str"
+                    }
+                },
+                "req": [
+                    "crypto_address",
+                    "type"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "PlaceOrderRequestOutput": {
+        "oneOf": [
+            {
+                "$ref": "PlaceOrderRequestOutputBankAccount"
+            },
+            {
+                "$ref": "PlaceOrderRequestOutputBityAccount"
+            },
+            {
+                "$ref": "PlaceOrderRequestOutputCryptoAddress"
+            }
+        ]
+    },
+    "PartnerFee": {
+        "props": {
+            "factor": {
+                "anyOf": [
+                    {
+                        "type": "num"
+                    },
+                    {
+                        "type": "str"
+                    }
+                ]
+            }
+        },
+        "req": [
+            "factor"
+        ],
+        "type": "obj"
+    },
+    "PlaceOrderRequest": {
+        "props": {
+            "client_value": {
+                "$ref": "ClientValue"
+            },
+            "contact_person": {
+                "props": {
+                    "email": {
+                        "type": "str"
+                    }
+                },
+                "type": "obj"
+            },
+            "input": {
+                "$ref": "PlaceOrderRequestInput"
+            },
+            "output": {
+                "$ref": "PlaceOrderRequestOutput"
+            },
+            "partner_fee": {
+                "$ref": "PartnerFee"
+            }
+        },
+        "req": [
+            "input",
+            "output"
+        ],
+        "type": "obj"
+    },
+    "AmountEstimateRequestCommon": {
+        "props": {
+            "fix_invalid_amount": {
+                "type": "bool"
+            },
+            "partner_fee": "PartnerFee"
+        },
+        "type": "obj"
+    },
+    "OrderInputType": {
+        "enum": [
+            "bank_account",
+            "bity_account",
+            "crypto_address",
+            "online_instant_payment"
+        ],
+        "type": "str"
+    },
+    "AmountEstimateRequestInputCommon": {
+        "props": {
+            "currency": "CurrencyCode",
+            "type": {
+                "$ref": "OrderInputType"
+            }
+        },
+        "req": [
+            "currency"
+        ],
+        "type": "obj"
+    },
+    "OrderOutputType": {
+        "enum": [
+            "bank_account",
+            "bity_account",
+            "crypto_address"
+        ],
+        "type": "str"
+    },
+    "AmountEstimateRequestOutputCommon": {
+        "props": {
+            "currency": "CurrencyCode",
+            "type": {
+                "$ref": "OrderOutputType"
+            }
+        },
+        "req": [
+            "currency"
+        ],
+        "type": "obj"
+    },
+    "InputAmountEstimateRequestOutput": {
+        "allOf": [
+            {
+                "$ref": "AmountEstimateRequestOutputCommon"
+            },
+            {
+                "props": {
+                    "amount": "OutputAmount"
+                },
+                "req": [
+                    "amount"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "InputAmountEstimateRequest": {
+        "allOf": [
+            {
+                "$ref": "AmountEstimateRequestCommon"
+            },
+            {
+                "props": {
+                    "input": {
+                        "$ref": "AmountEstimateRequestInputCommon"
+                    },
+                    "output": {
+                        "$ref": "InputAmountEstimateRequestOutput"
+                    }
+                },
+                "req": [
+                    "input",
+                    "output"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "OutputAmountEstimateRequestInput": {
+        "allOf": [
+            "AmountEstimateRequestInputCommon",
+            {
+                "props": {
+                    "amount": "InputAmount"
+                },
+                "req": [
+                    "amount"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "OutputAmountEstimateRequest": {
+        "allOf": [
+            "AmountEstimateRequestCommon",
+            {
+                "props": {
+                    "input": {
+                        "$ref": "OutputAmountEstimateRequestInput"
+                    },
+                    "output": "AmountEstimateRequestOutputCommon"
+                },
+                "req": [
+                    "input",
+                    "output"
+                ],
+                "type": "obj"
+            }
+        ]
+    },
+    "AmountEstimateRequest": {
+        "oneOf": [
+            {
+                "$ref": "InputAmountEstimateRequest"
+            },
+            {
+                "$ref": "OutputAmountEstimateRequest"
+            }
+        ]
+    },
+    "OrdersPerformMultipleEstimationsRequest": {
+        "items": "AmountEstimateRequest",
+        "type": "array"
+    }
+}

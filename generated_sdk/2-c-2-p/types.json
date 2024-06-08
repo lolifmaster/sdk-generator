@@ -1,0 +1,481 @@
+{
+    "BrowserDetails": {
+        "type": "obj",
+        "props": {
+            "version": {
+                "type": "str",
+                "nullable": true
+            },
+            "deviceType": {
+                "type": "str",
+                "nullable": true
+            },
+            "name": {
+                "type": "str",
+                "nullable": true
+            },
+            "os": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "MerchantValidationApplePay": {
+        "req": [
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "validationUrl": {
+                "type": "str",
+                "nullable": true
+            },
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    },
+    "PaymentBaseRequest": {
+        "req": [
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    },
+    "CardInstallmentPlanInfoRequest": {
+        "req": [
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "cardNo": {
+                "type": "str",
+                "nullable": true
+            },
+            "bankCode": {
+                "type": "str",
+                "nullable": true
+            },
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    },
+    "PaymentExchangeRateConverterRequest": {
+        "req": [
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "bin": {
+                "type": "str",
+                "nullable": true
+            },
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    },
+    "PayloadRequest": {
+        "type": "obj",
+        "props": {
+            "payload": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "PaymentLoyaltyPointInfoRequest": {
+        "req": [
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "providerID": {
+                "type": "str",
+                "nullable": true
+            },
+            "profileID": {
+                "type": "str",
+                "nullable": true
+            },
+            "referenceID": {
+                "type": "str",
+                "nullable": true
+            },
+            "cardNo": {
+                "type": "str",
+                "nullable": true
+            },
+            "expiryMonth": {
+                "type": "str",
+                "nullable": true
+            },
+            "expiryYear": {
+                "type": "str",
+                "nullable": true
+            },
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    },
+    "LoyaltyRewards": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "str",
+                "nullable": true
+            },
+            "Quantity": {
+                "type": "num",
+                "format": "double"
+            }
+        }
+    },
+    "LoyaltyDetails": {
+        "type": "obj",
+        "props": {
+            "providerID": {
+                "type": "str",
+                "nullable": true
+            },
+            "accountNo": {
+                "type": "str",
+                "nullable": true
+            },
+            "accountAuthData": {
+                "type": "str",
+                "nullable": true
+            },
+            "queryReferenceSpecified": {
+                "type": "bool",
+                "readOnly": true
+            },
+            "externalMerchantId": {
+                "type": "str",
+                "nullable": true
+            },
+            "redeemAmount": {
+                "type": "num",
+                "format": "double"
+            },
+            "rewards": {
+                "type": "array",
+                "items": "LoyaltyRewards",
+                "nullable": true
+            }
+        }
+    },
+    "PaymentParamsDataRequestV43": {
+        "type": "obj",
+        "props": {
+            "accountTokenization": {
+                "type": "bool"
+            },
+            "customerToken": {
+                "type": "str",
+                "nullable": true
+            },
+            "name": {
+                "type": "str",
+                "nullable": true
+            },
+            "email": {
+                "type": "str",
+                "nullable": true
+            },
+            "mobileNo": {
+                "type": "str",
+                "nullable": true
+            },
+            "accountNo": {
+                "type": "str",
+                "nullable": true
+            },
+            "securePayToken": {
+                "type": "str",
+                "nullable": true
+            },
+            "cardBank": {
+                "type": "str",
+                "nullable": true
+            },
+            "cardCountry": {
+                "type": "str",
+                "nullable": true
+            },
+            "installmentPeriod": {
+                "type": "int",
+                "format": "int32"
+            },
+            "payLaterPeriod": {
+                "type": "int",
+                "format": "int32",
+                "nullable": true
+            },
+            "interestType": {
+                "type": "str",
+                "nullable": true
+            },
+            "securityCode": {
+                "type": "str",
+                "nullable": true
+            },
+            "qrType": {
+                "type": "str",
+                "nullable": true
+            },
+            "fxRateID": {
+                "type": "str",
+                "nullable": true
+            },
+            "billingAddress1": {
+                "type": "str",
+                "nullable": true
+            },
+            "billingAddress2": {
+                "type": "str",
+                "nullable": true
+            },
+            "billingAddress3": {
+                "type": "str",
+                "nullable": true
+            },
+            "billingCity": {
+                "type": "str",
+                "nullable": true
+            },
+            "billingState": {
+                "type": "str",
+                "nullable": true
+            },
+            "billingPostalCode": {
+                "type": "str",
+                "nullable": true
+            },
+            "billingCountryCode": {
+                "type": "str",
+                "nullable": true
+            },
+            "paymentExpiry": {
+                "type": "str",
+                "nullable": true
+            },
+            "cardNo": {
+                "type": "str",
+                "nullable": true
+            },
+            "expiryMonth": {
+                "type": "str",
+                "nullable": true
+            },
+            "expiryYear": {
+                "type": "str",
+                "nullable": true
+            },
+            "pin": {
+                "type": "str",
+                "nullable": true
+            },
+            "loyaltyPoints": {
+                "type": "array",
+                "items": "LoyaltyDetails",
+                "nullable": true
+            },
+            "customerNote": {
+                "type": "str",
+                "nullable": true
+            },
+            "userAgent": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "PaymentOptionDetailsPaymentCode": {
+        "type": "obj",
+        "props": {
+            "channelCode": {
+                "type": "str",
+                "nullable": true
+            },
+            "agentCode": {
+                "type": "str",
+                "nullable": true
+            },
+            "agentChannelCode": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "PaymentParamsRequestV43": {
+        "type": "obj",
+        "props": {
+            "data": "PaymentParamsDataRequestV43",
+            "code": "PaymentOptionDetailsPaymentCode"
+        }
+    },
+    "PaymentRequestV43": {
+        "req": [
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "payment": "PaymentParamsRequestV43",
+            "responseReturnUrl": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientIP": {
+                "type": "str",
+                "nullable": true
+            },
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    },
+    "PaymentNotificationRequest": {
+        "req": [
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "plateform": {
+                "type": "str",
+                "nullable": true
+            },
+            "recipientID": {
+                "type": "str",
+                "nullable": true
+            },
+            "recipientName": {
+                "type": "str",
+                "nullable": true
+            },
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    },
+    "PaymentOptionDetailsRequest": {
+        "req": [
+            "categoryCode",
+            "groupCode",
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "categoryCode": {
+                "type": "str"
+            },
+            "groupCode": {
+                "type": "str"
+            },
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    },
+    "TransactionStatusRequest": {
+        "req": [
+            "paymentToken"
+        ],
+        "type": "obj",
+        "props": {
+            "additionalInfo": {
+                "type": "bool"
+            },
+            "paymentToken": {
+                "type": "str"
+            },
+            "locale": {
+                "type": "str",
+                "nullable": true
+            },
+            "clientID": {
+                "type": "str",
+                "format": "uuid"
+            },
+            "browserDetails": "BrowserDetails"
+        }
+    }
+}

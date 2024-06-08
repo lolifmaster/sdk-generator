@@ -1,0 +1,67 @@
+{
+    "SettleRequestBody": {
+        "type": "obj",
+        "props": {
+            "amount": {
+                "type": "num"
+            },
+            "settlementDate": {
+                "type": "str",
+                "format": "date"
+            }
+        }
+    },
+    "FundingRequestSubmissionRequestBody": {
+        "type": "obj",
+        "props": {
+            "collectionsPaydown": {
+                "type": "obj",
+                "props": {
+                    "amount": {
+                        "type": "num"
+                    },
+                    "targetFundingDate": {
+                        "type": "str",
+                        "format": "date"
+                    }
+                }
+            },
+            "collectionsRecycle": {
+                "type": "obj",
+                "props": {
+                    "amount": {
+                        "type": "num"
+                    },
+                    "targetFundingDate": {
+                        "type": "str",
+                        "format": "date"
+                    }
+                }
+            },
+            "curePaydown": {
+                "type": "obj",
+                "props": {
+                    "amount": {
+                        "type": "num"
+                    },
+                    "targetFundingDate": {
+                        "type": "str",
+                        "format": "date"
+                    }
+                }
+            },
+            "drawRequest": {
+                "type": "obj",
+                "props": {
+                    "amount": {
+                        "type": "num"
+                    },
+                    "targetFundingDate": {
+                        "type": "str",
+                        "format": "date"
+                    }
+                }
+            }
+        }
+    }
+}

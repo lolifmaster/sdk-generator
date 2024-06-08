@@ -1,0 +1,72 @@
+{
+    "UpsertSecretRequestV1": {
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "value": {
+                "type": "str"
+            }
+        },
+        "req": [
+            "name",
+            "value"
+        ],
+        "type": "obj"
+    },
+    "model_id": {
+        "schema": {
+            "type": "str"
+        },
+        "name": "model_id",
+        "in": "path",
+        "req": true
+    },
+    "deployment_id": {
+        "schema": {
+            "type": "str"
+        },
+        "name": "deployment_id",
+        "in": "path",
+        "req": true
+    },
+    "UpdateAutoscalingSettingsV1": {
+        "props": {
+            "min_replica": {
+                "def": null,
+                "type": "int",
+                "nullable": true
+            },
+            "max_replica": {
+                "def": null,
+                "type": "int",
+                "nullable": true
+            },
+            "autoscaling_window": {
+                "def": null,
+                "type": "int",
+                "nullable": true
+            },
+            "scale_down_delay": {
+                "def": null,
+                "type": "int",
+                "nullable": true
+            },
+            "concurrency_target": {
+                "def": null,
+                "type": "int",
+                "nullable": true
+            }
+        },
+        "type": "obj"
+    },
+    "PromoteRequestV1": {
+        "props": {
+            "scale_down_previous_production": {
+                "def": true,
+                "type": "bool"
+            }
+        },
+        "type": "obj"
+    }
+}

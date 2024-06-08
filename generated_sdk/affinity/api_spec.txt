@@ -1,0 +1,604 @@
+##IMPORTANT: base_url://api.affinity.co
+---
+##SECURITY SCHEMES
+-bearerAuth
+type: http
+scheme: bearer
+---
+##SECURITY SCOPES
+bearerAuth: []
+---
+##ENDPOINTS
+---
+-method:get
+path: /v2/auth/whoami
+opid: Auth_getCurrentUser
+sum: Get current user
+---
+-method:get
+path: /v2/companies
+opid: Companies_getAll
+params
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+explode: True
+in: query
+name: ids
+schema
+items
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+type: arr
+style: form
+req: False
+explode: True
+in: query
+name: fieldIds
+schema
+items
+format: str
+type: str
+type: arr
+style: form
+req: False
+explode: True
+in: query
+name: fieldTypes
+schema
+items
+enum
+enriched
+global
+relationship-intelligence
+format: str
+type: str
+type: arr
+style: form
+req: False
+sum: Get all Companies
+---
+-method:get
+path: /v2/companies/fields
+opid: Companies_getFieldMetadata
+params
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get metadata on Company Fields
+---
+-method:get
+path: /v2/companies/id
+opid: Companies_getSingleCompany
+params
+in: path
+name: id
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+explode: True
+in: query
+name: fieldIds
+schema
+items
+format: str
+type: str
+type: arr
+style: form
+req: False
+explode: True
+in: query
+name: fieldTypes
+schema
+items
+enum
+enriched
+global
+relationship-intelligence
+format: str
+type: str
+type: arr
+style: form
+req: False
+sum: Get a single Company
+---
+-method:get
+path: /v2/companies/id/lists
+opid: Companies_getListsMetadata
+params
+in: path
+name: id
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get a Companys Lists
+---
+-method:get
+path: /v2/companies/id/list-entries
+opid: Companies_getListEntries
+params
+in: path
+name: id
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get a Companys List Entries
+---
+-method:get
+path: /v2/lists
+opid: Lists_getMetadata
+params
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get metadata on all Lists
+---
+-method:get
+path: /v2/lists/listId/list-entries
+opid: Lists_getAllListEntries
+params
+in: path
+name: listId
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+explode: True
+in: query
+name: fieldIds
+schema
+items
+format: str
+type: str
+type: arr
+style: form
+req: False
+explode: True
+in: query
+name: fieldTypes
+schema
+items
+enum
+enriched
+global
+list
+relationship-intelligence
+format: str
+type: str
+type: arr
+style: form
+req: False
+sum: Get all List Entries on a List
+---
+-method:get
+path: /v2/lists/listId
+opid: Lists_getMetadataSingle
+params
+in: path
+name: listId
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+sum: Get metadata on a single List
+---
+-method:get
+path: /v2/lists/listId/fields
+opid: Lists_getFieldMetadata
+params
+in: path
+name: listId
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get metadata on a single Lists Fields
+---
+-method:get
+path: /v2/lists/listId/saved-views
+opid: Lists_listSavedViewsMetadata
+params
+in: path
+name: listId
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get metadata on Saved Views
+---
+-method:get
+path: /v2/lists/listId/saved-views/viewId/list-entries
+opid: Lists_getSavedViewListEntries
+params
+in: path
+name: listId
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: path
+name: viewId
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get all List Entries on a Saved View
+---
+-method:get
+path: /v2/lists/listId/saved-views/viewId
+opid: Lists_getSavedViewMetadata
+params
+in: path
+name: listId
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: path
+name: viewId
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+sum: Get metadata on a single Saved View
+---
+-method:get
+path: /v2/opportunities
+opid: Opportunities_getAll
+params
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+explode: True
+in: query
+name: ids
+schema
+items
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+type: arr
+style: form
+req: False
+sum: Get all Opportunities
+---
+-method:get
+path: /v2/opportunities/id
+opid: Opportunities_getBasicInfo
+params
+in: path
+name: id
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+sum: Get a single Opportunity
+---
+-method:get
+path: /v2/persons
+opid: Persons_getAll
+params
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+explode: True
+in: query
+name: ids
+schema
+items
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+type: arr
+style: form
+req: False
+explode: True
+in: query
+name: fieldIds
+schema
+items
+format: str
+type: str
+type: arr
+style: form
+req: False
+explode: True
+in: query
+name: fieldTypes
+schema
+items
+enum
+enriched
+global
+relationship-intelligence
+format: str
+type: str
+type: arr
+style: form
+req: False
+sum: Get all Persons
+---
+-method:get
+path: /v2/persons/fields
+opid: Persons_getMetadata
+params
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get metadata on Person Fields
+---
+-method:get
+path: /v2/persons/id
+opid: Persons_getPersonFieldData
+params
+in: path
+name: id
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+explode: True
+in: query
+name: fieldIds
+schema
+items
+format: str
+type: str
+type: arr
+style: form
+req: False
+explode: True
+in: query
+name: fieldTypes
+schema
+items
+enum
+enriched
+global
+relationship-intelligence
+format: str
+type: str
+type: arr
+style: form
+req: False
+sum: Get a single Person
+---
+-method:get
+path: /v2/persons/id/lists
+opid: Persons_getListsMetadata
+params
+in: path
+name: id
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get a Persons Lists
+---
+-method:get
+path: /v2/persons/id/list-entries
+opid: Persons_paginateEntries
+params
+in: path
+name: id
+req: True
+schema
+format: int64
+maximum: 9223372036854776000
+minimum: 1
+type: int
+in: query
+name: cursor
+schema
+type: str
+req: False
+in: query
+name: limit
+schema
+def: 100
+format: int32
+maximum: 100
+minimum: 1
+type: int
+req: False
+sum: Get a Persons List Entries
+---

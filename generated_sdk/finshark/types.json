@@ -1,0 +1,696 @@
+{
+    "BookingStatusType": {
+        "enum": [
+            "ALL",
+            "BOOKED",
+            "PENDING"
+        ],
+        "type": "str"
+    },
+    "BankIdIdentifyDto": {
+        "type": "obj",
+        "props": {
+            "personalNumber": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "QrDataRequest": {
+        "req": [
+            "qrStartSecret",
+            "qrStartToken",
+            "qrTime"
+        ],
+        "type": "obj",
+        "props": {
+            "qrStartSecret": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "qrStartToken": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "qrTime": {
+                "type": "int",
+                "format": "int32"
+            }
+        }
+    },
+    "UserDataDto": {
+        "type": "obj",
+        "props": {
+            "authorizationId": {
+                "type": "str",
+                "nullable": true
+            },
+            "personalId": {
+                "type": "str",
+                "nullable": true
+            },
+            "corporateId": {
+                "type": "str",
+                "nullable": true
+            },
+            "name": {
+                "type": "str",
+                "nullable": true
+            },
+            "givenName": {
+                "type": "str",
+                "nullable": true
+            },
+            "surname": {
+                "type": "str",
+                "nullable": true
+            },
+            "email": {
+                "type": "str",
+                "nullable": true
+            },
+            "phoneNumber": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "Providers": {
+        "enum": [
+            "fi-op",
+            "fi-op-sand",
+            "fi-spankki",
+            "fi-spankki-sand",
+            "fi-nordea",
+            "fi-nordea-sand",
+            "fi-danskebank",
+            "fi-danskebank-sand",
+            "fi-handelsbanken",
+            "fi-handelsbanken-sand",
+            "fi-norwegian",
+            "fi-norwegian-sand",
+            "fi-revolut",
+            "fi-revolut-sand",
+            "fi-alandsbanken",
+            "fi-alandsbanken-sand",
+            "fi-morrowbank",
+            "fi-morrowbank-sand",
+            "fi-poppankki",
+            "fi-poppankki-sand",
+            "fi-saastopankki",
+            "fi-saastopankki-sand",
+            "fi-omasaastopankki",
+            "fi-omasaastopankki-sand",
+            "dk-nordea",
+            "dk-nordea-sand",
+            "dk-sparekassendanmark-sand",
+            "dk-sparekassendanmark",
+            "dk-lansparbank-sand",
+            "dk-lansparbank",
+            "dk-sparekassenkronjylland-sand",
+            "dk-sparekassenkronjylland",
+            "dk-folkesparekassen-sand",
+            "dk-folkesparekassen",
+            "dk-ikanobank-sand",
+            "dk-ikanobank",
+            "dk-basisbank-sand",
+            "dk-basisbank",
+            "dk-norwegian",
+            "dk-norwegian-sand",
+            "dk-danskebank",
+            "dk-danskebank-sand",
+            "dk-swedbank-sand",
+            "dk-swedbank",
+            "dk-sparnordbank-sand",
+            "dk-sparnordbank",
+            "dk-arbejderneslandsbank-sand",
+            "dk-arbejderneslandsbank",
+            "dk-nykreditbank-sand",
+            "dk-nykreditbank",
+            "dk-vestjyskbank-sand",
+            "dk-vestjyskbank",
+            "dk-coopbank-sand",
+            "dk-coopbank",
+            "dk-monsbank-sand",
+            "dk-monsbank",
+            "dk-andelskassenfelleskassen-sand",
+            "dk-andelskassenfelleskassen",
+            "dk-jyskebank",
+            "dk-jyskebank-sand",
+            "dk-ringkjobinglandbobank",
+            "dk-ringkjobinglandbobank-sand",
+            "dk-kreditbanken",
+            "dk-kreditbanken-sand",
+            "dk-revolut",
+            "dk-revolut-sand"
+        ],
+        "type": "str"
+    },
+    "UserIdentityVerificationDto": {
+        "type": "obj",
+        "props": {
+            "providerId": {
+                "$ref": "Providers"
+            },
+            "paymentId": {
+                "type": "str",
+                "nullable": true
+            },
+            "authorizationId": {
+                "type": "str",
+                "nullable": true
+            },
+            "successRedirectUrl": {
+                "type": "str",
+                "nullable": true
+            },
+            "failRedirectUrl": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "Country": {
+        "enum": [
+            "dk",
+            "fi",
+            "no",
+            "se"
+        ],
+        "type": "str"
+    },
+    "CreateInsightsRequest": {
+        "req": [
+            "country"
+        ],
+        "type": "obj",
+        "props": {
+            "country": {
+                "$ref": "Country"
+            },
+            "dropSharedAccounts": {
+                "type": "bool",
+                "nullable": true
+            },
+            "dropJointAccounts": {
+                "type": "bool",
+                "nullable": true
+            },
+            "period": {
+                "type": "int",
+                "format": "int32",
+                "nullable": true
+            },
+            "currency": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "PaymentAmount": {
+        "req": [
+            "currency",
+            "value"
+        ],
+        "type": "obj",
+        "props": {
+            "currency": {
+                "type": "str"
+            },
+            "value": {
+                "pattern": "^\\$?\\d+(\\.(\\d{0,2}))?$",
+                "type": "num",
+                "format": "double"
+            }
+        }
+    },
+    "ChargeBearerType": {
+        "enum": [
+            "SHAR",
+            "DEBT"
+        ],
+        "type": "str"
+    },
+    "PaymentAccountType": {
+        "enum": [
+            "IBAN",
+            "BBAN",
+            "BG",
+            "PG",
+            "SettlementAccountId"
+        ],
+        "type": "str"
+    },
+    "PaymentAccount": {
+        "req": [
+            "accountNumber",
+            "accountType"
+        ],
+        "type": "obj",
+        "props": {
+            "accountNumber": {
+                "type": "str"
+            },
+            "accountType": {
+                "$ref": "PaymentAccountType"
+            },
+            "bic": {
+                "type": "str",
+                "nullable": true
+            },
+            "currencyCode": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "Address": {
+        "type": "obj",
+        "props": {
+            "city": {
+                "type": "str",
+                "nullable": true
+            },
+            "street": {
+                "type": "str",
+                "nullable": true
+            },
+            "country": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "PaymentCreditor": {
+        "req": [
+            "account",
+            "name"
+        ],
+        "type": "obj",
+        "props": {
+            "account": {
+                "$ref": "PaymentAccount"
+            },
+            "address": {
+                "$ref": "Address"
+            },
+            "message": {
+                "type": "str",
+                "nullable": true
+            },
+            "name": {
+                "type": "str"
+            }
+        }
+    },
+    "PaymentDebtor": {
+        "req": [
+            "account"
+        ],
+        "type": "obj",
+        "props": {
+            "account": "PaymentAccount",
+            "email": {
+                "type": "str",
+                "nullable": true
+            },
+            "message": {
+                "type": "str",
+                "nullable": true
+            },
+            "name": {
+                "type": "str",
+                "nullable": true
+            },
+            "phoneNumber": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "PaymentRemittanceInformationType": {
+        "enum": [
+            "UNSTRUCTURED",
+            "OCR"
+        ],
+        "type": "str"
+    },
+    "PaymentRemittanceInformation": {
+        "req": [
+            "type",
+            "value"
+        ],
+        "type": "obj",
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "type": {
+                "$ref": "PaymentRemittanceInformationType"
+            }
+        }
+    },
+    "SettlementCreditor": {
+        "req": [
+            "accountNumber",
+            "accountType",
+            "amount"
+        ],
+        "type": "obj",
+        "props": {
+            "accountNumber": {
+                "type": "str"
+            },
+            "accountType": "PaymentAccountType",
+            "bic": {
+                "type": "str",
+                "nullable": true
+            },
+            "amount": {
+                "pattern": "^\\$?\\d+(\\.(\\d{0,2}))?$",
+                "type": "num",
+                "format": "double"
+            },
+            "currencyCode": {
+                "type": "str",
+                "nullable": true
+            },
+            "name": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "CreatePaymentRequest": {
+        "req": [
+            "amount",
+            "creditor",
+            "paymentProductId",
+            "region",
+            "remittanceInformation"
+        ],
+        "type": "obj",
+        "props": {
+            "amount": {
+                "$ref": "PaymentAmount"
+            },
+            "chargeBearer": {
+                "$ref": "ChargeBearerType"
+            },
+            "creditor": {
+                "$ref": "PaymentCreditor"
+            },
+            "debtor": {
+                "$ref": "PaymentDebtor"
+            },
+            "executionDate": {
+                "type": "int",
+                "format": "int64",
+                "nullable": true
+            },
+            "externalReference": {
+                "type": "str",
+                "nullable": true
+            },
+            "remittanceInformation": {
+                "$ref": "PaymentRemittanceInformation"
+            },
+            "region": {
+                "type": "str"
+            },
+            "paymentProductId": {
+                "type": "str"
+            },
+            "paymentTemplateId": {
+                "type": "str",
+                "nullable": true
+            },
+            "settlementCreditors": {
+                "type": "array",
+                "items": {
+                    "$ref": "SettlementCreditor"
+                },
+                "nullable": true
+            }
+        }
+    },
+    "PaymentRequestsCreateRequestRequest": {
+        "oneOf": [
+            {
+                "$ref": "CreatePaymentRequest"
+            },
+            "CreatePaymentRequest",
+            "CreatePaymentRequest"
+        ]
+    },
+    "CreatePaymentRefundRequest": {
+        "type": "obj",
+        "props": {
+            "amount": "PaymentAmount"
+        }
+    },
+    "PaymentTemplateAmount": {
+        "req": [
+            "currency",
+            "value"
+        ],
+        "type": "obj",
+        "props": {
+            "currency": {
+                "type": "str"
+            },
+            "value": {
+                "type": "num",
+                "format": "double"
+            },
+            "isAmountEditable": {
+                "type": "bool"
+            }
+        }
+    },
+    "CreatePaymentTemplate": {
+        "req": [
+            "creditor",
+            "name",
+            "paymentProductId",
+            "region"
+        ],
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "creditor": "PaymentCreditor",
+            "amount": {
+                "$ref": "PaymentTemplateAmount"
+            },
+            "remittanceInformation": "PaymentRemittanceInformation",
+            "region": {
+                "type": "str"
+            },
+            "paymentProductId": {
+                "type": "str"
+            }
+        }
+    },
+    "UpdatePaymentTemplate": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str",
+                "nullable": true
+            },
+            "creditor": "PaymentCreditor",
+            "amount": "PaymentTemplateAmount",
+            "remittanceInformation": "PaymentRemittanceInformation",
+            "region": {
+                "type": "str",
+                "nullable": true
+            },
+            "paymentProductId": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "PaymentRequestInit": {
+        "req": [
+            "debtor"
+        ],
+        "type": "obj",
+        "props": {
+            "amount": "PaymentAmount",
+            "remittanceInformation": "PaymentRemittanceInformation",
+            "debtor": "PaymentDebtor",
+            "executionDate": {
+                "type": "int",
+                "format": "int64",
+                "nullable": true
+            }
+        }
+    },
+    "PayoutCreditor": {
+        "type": "obj",
+        "props": {
+            "iban": {
+                "type": "str",
+                "nullable": true
+            },
+            "bban": {
+                "type": "str",
+                "nullable": true
+            },
+            "name": {
+                "type": "str",
+                "nullable": true
+            },
+            "personalNumber": {
+                "type": "str",
+                "nullable": true
+            },
+            "email": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "CreatePayout": {
+        "type": "obj",
+        "props": {
+            "paymentId": {
+                "type": "str"
+            },
+            "amount": "PaymentAmount",
+            "creditor": {
+                "$ref": "PayoutCreditor"
+            },
+            "externalReference": {
+                "type": "str",
+                "nullable": true
+            },
+            "delayExecution": {
+                "type": "bool"
+            }
+        }
+    },
+    "PayoutStatus": {
+        "enum": [
+            "CREATED",
+            "PROCESSED",
+            "CANCELED",
+            "FAILED"
+        ],
+        "type": "str"
+    },
+    "Frequency": {
+        "enum": [
+            "MONTHLY"
+        ],
+        "type": "str"
+    },
+    "RecurringPaymentCreateRequest": {
+        "req": [
+            "amount",
+            "creditor",
+            "frequency",
+            "paymentProductId",
+            "region",
+            "startDate"
+        ],
+        "type": "obj",
+        "props": {
+            "amount": "PaymentAmount",
+            "chargeBearer": "ChargeBearerType",
+            "creditor": "PaymentCreditor",
+            "frequency": {
+                "$ref": "Frequency"
+            },
+            "paymentProductId": {
+                "type": "str"
+            },
+            "region": {
+                "type": "str"
+            },
+            "remittanceInformation": "PaymentRemittanceInformation",
+            "startDate": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "SigningBasketCreateRequest": {
+        "type": "obj",
+        "props": {
+            "debtor": "PaymentDebtor",
+            "paymentIds": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                },
+                "nullable": true
+            },
+            "payments": {
+                "type": "array",
+                "items": {
+                    "oneOf": [
+                        "CreatePaymentRequest",
+                        "CreatePaymentRequest",
+                        "CreatePaymentRequest"
+                    ]
+                },
+                "nullable": true
+            }
+        }
+    },
+    "AuthorizationValidationRequest": {
+        "type": "obj",
+        "props": {
+            "psuId": {
+                "type": "str",
+                "nullable": true
+            },
+            "organizationId": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "WebhookEventType": {
+        "enum": [
+            "paymentStatusChanged",
+            "verifiedAccount",
+            "payoutStatusChanged"
+        ],
+        "type": "str"
+    },
+    "CreateWebhookRequest": {
+        "req": [
+            "event",
+            "url"
+        ],
+        "type": "obj",
+        "props": {
+            "event": {
+                "$ref": "WebhookEventType"
+            },
+            "url": {
+                "minLen": 1,
+                "type": "str"
+            }
+        }
+    },
+    "UpdateWebhookRequest": {
+        "req": [
+            "event",
+            "url"
+        ],
+        "type": "obj",
+        "props": {
+            "event": "WebhookEventType",
+            "url": {
+                "minLen": 1,
+                "type": "str"
+            }
+        }
+    }
+}

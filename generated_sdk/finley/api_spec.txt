@@ -1,0 +1,195 @@
+##IMPORTANT: base_url:api.finleycms.com
+---
+---
+##ENDPOINTS
+---
+-method:get
+path: /credit-facilities/creditFacilityId/borrowing-base-reports/borrowingBaseReportId
+opid: BorrowingBaseReports_getById
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+in: path
+name: borrowingBaseReportId
+schema
+type: str
+req: True
+sum: Get Borrowing-base Report
+---
+-method:get
+path: /credit-facilities/creditFacilityId/borrowing-base-reports
+opid: BorrowingBaseReports_getList
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+sum: List Borrowing-base Reports
+---
+-method:get
+path: /credit-facilities/creditFacilityId
+opid: CreditFacilities_getById
+params
+in: path
+name: creditFacility
+schema
+type: str
+req: True
+sum: Get Credit Facility
+---
+-method:get
+path: /credit-facilities
+opid: CreditFacilities_getList
+sum: Get Credit Facilities
+---
+-method:get
+path: /credit-facilities/creditFacilityId/expenses-fees
+opid: ExpensesFeesReports_getSummary
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+in: query
+name: startDate
+schema
+type: str
+req: False
+in: query
+name: endDate
+schema
+type: str
+req: False
+sum: Get Expenses  Fees Report
+---
+-method:get
+path: /credit-facilities/creditFacilityId/funding-requests/fundingRequestId
+opid: FundingRequests_getByRequestId
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+in: path
+name: fundingRequestId
+schema
+type: str
+req: True
+sum: Get Funding Request
+---
+-method:get
+path: /credit-facilities/creditFacilityId/funding-requests
+opid: FundingRequests_list
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+in: query
+name: borrowingBaseReportId
+schema
+type: str
+req: False
+in: query
+name: status
+schema
+type: str
+req: False
+enum
+approved
+canceled
+expired
+pending
+rejected
+submitted
+type: str
+sum: List Funding Requests
+---
+-method:post
+path: /credit-facilities/creditFacilityId/funding-requests
+opid: FundingRequests_createPendingRequestUsingLatestBorrowingBase
+sum: Create Funding Request
+---
+-method:get
+path: /credit-facilities/creditFacilityId/funding-requests/fundingRequestId/components/fundingRequestComponentId
+opid: FundingRequests_getComponentById
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+in: path
+name: fundingRequestId
+schema
+type: str
+req: True
+in: path
+name: fundingRequestComponentId
+schema
+type: str
+req: True
+sum: Get Component
+---
+-method:get
+path: /credit-facilities/creditFacilityId/funding-requests/fundingRequestId/components
+opid: FundingRequests_listComponentsByRequestId
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+in: path
+name: fundingRequestId
+schema
+type: str
+req: True
+sum: List Components
+---
+-method:put
+path: /credit-facilities/creditFacilityId/funding-requests/fundingRequestId/components/fundingRequestComponentId/settle
+opid: FundingRequests_settleComponentSettlement
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+in: path
+name: fundingRequestId
+schema
+type: str
+req: True
+in: path
+name: fundingRequestComponentId
+schema
+type: str
+req: True
+sum: Settle Component
+ref: #/components/schemas/SettleRequestBody
+---
+-method:put
+path: /credit-facilities/creditFacilityId/funding-requests/fundingRequestId/submit
+opid: FundingRequests_submitFundingRequest
+params
+in: path
+name: creditFacilityId
+schema
+type: str
+req: True
+in: path
+name: fundingRequestId
+schema
+type: str
+req: True
+sum: Submit Funding Request
+ref: #/components/schemas/FundingRequestSubmissionRequestBody
+---

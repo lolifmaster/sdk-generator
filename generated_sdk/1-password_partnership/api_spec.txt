@@ -1,0 +1,43 @@
+###IMPORTANT: base_url:https://billing.b5test.eu
+---
+###SECURITY SCHEMES
+-bearerAuth
+type: http
+scheme: bearer
+---
+###SECURITY SCOPES
+bearerAuth: []
+---
+###ENDPOINTS
+##path: /api/v1/partners/accounts
+#method:post
+opid: Account_beginProvisioningProcess
+ref: #CreatePartnerAccountRequest
+---
+##path: /api/v1/partners/accounts/{customer_account_uid}
+#method:get
+opid: Account_getByUid
+params
+name: customer_account_uid
+in: path
+req: True
+schema
+type: str
+#method:delete
+opid: Account_removeFromPartnership
+params
+name: customer_account_uid
+in: path
+req: True
+schema
+type: str
+#method:patch
+opid: Account_updateEndsAtByUid
+params
+name: customer_account_uid
+in: path
+req: True
+schema
+type: str
+ref: #UpdatePartnerAccountRequest
+---

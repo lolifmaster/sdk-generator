@@ -1,0 +1,458 @@
+##IMPORTANT: base_url:https://dev.foodkit.io/api
+---
+---
+##ENDPOINTS
+---
+-method:post
+path: /v1/storefront/customers
+opid: Customers_registerCustomer
+sum: Register customer
+ref: #/components/schemas/CustomersRegisterCustomerRequest
+---
+-method:patch
+path: /v1/storefront/customers/me
+opid: Customers_updateDetails
+sum: Update customer
+ref: #/components/schemas/CustomersUpdateDetailsRequest
+---
+-method:get
+path: /v1/storefront/customers/me
+opid: Customers_getDetails
+sum: Get current customer
+---
+-method:get
+path: /v2/storefront/customers/me/addresses
+opid: Customers_getAddresses
+sum: Get customer addresses
+---
+-method:get
+path: /v3/storefront/brands
+opid: Brands_getBrandContext
+sum: Get brand
+---
+-method:get
+path: /v3/storefront/customers/me/orders
+opid: Customers_getCustomerOrders
+sum: Get customer orders
+---
+-method:get
+path: /v3/storefront/vendors/vendor/promotions
+opid: Marketing_getPromotions
+params
+in: path
+name: vendor
+schema
+type: int
+req: True
+sum: Get promotions
+---
+-method:get
+path: /v4/storefront/customers/brands/brand/customers/customer/orders/id/track
+opid: Orders_trackStatus
+params
+in: path
+name: brand
+schema
+type: int
+req: True
+in: path
+name: customer
+schema
+type: int
+req: True
+in: path
+name: id
+schema
+type: int
+req: True
+sum: Track order
+---
+-method:get
+path: /v4/storefront/customers/brands/brand/customers/customer/tax-ids
+opid: Customers_getTaxIds
+params
+in: path
+name: brand
+schema
+type: int
+req: True
+in: path
+name: customer
+schema
+type: int
+req: True
+sum: Get customer tax IDs
+---
+-method:post
+path: /v4/storefront/customers/brands/brand/customers/customer/tax-ids
+opid: Customers_storeTaxId
+params
+in: path
+name: brand
+schema
+type: int
+req: True
+in: path
+name: customer
+schema
+type: int
+req: True
+sum: Store customer tax ID
+ref: #/components/schemas/CustomersStoreTaxIdRequest
+---
+-method:get
+path: /v5/storefront/content/tenants/tenant/branch-list
+opid: BranchList_content
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Branch list content
+---
+-method:get
+path: /v5/storefront/content/tenants/tenant/branch-list/timestamp
+opid: BranchList_getTimestampedLink
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Timestamped branch list link
+---
+-method:get
+path: /v5/storefront/content/tenants/tenant/menu
+opid: Menu_getTenantMenu
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Menu content
+---
+-method:get
+path: /v5/storefront/content/tenants/tenant/menu/timestamp
+opid: Menu_getTimestampedLink
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Timestamped menu link
+---
+-method:get
+path: /v5/storefront/content/tenants/tenant/publications-cached
+opid: Publications_getCachedPublications
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Get publications
+---
+-method:get
+path: /v5/storefront/content/tenants/tenant/publications/timestamp
+opid: Publications_getTenantPublicationsTimestamp
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Get publications timestamp
+---
+-method:post
+path: /v5/storefront/customers/tenants/tenant/customers/customer/contact-form
+opid: Branches_submitContactForm
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: customer
+schema
+type: int
+req: True
+sum: Submit contact form
+ref: #/components/schemas/BranchesSubmitContactFormRequest
+---
+-method:post
+path: /v5/storefront/inventory/brands/brand/branches/branch/upsells
+opid: Marketing_createUpsellRecommendations
+params
+in: path
+name: brand
+schema
+type: int
+req: True
+in: path
+name: branch
+schema
+type: int
+req: True
+sum: Upsell recommendations
+ref: #/components/schemas/MarketingCreateUpsellRecommendationsRequest
+---
+-method:get
+path: /v5/storefront/tenants/tenant/branch-capabilities
+opid: Branches_listBranchCapabilities
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Branch capabilities by tenant
+---
+-method:get
+path: /v5/storefront/tenants/tenant/branch-closures
+opid: Branches_getClosures
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Branch closures by tenant
+---
+-method:get
+path: /v5/storefront/tenants/tenant/brands/brand/branch-capabilities
+opid: Branches_getBranchCapabilities
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: brand
+schema
+type: int
+req: True
+sum: Branch capabilities by brand
+---
+-method:get
+path: /v5/storefront/tenants/tenant/brands/brand/branch-closures
+opid: Branches_getClosedBranches
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: brand
+schema
+type: int
+req: True
+sum: Branch closures by brand
+---
+-method:get
+path: /v5/storefront/tenants/tenant/brands/brand/branches/branch/inventory-closures
+opid: Menu_getBranchInventoryClosures
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: brand
+schema
+type: int
+req: True
+in: path
+name: branch
+schema
+type: int
+req: True
+sum: Inventory closures
+---
+-method:get
+path: /v5/storefront/tenants/tenant/brands/brand/deliverable-branches
+opid: Branches_findDeliverableBranches
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: brand
+schema
+type: int
+req: True
+in: query
+name: latitude
+schema
+type: num
+req: True
+in: query
+name: longitude
+schema
+type: num
+req: True
+sum: Deliverable branches by brand
+---
+-method:get
+path: /v5/storefront/tenants/tenant/deliverable-branches
+opid: Branches_listDeliverableBranches
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: query
+name: latitude
+schema
+type: num
+req: True
+in: query
+name: longitude
+schema
+type: num
+req: True
+sum: Deliverable branches by tenant
+---
+-method:post
+path: /v5/storefront/tenants/tenant/orders
+opid: Orders_createOrder
+params
+in: path
+name: tenant
+schema
+type: str
+req: True
+sum: Store an order
+ref: #/components/schemas/OrdersCreateOrderRequest
+---
+-method:post
+path: /v5/storefront/tenants/tenant/quotes
+opid: Orders_getQuotation
+params
+in: path
+name: tenant
+schema
+type: str
+req: True
+sum: Retrieve a quotation
+ref: #/components/schemas/OrdersGetQuotationRequest
+---
+-method:post
+path: /v5/storefront/tenants/tenant/service-area-email
+opid: Customers_optInServiceAreaEmail
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Opt-in for service area change email
+ref: #/components/schemas/CustomersOptInServiceAreaEmailRequest
+---
+-method:post
+path: /v6/storefront/customers/tenants/tenant/customers/gdpr-preferences
+opid: Customers_storeGdprPreferences
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: customer
+schema
+type: int
+req: True
+sum: Store customers GDPR preferences
+ref: #/components/schemas/CustomersStoreGdprPreferencesRequest
+---
+-method:post
+path: /v6/storefront/customers/tenants/tenant/customers/customer/intercom-hmacs
+opid: Customers_generateIntercomHmac
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: customer
+schema
+type: int
+req: True
+sum: Generate Intercom HMAC
+ref: #/components/schemas/CustomersGenerateIntercomHmacRequest
+---
+-method:get
+path: /v6/storefront/loyalty/tenants/tenant/customers/customer/punch-card
+opid: LoyaltyPunchCard_getPunchcard
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: customer
+schema
+type: int
+req: True
+sum: Get punchcard for customer
+---
+-method:get
+path: /v6/storefront/loyalty/tenants/tenant/punch-card
+opid: LoyaltyPunchCard_getDetails
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+sum: Get punchcard for guest
+---
+-method:get
+path: /v6/storefront/referrals/tenants/tenant/customers/customer
+opid: Referrals_getReferralCodesForCustomer
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: path
+name: customer
+schema
+type: int
+req: True
+sum: Get referral codes for customer
+---
+-method:get
+path: /v6/storefront/tenants/tenant/delivery-zones
+opid: Branches_listDeliveryZones
+params
+in: path
+name: tenant
+schema
+type: int
+req: True
+in: query
+name: latitude
+schema
+type: num
+req: True
+in: query
+name: longitude
+schema
+type: num
+req: True
+sum: Delivery zones
+---

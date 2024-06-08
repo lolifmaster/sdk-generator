@@ -1,0 +1,416 @@
+{
+    "authenticate-payload": {
+        "title": "ApiKey",
+        "req": [
+            "apiKey"
+        ],
+        "type": "obj",
+        "props": {
+            "apiKey": {
+                "type": "str"
+            }
+        }
+    },
+    "refresh-token-payload": {
+        "title": "RefreshToken",
+        "req": [
+            "refreshToken"
+        ],
+        "type": "obj",
+        "props": {
+            "refreshToken": {
+                "type": "str"
+            }
+        }
+    },
+    "current-page": {
+        "name": "currentPage",
+        "in": "query",
+        "req": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+            "type": "int",
+            "def": 1
+        }
+    },
+    "page-size": {
+        "name": "pageSize",
+        "in": "query",
+        "req": false,
+        "style": "form",
+        "explode": true,
+        "schema": {
+            "type": "int",
+            "def": 25
+        }
+    },
+    "metadata": {
+        "title": "Metadata",
+        "type": "obj",
+        "props": {
+            "key": {
+                "type": "str"
+            },
+            "value": {
+                "type": "str"
+            }
+        },
+        "x-client-all-args-constructor": true
+    },
+    "video-clip": {
+        "type": "obj",
+        "props": {
+            "startTimecode": {
+                "type": "str",
+                "pattern": "^(?:\\d{2,3}:[0-5]\\d:[0-5]\\d(?:\\.\\d{1,3}|\\:\\d{1,2})?|\\d{1,7})$"
+            },
+            "endTimecode": {
+                "type": "str",
+                "pattern": "^(?:\\d{2,3}:[0-5]\\d:[0-5]\\d(?:\\.\\d{1,3}|\\:\\d{1,2})?|\\d{1,7})$"
+            }
+        }
+    },
+    "video-watermark": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "top": {
+                "type": "str"
+            },
+            "left": {
+                "type": "str"
+            },
+            "bottom": {
+                "type": "str"
+            },
+            "right": {
+                "type": "str"
+            },
+            "width": {
+                "type": "str"
+            },
+            "height": {
+                "type": "str"
+            },
+            "opacity": {
+                "type": "str"
+            }
+        }
+    },
+    "video-creation-payload": {
+        "title": "VideoCreationPayload",
+        "type": "obj",
+        "props": {
+            "tags": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            },
+            "title": {
+                "type": "str"
+            },
+            "source": {
+                "type": "str"
+            },
+            "public": {
+                "type": "bool",
+                "def": true
+            },
+            "panoramic": {
+                "type": "bool",
+                "def": false
+            },
+            "mp4Support": {
+                "type": "bool",
+                "def": true
+            },
+            "playerId": {
+                "type": "str"
+            },
+            "metadata": {
+                "type": "array",
+                "items": {
+                    "$ref": "metadata"
+                }
+            },
+            "clip": {
+                "$ref": "video-clip"
+            },
+            "watermark": {
+                "$ref": "video-watermark"
+            }
+        },
+        "req": [
+            "title"
+        ]
+    },
+    "video-thumbnail-pick-payload": {
+        "title": "ThumbnailPickPayload",
+        "req": [
+            "timecode"
+        ],
+        "type": "obj",
+        "props": {
+            "timecode": {
+                "pattern": "\\d{2}:\\d{2}:\\d{2}(\\.\\d{2})?",
+                "type": "str"
+            }
+        }
+    },
+    "video-update-payload": {
+        "title": "VideoUpdatePayload",
+        "type": "obj",
+        "props": {
+            "tags": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            },
+            "title": {
+                "type": "str"
+            },
+            "playerId": {
+                "type": "str",
+                "x-optional-nullable": true
+            },
+            "public": {
+                "type": "bool"
+            },
+            "panoramic": {
+                "type": "bool"
+            },
+            "mp4Support": {
+                "type": "bool"
+            },
+            "metadata": {
+                "type": "array",
+                "items": "metadata"
+            }
+        }
+    },
+    "token-creation-payload": {
+        "title": "TokenCreationPayload",
+        "type": "obj",
+        "props": {
+            "ttl": {
+                "max": 2147483647,
+                "min": 0,
+                "type": "int",
+                "def": 0
+            }
+        }
+    },
+    "restreams-request-object": {
+        "title": "Restreams request object",
+        "type": "obj",
+        "req": [
+            "name",
+            "serverUrl",
+            "streamKey"
+        ],
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "serverUrl": {
+                "type": "str"
+            },
+            "streamKey": {
+                "type": "str"
+            }
+        }
+    },
+    "live-stream-creation-payload": {
+        "title": "LiveStreamCreationPayload",
+        "req": [
+            "name"
+        ],
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "public": {
+                "type": "bool"
+            },
+            "playerId": {
+                "type": "str"
+            },
+            "restreams": {
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                    "$ref": "restreams-request-object"
+                }
+            }
+        }
+    },
+    "live-stream-update-payload": {
+        "title": "LiveStreamUpdatePayload",
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "public": {
+                "type": "bool"
+            },
+            "playerId": {
+                "type": "str"
+            },
+            "restreams": {
+                "maxItems": 5,
+                "type": "array",
+                "items": "restreams-request-object"
+            }
+        }
+    },
+    "captions-update-payload": {
+        "title": "CaptionsUpdatePayload",
+        "type": "obj",
+        "props": {
+            "def": {
+                "type": "bool"
+            }
+        }
+    },
+    "player-theme-creation-payload": {
+        "title": "PlayerThemeCreationPayload",
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str",
+                "maxLen": 100
+            },
+            "text": {
+                "type": "str"
+            },
+            "link": {
+                "type": "str"
+            },
+            "linkHover": {
+                "type": "str"
+            },
+            "linkActive": {
+                "type": "str"
+            },
+            "trackPlayed": {
+                "type": "str"
+            },
+            "trackUnplayed": {
+                "type": "str"
+            },
+            "trackBackground": {
+                "type": "str"
+            },
+            "backgroundTop": {
+                "type": "str"
+            },
+            "backgroundBottom": {
+                "type": "str"
+            },
+            "backgroundText": {
+                "type": "str"
+            },
+            "enableApi": {
+                "type": "bool",
+                "def": true
+            },
+            "enableControls": {
+                "type": "bool",
+                "def": true
+            },
+            "forceAutoplay": {
+                "type": "bool",
+                "def": false
+            },
+            "hideTitle": {
+                "type": "bool",
+                "def": false
+            },
+            "forceLoop": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "player-theme-update-payload": {
+        "title": "PlayerThemeUpdatePayload",
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str",
+                "maxLen": 100
+            },
+            "text": {
+                "type": "str"
+            },
+            "link": {
+                "type": "str"
+            },
+            "linkHover": {
+                "type": "str"
+            },
+            "linkActive": {
+                "type": "str"
+            },
+            "trackPlayed": {
+                "type": "str"
+            },
+            "trackUnplayed": {
+                "type": "str"
+            },
+            "trackBackground": {
+                "type": "str"
+            },
+            "backgroundTop": {
+                "type": "str"
+            },
+            "backgroundBottom": {
+                "type": "str"
+            },
+            "backgroundText": {
+                "type": "str"
+            },
+            "enableApi": {
+                "type": "bool"
+            },
+            "enableControls": {
+                "type": "bool"
+            },
+            "forceAutoplay": {
+                "type": "bool"
+            },
+            "hideTitle": {
+                "type": "bool"
+            },
+            "forceLoop": {
+                "type": "bool"
+            }
+        }
+    },
+    "webhooks-creation-payload": {
+        "title": "WebhooksCreationPayload",
+        "req": [
+            "events",
+            "url"
+        ],
+        "type": "obj",
+        "props": {
+            "events": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            },
+            "url": {
+                "type": "str"
+            }
+        }
+    }
+}

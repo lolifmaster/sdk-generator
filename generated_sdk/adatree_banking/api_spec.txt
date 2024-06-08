@@ -1,0 +1,369 @@
+##IMPORTANT: base_url:https://cdr-insights-prod.api.adatree.com.au
+---
+##SECURITY SCHEMES
+-bearerAuth
+type: http
+scheme: bearer
+bearerFormat: JWT
+---
+##SECURITY SCOPES
+bearerAuth: ['adr:banking:read']
+---
+##ENDPOINTS
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts
+opid: Accounts_getCdrArrangementAccounts
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/ParamProductCategory
+req: False
+ref: #/components/parameters/ParamAccountOpenStatus
+req: False
+ref: #/components/parameters/ParamAccountIsOwned
+req: False
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Accounts under cdr arrangement id
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts/balances
+opid: AccountsBalances_getFilteredBalances
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/ParamAccountIds
+req: False
+ref: #/components/parameters/ParamProductCategory
+req: False
+ref: #/components/parameters/ParamAccountOpenStatus
+req: False
+ref: #/components/parameters/ParamAccountIsOwned
+req: False
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Bulk Balances
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts/accountId/balance
+opid: AccountsBalance_obtainSingleAccountBalance
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/RequestPathAccountId
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Account Balance
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts/accountId
+opid: Accounts_obtainDetail
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/RequestPathAccountId
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Account Detail
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts/accountId/transactions
+opid: AccountTransactions_getByAccountIdAndCdrArrangementId
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/RequestPathAccountIdPreviouslyListed
+req: False
+ref: #/components/parameters/ParamTransactionOldestTime
+req: False
+ref: #/components/parameters/ParamTransactionNewestTime
+req: False
+ref: #/components/parameters/ParamTransactionMinAmount
+req: False
+ref: #/components/parameters/ParamTransactionMaxAmount
+req: False
+ref: #/components/parameters/ParamTransactionText
+req: False
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Transactions For Account
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts/accountId/transactions/transactionId
+opid: AccountTransactions_obtainDetail
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/RequestPathAccountIdPreviouslyListed
+req: False
+name: transactionId
+in: path
+req: True
+schema
+type: str
+x-cds-type: ASCIIString
+x-cds-type: ASCIIString
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Transaction Detail
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts/accountId/direct-debits
+opid: AccountDirectDebits_obtainForAccount
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+name: accountId
+in: path
+req: True
+schema
+type: str
+x-cds-type: ASCIIString
+x-cds-type: ASCIIString
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Direct Debits For Account
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts/direct-debits
+opid: AccountsDirectDebits_getBulkDirectDebits
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/ParamAccountIds
+req: False
+ref: #/components/parameters/ParamProductCategory
+req: False
+ref: #/components/parameters/ParamAccountOpenStatus
+req: False
+ref: #/components/parameters/ParamAccountIsOwned
+req: False
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Bulk Direct Debits
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/accounts/accountId/payments/scheduled
+opid: AccountPaymentsScheduled_getScheduledPayments
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+name: accountId
+in: path
+req: True
+schema
+type: str
+x-cds-type: ASCIIString
+x-cds-type: ASCIIString
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Scheduled Payments for Account
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/payments/scheduled
+opid: PaymentsScheduled_bulkGet
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/ParamAccountIds
+req: False
+ref: #/components/parameters/ParamProductCategory
+req: False
+ref: #/components/parameters/ParamAccountOpenStatus
+req: False
+ref: #/components/parameters/ParamAccountIsOwned
+req: False
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Scheduled Payments Bulk
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/payees
+opid: Payees_getList
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+name: type
+in: query
+schema
+type: str
+def: ALL
+enum
+BILLER
+DOMESTIC
+INTERNATIONAL
+ALL
+req: False
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Payees
+---
+-method:get
+---
+path: /adr/banking/arrangements/cdrArrangementId/payees/payeeId
+opid: Payees_getDetail
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+name: payeeId
+in: path
+req: True
+schema
+type: str
+x-cds-type: ASCIIString
+x-cds-type: ASCIIString
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Payee Detail
+---
+-method:get
+---
+path: /adr/common/arrangements/cdrArrangementId/userinfo
+opid: UserInfo_getByArrangementId
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+sum: Get user info under cdr arrangement id
+---
+-method:get
+---
+path: /adr/common/arrangements/cdrArrangementId/customer
+opid: Customers_getCustomerInfo
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Customer
+---
+-method:get
+---
+path: /adr/common/arrangements/cdrArrangementId/customer/detail
+opid: Customers_obtainDetailedInfo
+params
+ref: #/components/parameters/RequestPathCdrArrangementId
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-auth-date
+req: False
+ref: #/components/parameters/RequestHeader_x-fapi-customer-ip-address
+req: False
+ref: #/components/parameters/RequestHeader_x-cds-client-headers
+req: False
+sum: Get Customer Detail
+---
+-method:get
+---
+path: /adr/discovery/status
+opid: DataHolderDiscovery_getStatus
+params
+ref: #/components/parameters/ParamDataHolderIds
+req: False
+sum: Get Status
+---
+-method:get
+---
+path: /adr/discovery/outages
+opid: DataHolderDiscovery_getOutages
+params
+ref: #/components/parameters/ParamDataHolderIds
+req: False
+sum: Get Outages
+---

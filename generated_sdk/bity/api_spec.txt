@@ -1,0 +1,214 @@
+##IMPORTANT: base_url:https://exchange.api.bity.com/v2
+---
+---
+##ENDPOINTS
+---
+-method:get
+-security
+path: /currencies
+opid: get_currencies
+params
+explode: False
+in: query
+name: tags
+req: False
+schema
+items
+ref: #/components/schemas/CurrencyTag
+type: arr
+style: form
+sum: List currencies
+---
+-method:get
+-security
+path: /currencies/currency_code
+opid: Currencies_getByCode
+params
+in: path
+name: currency_code
+req: True
+schema
+ref: #/components/schemas/CurrencyCode
+sum: Get a single currency
+---
+-method:get
+-security
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.history']
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.audit']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.history']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.audit']
+client_oauth: ['https://auth.bity.com/scopes/exchange.client-history']
+client_oauth: ['https://auth.bity.com/scopes/exchange.client-history-full']
+path: /orders
+opid: list_orders
+params
+in: query
+name: page
+req: False
+schema
+minimum: 1
+type: num
+in: query
+name: page_size
+req: False
+schema
+maximum: 100
+minimum: 1
+type: num
+in: query
+name: status
+req: False
+schema
+enum
+finalized
+ongoing
+type: str
+sum: List previously placed orders
+---
+-method:post
+-security
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.place']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders
+opid: place_order
+sum: Place an order
+ref: #/components/schemas/PlaceOrderRequest
+---
+-method:post
+-security
+bity_account_oauth: []
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders/estimate
+opid: Orders_calculateAmountEstimate
+sum: Estimate the amount of an order
+ref: #/components/schemas/AmountEstimateRequest
+---
+-method:post
+-security
+bity_account_oauth: []
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders/estimate/multiple
+opid: Orders_performMultipleEstimations
+sum: Perform several estimations in one request
+ref: #/components/schemas/OrdersPerformMultipleEstimationsRequest
+---
+-method:get
+-security
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.audit']
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.history']
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.place']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.audit']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.history']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders/order_uuid
+opid: Orders_getOrderDetails
+params
+in: path
+name: order_uuid
+req: True
+schema
+type: str
+sum: Get the details of an order
+---
+-method:get
+-security
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.place']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders/order_uuid/bank_transfer_qr_bill
+opid: Orders_getQrBill
+params
+in: path
+name: order_uuid
+req: True
+schema
+type: str
+sum: Get the QR-bill of an order where the input is bank_transfer.
+---
+-method:post
+-security
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.place']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders/order_uuid/cancel
+opid: cancel_order
+params
+in: path
+name: order_uuid
+req: True
+schema
+type: str
+sum: Cancel an order
+---
+-method:post
+-security
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.place']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders/order_uuid/duplicate
+opid: duplicate_order
+params
+in: path
+name: order_uuid
+req: True
+schema
+type: str
+sum: Duplicate an order
+---
+-method:post
+-security
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.place']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders/order_uuid/execute
+opid: execute_order
+params
+in: path
+name: order_uuid
+req: True
+schema
+type: str
+sum: Execute order
+---
+-method:post
+-security
+bity_account_oauth: ['https://auth.bity.com/scopes/exchange.place']
+bity_account_client_oauth: ['https://auth.bity.com/scopes/exchange.place']
+client_oauth: []
+path: /orders/order_uuid/signature
+opid: Orders_submitSignature
+params
+in: path
+name: order_uuid
+req: True
+schema
+type: str
+sum: Sign proof of wallet ownership message
+---
+-method:get
+-security
+path: /pairs
+opid: Currencies_getList
+params
+in: query
+name: input
+req: False
+schema
+type: str
+in: query
+name: output
+req: False
+schema
+type: str
+allowEmptyValue: True
+in: query
+name: enabled
+req: False
+schema
+type: str
+sum: List currency pairs
+---

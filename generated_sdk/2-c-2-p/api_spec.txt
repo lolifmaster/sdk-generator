@@ -1,0 +1,110 @@
+###IMPORTANT: base_url:https://sandbox-pgw.2c2p.com
+---
+---
+###ENDPOINTS
+##path: /payment/4.3/applepay/merchantvalidation
+#method:post
+opid: ApplePay_validateMerchant
+ref: #MerchantValidationApplePay
+---
+##path: /payment/4.3/cache/cleancache
+#method:post
+opid: Cache_cleanCache
+---
+##path: /payment/4.3/canceltransaction
+#method:post
+opid: CancelTransaction_post
+ref: #PaymentBaseRequest
+---
+##path: /payment/4.3/cardinstallmentplaninfo
+#method:post
+opid: CardInstallmentPlanInfo_create
+ref: #CardInstallmentPlanInfoRequest
+---
+##path: /payment/4.3/cardtokeninfo
+#method:post
+opid: CardTokenInfo_getCardTokenInfo
+ref: #PaymentBaseRequest
+---
+##path: /payment/4.3/exchangerate
+#method:post
+opid: ExchangeRate_getRate
+ref: #PaymentExchangeRateConverterRequest
+---
+##path: /payment/4.3/exchangerate/secure
+#method:post
+opid: ExchangeRate_requestEndpoint
+ref: #PayloadRequest
+---
+##path: /payment/4.3/exchangerate/apmmccexchangerate
+#method:post
+opid: ExchangeRate_apmMcc
+ref: #PaymentBaseRequest
+---
+##path: /payment/4.3/initialization
+#method:post
+opid: Initialization_requestCreation
+---
+##path: /payment/4.3/loyaltypointinfo
+#method:post
+opid: LoyaltyPointInfo_postLoyaltyPointInfo
+ref: #PaymentLoyaltyPointInfoRequest
+---
+##path: /payment/4.3/payment
+#method:post
+opid: Payment_createPayment
+ref: #PaymentRequestV43
+---
+##path: /payment/4.3/paymentinquiry
+#method:post
+opid: PaymentInquiry_postPaymentDetails
+ref: #PayloadRequest
+---
+##path: /payment/4.3/paymentinstruction
+#method:post
+opid: PaymentInstruction_submitInstruction
+ref: #PayloadRequest
+---
+##path: /payment/4.3/paymentnotification
+#method:post
+opid: PaymentNotification_processNotification
+ref: #PaymentNotificationRequest
+---
+##path: /payment/4.3/paymentoption
+#method:post
+opid: PaymentOption_createPaymentOption
+ref: #PaymentBaseRequest
+---
+##path: /payment/4.3/paymentoptiondetails
+#method:post
+opid: PaymentOptionDetails_postOptionDetails
+ref: #PaymentOptionDetailsRequest
+---
+##path: /payment/4.3/paymentsimulate
+#method:post
+opid: PaymentSimulate_executePaymentSimulation
+ref: #PayloadRequest
+---
+##path: /payment/4.3/paymenttoken
+#method:post
+opid: PaymentToken_generateToken
+ref: #PayloadRequest
+---
+##path: /payment/4.3/redirectbackend
+#method:post
+opid: RedirectBackEnd_postPaymentRedirect
+---
+##path: /payment/4.3/redirectfrontend
+#method:post
+opid: RedirectFrontEnd_postPaymentRedirect
+---
+##path: /payment/4.3/transactionstatus
+#method:post
+opid: TransactionStatus_updateTransactionStatus
+ref: #TransactionStatusRequest
+---
+##path: /payment/4.3/userpreference
+#method:post
+opid: UserPreference_saveUserPreference
+ref: #PaymentBaseRequest
+---

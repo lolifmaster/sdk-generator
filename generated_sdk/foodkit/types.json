@@ -1,0 +1,507 @@
+{
+    "CustomersRegisterCustomerRequest": {
+        "type": "obj",
+        "props": {
+            "title": {
+                "type": "str"
+            },
+            "email": {
+                "type": "str"
+            },
+            "phone_number": {
+                "type": "str"
+            },
+            "name": {
+                "type": "str"
+            },
+            "first_name": {
+                "type": "str"
+            },
+            "last_name": {
+                "type": "str"
+            },
+            "password": {
+                "type": "str"
+            },
+            "date_of_birth": {
+                "type": "str"
+            },
+            "gender": {
+                "type": "str",
+                "enum": [
+                    "male",
+                    "female"
+                ]
+            },
+            "accepts_terms_and_conditions": {
+                "type": "bool"
+            },
+            "accepts_marketing_notifications": {
+                "type": "bool"
+            }
+        }
+    },
+    "CustomersUpdateDetailsRequest": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "email": {
+                "type": "str"
+            },
+            "password": {
+                "type": "str"
+            }
+        }
+    },
+    "CustomersStoreTaxIdRequest": {
+        "type": "obj",
+        "props": {
+            "customer_id": {
+                "type": "int"
+            },
+            "tax_id": {
+                "type": "str"
+            },
+            "company_name": {
+                "type": "str"
+            },
+            "company_address": {
+                "type": "str"
+            },
+            "company_district": {
+                "type": "str"
+            },
+            "company_area": {
+                "type": "str"
+            },
+            "company_province": {
+                "type": "str"
+            },
+            "company_postcode": {
+                "type": "str"
+            },
+            "company_phone": {
+                "type": "str"
+            },
+            "is_headoffice": {
+                "type": "bool"
+            },
+            "branch_no": {
+                "type": "str"
+            }
+        }
+    },
+    "BranchesSubmitContactFormRequest": {
+        "type": "obj",
+        "props": {
+            "message": {
+                "type": "str"
+            }
+        }
+    },
+    "MarketingCreateUpsellRecommendationsRequest": {
+        "type": "obj",
+        "props": {
+            "products": {
+                "type": "array",
+                "items": {
+                    "type": "obj",
+                    "props": {
+                        "id": {
+                            "type": "int"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "OrdersCreateOrderRequest": {
+        "type": "obj",
+        "props": {
+            "branch_id": {
+                "type": "int"
+            },
+            "order_type": {
+                "type": "str",
+                "enum": [
+                    "delivery",
+                    "pickup",
+                    "room-service",
+                    "digital"
+                ]
+            },
+            "payment_type": {
+                "type": "str",
+                "enum": [
+                    "cod",
+                    "payment_link",
+                    "external_credit_card",
+                    "third_party",
+                    "credit_card",
+                    "card_on_file",
+                    "bank_transfer",
+                    "paypal_express",
+                    "other",
+                    "none"
+                ]
+            },
+            "card": {
+                "type": "obj",
+                "props": {
+                    "id": {
+                        "type": "int"
+                    },
+                    "card_token": {
+                        "type": "str"
+                    }
+                }
+            },
+            "store_card_info": {
+                "type": "bool"
+            },
+            "products": {
+                "type": "array",
+                "items": {
+                    "type": "obj",
+                    "props": {
+                        "id": {
+                            "type": "int"
+                        },
+                        "quantity": {
+                            "type": "int"
+                        },
+                        "extra_items": {
+                            "type": "array",
+                            "items": {
+                                "type": "obj",
+                                "props": {
+                                    "id": {
+                                        "type": "int"
+                                    },
+                                    "quantity": {
+                                        "type": "int"
+                                    }
+                                }
+                            }
+                        },
+                        "combo_items": {
+                            "type": "array",
+                            "items": {
+                                "type": "obj",
+                                "props": {
+                                    "product_id": {
+                                        "type": "int"
+                                    },
+                                    "combo_group_id": {
+                                        "type": "int"
+                                    },
+                                    "extra_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "obj",
+                                            "props": {
+                                                "id": {
+                                                    "type": "int"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "comments": {
+                            "type": "str"
+                        }
+                    }
+                }
+            },
+            "latitude": {
+                "type": "str"
+            },
+            "longitude": {
+                "type": "num"
+            },
+            "address": {
+                "type": "obj",
+                "props": {
+                    "id": {
+                        "type": "int"
+                    },
+                    "address1": {
+                        "type": "str"
+                    },
+                    "address_label": {
+                        "type": "str"
+                    },
+                    "building_name": {
+                        "type": "str"
+                    },
+                    "address2": {
+                        "type": "str"
+                    },
+                    "room_number": {
+                        "type": "str"
+                    },
+                    "floor_number": {
+                        "type": "str"
+                    },
+                    "directions": {
+                        "type": "str"
+                    },
+                    "latitude": {
+                        "type": "str"
+                    },
+                    "longitude": {
+                        "type": "num"
+                    }
+                }
+            },
+            "is_realtime": {
+                "type": "bool"
+            },
+            "scheduled_date": {
+                "type": "str"
+            },
+            "scheduled_time": {
+                "type": "str"
+            },
+            "comments": {
+                "type": "str"
+            },
+            "customer_tax_id": {
+                "type": "int"
+            },
+            "3ds_callback_url": {
+                "type": "str"
+            },
+            "exceeds_cart_limit": {
+                "type": "bool"
+            },
+            "phone_number": {
+                "type": "str"
+            },
+            "coupon_code": {
+                "type": "str"
+            }
+        }
+    },
+    "OrdersGetQuotationRequest": {
+        "type": "obj",
+        "props": {
+            "branch_id": {
+                "type": "int"
+            },
+            "order_type": {
+                "type": "str",
+                "enum": [
+                    "delivery",
+                    "pickup",
+                    "room-service",
+                    "digital"
+                ]
+            },
+            "payment_type": {
+                "type": "str",
+                "enum": [
+                    "cod",
+                    "payment_link",
+                    "external_credit_card",
+                    "third_party",
+                    "credit_card",
+                    "card_on_file",
+                    "bank_transfer",
+                    "paypal_express",
+                    "other",
+                    "none"
+                ]
+            },
+            "card": {
+                "type": "obj",
+                "props": {
+                    "id": {
+                        "type": "int"
+                    },
+                    "card_token": {
+                        "type": "str"
+                    }
+                }
+            },
+            "store_card_info": {
+                "type": "bool"
+            },
+            "products": {
+                "type": "array",
+                "items": {
+                    "type": "obj",
+                    "props": {
+                        "id": {
+                            "type": "int"
+                        },
+                        "quantity": {
+                            "type": "int"
+                        },
+                        "extra_items": {
+                            "type": "array",
+                            "items": {
+                                "type": "obj",
+                                "props": {
+                                    "id": {
+                                        "type": "int"
+                                    },
+                                    "quantity": {
+                                        "type": "int"
+                                    }
+                                }
+                            }
+                        },
+                        "combo_items": {
+                            "type": "array",
+                            "items": {
+                                "type": "obj",
+                                "props": {
+                                    "product_id": {
+                                        "type": "int"
+                                    },
+                                    "combo_group_id": {
+                                        "type": "int"
+                                    },
+                                    "extra_items": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "obj",
+                                            "props": {
+                                                "id": {
+                                                    "type": "int"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "comments": {
+                            "type": "str"
+                        }
+                    }
+                }
+            },
+            "latitude": {
+                "type": "str"
+            },
+            "longitude": {
+                "type": "num"
+            },
+            "address": {
+                "type": "obj",
+                "props": {
+                    "id": {
+                        "type": "int"
+                    },
+                    "address1": {
+                        "type": "str"
+                    },
+                    "address_label": {
+                        "type": "str"
+                    },
+                    "building_name": {
+                        "type": "str"
+                    },
+                    "address2": {
+                        "type": "str"
+                    },
+                    "room_number": {
+                        "type": "str"
+                    },
+                    "floor_number": {
+                        "type": "str"
+                    },
+                    "directions": {
+                        "type": "str"
+                    },
+                    "latitude": {
+                        "type": "str"
+                    },
+                    "longitude": {
+                        "type": "num"
+                    }
+                }
+            },
+            "is_realtime": {
+                "type": "bool"
+            },
+            "scheduled_date": {
+                "type": "str"
+            },
+            "scheduled_time": {
+                "type": "str"
+            },
+            "comments": {
+                "type": "str"
+            },
+            "customer_tax_id": {
+                "type": "int"
+            },
+            "3ds_callback_url": {
+                "type": "str"
+            },
+            "exceeds_cart_limit": {
+                "type": "bool"
+            },
+            "phone_number": {
+                "type": "str"
+            },
+            "coupon_code": {
+                "type": "str"
+            }
+        }
+    },
+    "CustomersOptInServiceAreaEmailRequest": {
+        "type": "obj",
+        "props": {
+            "email": {
+                "type": "str"
+            },
+            "latitude": {
+                "type": "num"
+            },
+            "longitude": {
+                "type": "num"
+            },
+            "address1": {
+                "type": "str"
+            }
+        }
+    },
+    "CustomersStoreGdprPreferencesRequest": {
+        "type": "obj",
+        "props": {
+            "device_uuid": {
+                "type": "str"
+            },
+            "accept_all": {
+                "type": "bool"
+            },
+            "accept_performance": {
+                "type": "bool"
+            },
+            "accept_marketing": {
+                "type": "bool"
+            }
+        }
+    },
+    "CustomersGenerateIntercomHmacRequest": {
+        "type": "obj",
+        "props": {
+            "channel": {
+                "type": "str",
+                "enum": [
+                    "android",
+                    "ios",
+                    "web"
+                ]
+            }
+        }
+    }
+}

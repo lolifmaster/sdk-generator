@@ -1,0 +1,3353 @@
+{
+    "allocation_path_gid": {
+        "name": "allocation_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "allocation"
+    },
+    "pretty": {
+        "name": "opt_pretty",
+        "in": "query",
+        "req": false,
+        "allowEmptyValue": true,
+        "schema": {
+            "type": "bool"
+        },
+        "style": "form"
+    },
+    "AsanaResource": {
+        "type": "obj",
+        "props": {
+            "gid": {
+                "type": "str",
+                "readOnly": true,
+                "x-insert-after": false
+            },
+            "resource_type": {
+                "type": "str",
+                "readOnly": true,
+                "x-insert-after": "gid"
+            }
+        }
+    },
+    "AllocationBase": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "allocation"
+                },
+                "props": {
+                    "start_date": {
+                        "type": "str",
+                        "format": "date"
+                    },
+                    "end_date": {
+                        "type": "str",
+                        "format": "date"
+                    },
+                    "effort": {
+                        "type": "obj",
+                        "nullable": true,
+                        "props": {
+                            "type": {
+                                "type": "str",
+                                "enum": [
+                                    "hours",
+                                    "percent"
+                                ]
+                            },
+                            "value": {
+                                "type": "num"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "AllocationRequest": {
+        "allOf": [
+            "AllocationBase",
+            {
+                "type": "obj",
+                "props": {
+                    "assignee": {
+                        "type": "str"
+                    },
+                    "parent": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "AllocationsUpdateRecordByIdRequest": {
+        "type": "obj",
+        "props": {
+            "data": "AllocationRequest"
+        }
+    },
+    "limit": {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+            "type": "int",
+            "min": 1,
+            "max": 100
+        }
+    },
+    "offset": {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "AllocationsCreateRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": {
+                "allOf": [
+                    "AllocationRequest",
+                    {
+                        "type": "obj",
+                        "req": [
+                            "assignee",
+                            "end_date",
+                            "parent",
+                            "start_date"
+                        ]
+                    }
+                ]
+            }
+        }
+    },
+    "attachment_path_gid": {
+        "name": "attachment_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "attachment"
+    },
+    "workspace_path_gid": {
+        "name": "workspace_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "workspace"
+    },
+    "audit_log_start_at": {
+        "name": "start_at",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str",
+            "format": "date-time"
+        }
+    },
+    "audit_log_end_at": {
+        "name": "end_at",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str",
+            "format": "date-time"
+        }
+    },
+    "audit_log_event_type": {
+        "name": "event_type",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str"
+        }
+    },
+    "audit_log_actor_type": {
+        "name": "actor_type",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str",
+            "enum": [
+                "user",
+                "asana",
+                "asana_support",
+                "anonymous",
+                "external_administrator"
+            ]
+        }
+    },
+    "audit_log_actor_gid": {
+        "name": "actor_gid",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str"
+        }
+    },
+    "audit_log_resource_gid": {
+        "name": "resource_gid",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str"
+        }
+    },
+    "BatchRequestAction": {
+        "type": "obj",
+        "props": {
+            "relative_path": {
+                "type": "str"
+            },
+            "method": {
+                "type": "str",
+                "enum": [
+                    "get",
+                    "post",
+                    "put",
+                    "delete",
+                    "patch",
+                    "head"
+                ]
+            },
+            "data": {
+                "type": "obj"
+            },
+            "options": {
+                "type": "obj",
+                "props": {
+                    "limit": {
+                        "type": "int"
+                    },
+                    "offset": {
+                        "type": "int"
+                    },
+                    "fields": {
+                        "type": "array",
+                        "items": {
+                            "type": "str"
+                        }
+                    }
+                }
+            }
+        },
+        "req": [
+            "relative_path",
+            "method"
+        ]
+    },
+    "BatchRequest": {
+        "type": "obj",
+        "props": {
+            "actions": {
+                "type": "array",
+                "items": "BatchRequestAction"
+            }
+        }
+    },
+    "BatchApiSubmitParallelRequestsRequest": {
+        "type": "obj",
+        "props": {
+            "data": "BatchRequest"
+        }
+    },
+    "project_path_gid": {
+        "name": "project_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "project"
+    },
+    "portfolio_path_gid": {
+        "name": "portfolio_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "portfolio"
+    },
+    "EnumOption": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "enum_option"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    },
+                    "enabled": {
+                        "type": "bool"
+                    },
+                    "color": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "CustomFieldCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "custom_field"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    },
+                    "resource_subtype": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "text",
+                            "enum",
+                            "multi_enum",
+                            "num",
+                            "date",
+                            "people"
+                        ]
+                    },
+                    "type": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "text",
+                            "enum",
+                            "multi_enum",
+                            "num",
+                            "date",
+                            "people"
+                        ]
+                    },
+                    "enum_options": {
+                        "type": "array",
+                        "items": "EnumOption"
+                    },
+                    "enabled": {
+                        "type": "bool",
+                        "readOnly": true
+                    },
+                    "representation_type": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "text",
+                            "enum",
+                            "multi_enum",
+                            "num",
+                            "date",
+                            "people",
+                            "formula",
+                            "custom_id"
+                        ]
+                    },
+                    "id_prefix": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "is_formula_field": {
+                        "type": "bool"
+                    },
+                    "date_value": {
+                        "type": "obj",
+                        "nullable": true,
+                        "props": {
+                            "date": {
+                                "type": "str"
+                            },
+                            "date_time": {
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "enum_value": {
+                        "allOf": [
+                            "EnumOption",
+                            {
+                                "type": "obj",
+                                "nullable": true
+                            }
+                        ]
+                    },
+                    "multi_enum_values": {
+                        "type": "array",
+                        "items": "EnumOption"
+                    },
+                    "number_value": {
+                        "type": "num",
+                        "nullable": true
+                    },
+                    "text_value": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "display_value": {
+                        "type": "str",
+                        "readOnly": true,
+                        "nullable": true
+                    }
+                }
+            }
+        ]
+    },
+    "CustomFieldBase": {
+        "allOf": [
+            "CustomFieldCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "enum_options": {
+                        "type": "array",
+                        "items": "EnumOption"
+                    },
+                    "precision": {
+                        "type": "int"
+                    },
+                    "format": {
+                        "type": "str",
+                        "enum": [
+                            "currency",
+                            "identifier",
+                            "percentage",
+                            "custom",
+                            "duration",
+                            "none"
+                        ]
+                    },
+                    "currency_code": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "custom_label": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "custom_label_position": {
+                        "type": "str",
+                        "nullable": true,
+                        "enum": [
+                            "prefix",
+                            "suffix",
+                            null
+                        ]
+                    },
+                    "is_global_to_workspace": {
+                        "type": "bool",
+                        "readOnly": true
+                    },
+                    "has_notifications_enabled": {
+                        "type": "bool"
+                    },
+                    "asana_created_field": {
+                        "type": "str",
+                        "readOnly": true,
+                        "nullable": true,
+                        "enum": [
+                            "a_v_requirements",
+                            "account_name",
+                            "actionable",
+                            "align_shipping_link",
+                            "align_status",
+                            "allotted_time",
+                            "appointment",
+                            "approval_stage",
+                            "approved",
+                            "article_series",
+                            "board_committee",
+                            "browser",
+                            "campaign_audience",
+                            "campaign_project_status",
+                            "campaign_regions",
+                            "channel_primary",
+                            "client_topic_type",
+                            "complete_by",
+                            "contact",
+                            "contact_email_address",
+                            "content_channels",
+                            "content_channels_needed",
+                            "content_stage",
+                            "content_type",
+                            "contract",
+                            "contract_status",
+                            "cost",
+                            "creation_stage",
+                            "creative_channel",
+                            "creative_needed",
+                            "creative_needs",
+                            "data_sensitivity",
+                            "deal_size",
+                            "delivery_appt",
+                            "delivery_appt_date",
+                            "department",
+                            "department_responsible",
+                            "design_request_needed",
+                            "design_request_type",
+                            "discussion_category",
+                            "do_this_task",
+                            "editorial_content_status",
+                            "editorial_content_tag",
+                            "editorial_content_type",
+                            "effort",
+                            "effort_level",
+                            "est_completion_date",
+                            "estimated_time",
+                            "estimated_value",
+                            "expected_cost",
+                            "external_steps_needed",
+                            "favorite_idea",
+                            "feedback_type",
+                            "financial",
+                            "funding_amount",
+                            "grant_application_process",
+                            "hiring_candidate_status",
+                            "idea_status",
+                            "ids_link",
+                            "ids_patient_link",
+                            "implementation_stage",
+                            "insurance",
+                            "interview_area",
+                            "interview_question_score",
+                            "itero_scan_link",
+                            "job_s_applied_to",
+                            "lab",
+                            "launch_status",
+                            "lead_status",
+                            "localization_language",
+                            "localization_market_team",
+                            "localization_status",
+                            "meeting_minutes",
+                            "meeting_needed",
+                            "minutes",
+                            "mrr",
+                            "must_localize",
+                            "name_of_foundation",
+                            "need_to_follow_up",
+                            "next_appointment",
+                            "next_steps_sales",
+                            "num_people",
+                            "number_of_user_reports",
+                            "office_location",
+                            "onboarding_activity",
+                            "owner",
+                            "participants_needed",
+                            "patient_date_of_birth",
+                            "patient_email",
+                            "patient_phone",
+                            "patient_status",
+                            "phone_number",
+                            "planning_category",
+                            "point_of_contact",
+                            "position",
+                            "post_format",
+                            "prescription",
+                            "priority",
+                            "priority_level",
+                            "product",
+                            "product_stage",
+                            "progress",
+                            "project_size",
+                            "project_status",
+                            "proposed_budget",
+                            "publish_status",
+                            "reason_for_scan",
+                            "referral",
+                            "request_type",
+                            "research_status",
+                            "responsible_department",
+                            "responsible_team",
+                            "risk_assessment_status",
+                            "room_name",
+                            "sales_counterpart",
+                            "sentiment",
+                            "shipping_link",
+                            "social_channels",
+                            "stage",
+                            "status",
+                            "status_design",
+                            "status_of_initiative",
+                            "system_setup",
+                            "task_progress",
+                            "team",
+                            "team_marketing",
+                            "team_responsible",
+                            "time_it_takes_to_complete_tasks",
+                            "timeframe",
+                            "treatment_type",
+                            "type_work_requests_it",
+                            "use_agency",
+                            "user_name",
+                            "vendor_category",
+                            "vendor_type",
+                            "word_count",
+                            null
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "CustomFieldRequest": {
+        "allOf": [
+            "CustomFieldBase",
+            {
+                "type": "obj",
+                "req": [
+                    "workspace"
+                ],
+                "props": {
+                    "workspace": {
+                        "type": "str"
+                    },
+                    "owned_by_app": {
+                        "type": "bool"
+                    },
+                    "people_value": {
+                        "type": "array",
+                        "items": {
+                            "type": "str"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "CustomFieldsCreateNewFieldRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "CustomFieldRequest"
+        }
+    },
+    "custom_field_path_gid": {
+        "name": "custom_field_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "custom_field"
+    },
+    "CustomFieldsUpdateFieldRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "CustomFieldRequest"
+        }
+    },
+    "EnumOptionRequest": {
+        "allOf": [
+            "EnumOption",
+            {
+                "type": "obj",
+                "props": {
+                    "insert_before": {
+                        "type": "str"
+                    },
+                    "insert_after": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "CustomFieldsAddEnumOptionRequest": {
+        "type": "obj",
+        "props": {
+            "data": "EnumOptionRequest"
+        }
+    },
+    "EnumOptionInsertRequest": {
+        "type": "obj",
+        "req": [
+            "enum_option"
+        ],
+        "props": {
+            "enum_option": {
+                "type": "str"
+            },
+            "before_enum_option": {
+                "type": "str"
+            },
+            "after_enum_option": {
+                "type": "str"
+            }
+        }
+    },
+    "CustomFieldsReorderEnumOptionRequest": {
+        "type": "obj",
+        "props": {
+            "data": "EnumOptionInsertRequest"
+        }
+    },
+    "CustomFieldsUpdateEnumOptionRequest": {
+        "type": "obj",
+        "props": {
+            "data": "EnumOption"
+        }
+    },
+    "goal_relationship_path_gid": {
+        "name": "goal_relationship_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "goal_relationship"
+    },
+    "ProjectCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "project"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "GoalRelationshipCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "goal_relationship"
+                },
+                "props": {
+                    "resource_subtype": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "subgoal",
+                            "supporting_work"
+                        ]
+                    },
+                    "supporting_resource": {
+                        "allOf": [
+                            "ProjectCompact",
+                            {
+                                "type": "obj",
+                                "readOnly": true
+                            }
+                        ]
+                    },
+                    "contribution_weight": {
+                        "type": "num"
+                    }
+                }
+            }
+        ]
+    },
+    "UserCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "user"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "GoalCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "goal"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    },
+                    "owner": {
+                        "allOf": [
+                            "UserCompact",
+                            {
+                                "type": "obj",
+                                "nullable": true
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "GoalRelationshipBase": {
+        "allOf": [
+            "GoalRelationshipCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "supported_goal": {
+                        "allOf": [
+                            "GoalCompact",
+                            {
+                                "type": "obj",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "GoalRelationshipRequest": {
+        "allOf": [
+            "GoalRelationshipBase",
+            {
+                "type": "obj"
+            }
+        ]
+    },
+    "GoalRelationshipsUpdateGoalRelationshipRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "GoalRelationshipRequest"
+        }
+    },
+    "goal_path_gid": {
+        "name": "goal_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "goal"
+    },
+    "GoalAddSupportingRelationshipRequest": {
+        "type": "obj",
+        "req": [
+            "supporting_resource"
+        ],
+        "props": {
+            "supporting_resource": {
+                "type": "str"
+            },
+            "insert_before": {
+                "type": "str"
+            },
+            "insert_after": {
+                "type": "str"
+            },
+            "contribution_weight": {
+                "type": "num"
+            }
+        }
+    },
+    "GoalRelationshipsCreateSupportingRelationshipRequest": {
+        "type": "obj",
+        "props": {
+            "data": "GoalAddSupportingRelationshipRequest"
+        }
+    },
+    "GoalRemoveSupportingRelationshipRequest": {
+        "type": "obj",
+        "req": [
+            "supporting_resource"
+        ],
+        "props": {
+            "supporting_resource": {
+                "type": "str"
+            }
+        }
+    },
+    "GoalRelationshipsRemoveSupportingRelationshipRequest": {
+        "type": "obj",
+        "props": {
+            "data": "GoalRemoveSupportingRelationshipRequest"
+        }
+    },
+    "GoalBase": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "goal"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    },
+                    "html_notes": {
+                        "type": "str"
+                    },
+                    "notes": {
+                        "type": "str"
+                    },
+                    "due_on": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "start_on": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "is_workspace_level": {
+                        "type": "bool"
+                    },
+                    "liked": {
+                        "type": "bool"
+                    }
+                }
+            }
+        ]
+    },
+    "GoalRequestBase": {
+        "allOf": [
+            "GoalBase",
+            {
+                "type": "obj",
+                "props": {
+                    "team": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "workspace": {
+                        "type": "str"
+                    },
+                    "time_period": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "owner": {
+                        "type": "str",
+                        "nullable": true
+                    }
+                }
+            }
+        ]
+    },
+    "GoalUpdateRequest": {
+        "allOf": [
+            "GoalRequestBase",
+            {
+                "type": "obj",
+                "props": {
+                    "status": {
+                        "type": "str",
+                        "nullable": true
+                    }
+                }
+            }
+        ]
+    },
+    "GoalsUpdateGoalRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "GoalUpdateRequest"
+        }
+    },
+    "GoalRequest": {
+        "allOf": [
+            "GoalRequestBase",
+            {
+                "type": "obj",
+                "props": {
+                    "followers": {
+                        "type": "array",
+                        "items": {
+                            "type": "str"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "GoalsCreateNewGoalRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "GoalRequest"
+        }
+    },
+    "GoalMetricBase": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "props": {
+                    "resource_subtype": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "num"
+                        ]
+                    },
+                    "precision": {
+                        "type": "int"
+                    },
+                    "unit": {
+                        "type": "str",
+                        "enum": [
+                            "none",
+                            "currency",
+                            "percentage"
+                        ]
+                    },
+                    "currency_code": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "initial_number_value": {
+                        "type": "num"
+                    },
+                    "target_number_value": {
+                        "type": "num"
+                    },
+                    "current_number_value": {
+                        "type": "num"
+                    },
+                    "current_display_value": {
+                        "type": "str",
+                        "readOnly": true
+                    },
+                    "progress_source": {
+                        "type": "str",
+                        "enum": [
+                            "manual",
+                            "subgoal_progress",
+                            "project_task_completion",
+                            "project_milestone_completion",
+                            "task_completion",
+                            "external"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "GoalsCreateMetricRequest": {
+        "type": "obj",
+        "props": {
+            "data": "GoalMetricBase"
+        }
+    },
+    "GoalMetricCurrentValueRequest": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "props": {
+                    "current_number_value": {
+                        "type": "num"
+                    }
+                }
+            }
+        ]
+    },
+    "GoalsUpdateMetricCurrentValueRequest": {
+        "type": "obj",
+        "props": {
+            "data": "GoalMetricCurrentValueRequest"
+        }
+    },
+    "TaskAddFollowersRequest": {
+        "type": "obj",
+        "props": {
+            "followers": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            }
+        },
+        "req": [
+            "followers"
+        ]
+    },
+    "GoalsAddCollaboratorsToGoalRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskAddFollowersRequest"
+        }
+    },
+    "GoalsRemoveFollowersFromGoalRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskAddFollowersRequest"
+        }
+    },
+    "job_path_gid": {
+        "name": "job_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "job"
+    },
+    "MembershipRequest": {
+        "type": "obj",
+        "props": {
+            "access_level": {
+                "type": "str"
+            }
+        }
+    },
+    "CreateMembershipRequest": {
+        "allOf": [
+            "MembershipRequest",
+            {
+                "type": "obj",
+                "props": {
+                    "member": {
+                        "type": "str"
+                    },
+                    "parent": {
+                        "type": "str"
+                    },
+                    "role": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "MembershipsCreateNewRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "CreateMembershipRequest"
+        }
+    },
+    "membership_path_gid": {
+        "name": "membership_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "membership"
+    },
+    "MembershipsUpdateMembershipRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "MembershipRequest"
+        }
+    },
+    "OrganizationExportRequest": {
+        "type": "obj",
+        "props": {
+            "organization": {
+                "type": "str"
+            }
+        }
+    },
+    "OrganizationExportsCreateExportRequestRequest": {
+        "type": "obj",
+        "props": {
+            "data": "OrganizationExportRequest"
+        }
+    },
+    "organization_export_path_gid": {
+        "name": "organization_export_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "organization_export"
+    },
+    "portfolio_query_param": {
+        "name": "portfolio",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "portfolio"
+    },
+    "workspace_query_param": {
+        "name": "workspace",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "workspace"
+    },
+    "user_query_param": {
+        "name": "user",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "user"
+    },
+    "portfolio_membership_path_gid": {
+        "name": "portfolio_membership_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "portfolio_membership"
+    },
+    "PortfolioCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "portfolio"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "PortfolioBase": {
+        "allOf": [
+            "PortfolioCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "color": {
+                        "type": "str",
+                        "enum": [
+                            "dark-pink",
+                            "dark-green",
+                            "dark-blue",
+                            "dark-red",
+                            "dark-teal",
+                            "dark-brown",
+                            "dark-orange",
+                            "dark-purple",
+                            "dark-warm-gray",
+                            "light-pink",
+                            "light-green",
+                            "light-blue",
+                            "light-red",
+                            "light-teal",
+                            "light-brown",
+                            "light-orange",
+                            "light-purple",
+                            "light-warm-gray"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "PortfolioRequest": {
+        "allOf": [
+            "PortfolioBase",
+            {
+                "type": "obj",
+                "props": {
+                    "members": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                            "type": "str"
+                        }
+                    },
+                    "workspace": {
+                        "type": "str"
+                    },
+                    "public": {
+                        "type": "bool"
+                    }
+                }
+            }
+        ]
+    },
+    "PortfoliosCreateNewPortfolioRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "PortfolioRequest"
+        }
+    },
+    "PortfoliosUpdatePortfolioRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "PortfolioRequest"
+        }
+    },
+    "PortfolioAddItemRequest": {
+        "type": "obj",
+        "req": [
+            "item"
+        ],
+        "props": {
+            "item": {
+                "type": "str"
+            },
+            "insert_before": {
+                "type": "str"
+            },
+            "insert_after": {
+                "type": "str"
+            }
+        }
+    },
+    "PortfoliosAddPortfolioItemRequest": {
+        "type": "obj",
+        "props": {
+            "data": "PortfolioAddItemRequest"
+        }
+    },
+    "PortfolioRemoveItemRequest": {
+        "type": "obj",
+        "req": [
+            "item"
+        ],
+        "props": {
+            "item": {
+                "type": "str"
+            }
+        }
+    },
+    "PortfoliosRemoveItemFromPortfolioRequest": {
+        "type": "obj",
+        "props": {
+            "data": "PortfolioRemoveItemRequest"
+        }
+    },
+    "AddCustomFieldSettingRequest": {
+        "type": "obj",
+        "req": [
+            "custom_field"
+        ],
+        "props": {
+            "custom_field": {
+                "type": "str"
+            },
+            "is_important": {
+                "type": "bool"
+            },
+            "insert_before": {
+                "type": "str"
+            },
+            "insert_after": {
+                "type": "str"
+            }
+        }
+    },
+    "PortfoliosAddCustomFieldSettingRequest": {
+        "type": "obj",
+        "props": {
+            "data": "AddCustomFieldSettingRequest"
+        }
+    },
+    "RemoveCustomFieldSettingRequest": {
+        "type": "obj",
+        "req": [
+            "custom_field"
+        ],
+        "props": {
+            "custom_field": {
+                "type": "str"
+            }
+        }
+    },
+    "PortfoliosRemoveCustomFieldSettingRequest": {
+        "type": "obj",
+        "props": {
+            "data": "RemoveCustomFieldSettingRequest"
+        }
+    },
+    "AddMembersRequest": {
+        "type": "obj",
+        "req": [
+            "members"
+        ],
+        "props": {
+            "members": {
+                "type": "str"
+            }
+        }
+    },
+    "PortfoliosAddMembersToPortfolioRequest": {
+        "type": "obj",
+        "props": {
+            "data": "AddMembersRequest"
+        }
+    },
+    "RemoveMembersRequest": {
+        "type": "obj",
+        "req": [
+            "members"
+        ],
+        "props": {
+            "members": {
+                "type": "str"
+            }
+        }
+    },
+    "PortfoliosRemoveMembersFromPortfolioRequest": {
+        "type": "obj",
+        "props": {
+            "data": "RemoveMembersRequest"
+        }
+    },
+    "project_brief_path_gid": {
+        "name": "project_brief_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "project_brief"
+    },
+    "ProjectBriefCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "project_brief"
+                }
+            }
+        ]
+    },
+    "ProjectBriefBase": {
+        "allOf": [
+            "ProjectBriefCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "html_text": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "ProjectBriefRequest": {
+        "allOf": [
+            "ProjectBriefBase",
+            {
+                "type": "obj",
+                "props": {
+                    "text": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "ProjectBriefsUpdateBriefRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectBriefRequest"
+        }
+    },
+    "ProjectBriefsCreateNewRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectBriefRequest"
+        }
+    },
+    "project_membership_path_gid": {
+        "name": "project_membership_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "project_membership"
+    },
+    "project_status_path_gid": {
+        "name": "project_status_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "project_status"
+    },
+    "ProjectStatusCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "project_status"
+                },
+                "props": {}
+            }
+        ]
+    },
+    "ProjectStatusBase": {
+        "allOf": [
+            "ProjectStatusCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "text": {
+                        "type": "str"
+                    },
+                    "html_text": {
+                        "type": "str"
+                    },
+                    "color": {
+                        "type": "str",
+                        "enum": [
+                            "green",
+                            "yellow",
+                            "red",
+                            "blue",
+                            "complete"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "ProjectStatusesCreateNewStatusUpdateRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectStatusBase"
+        }
+    },
+    "project_template_path_gid": {
+        "name": "project_template_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "project_template"
+    },
+    "team_query_param": {
+        "name": "team",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "team"
+    },
+    "team_path_gid": {
+        "name": "team_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "team"
+    },
+    "DateVariableRequest": {
+        "type": "obj",
+        "props": {
+            "gid": {
+                "type": "str"
+            },
+            "value": {
+                "type": "str",
+                "nullable": true,
+                "format": "date-time"
+            }
+        }
+    },
+    "RequestedRoleRequest": {
+        "type": "obj",
+        "props": {
+            "gid": {
+                "type": "str"
+            },
+            "value": {
+                "type": "str"
+            }
+        }
+    },
+    "ProjectTemplateInstantiateProjectRequest": {
+        "type": "obj",
+        "req": [
+            "name"
+        ],
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "team": {
+                "type": "str"
+            },
+            "public": {
+                "type": "bool"
+            },
+            "is_strict": {
+                "type": "bool"
+            },
+            "requested_dates": {
+                "type": "array",
+                "items": "DateVariableRequest"
+            },
+            "requested_roles": {
+                "type": "array",
+                "items": "RequestedRoleRequest"
+            }
+        }
+    },
+    "ProjectTemplatesInstantiateProjectJobRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectTemplateInstantiateProjectRequest"
+        }
+    },
+    "archived_query_param": {
+        "name": "archived",
+        "in": "query",
+        "schema": {
+            "type": "bool"
+        }
+    },
+    "ProjectStatusResponse": {
+        "allOf": [
+            "ProjectStatusBase",
+            {
+                "type": "obj",
+                "props": {
+                    "author": "UserCompact",
+                    "created_at": {
+                        "type": "str",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "created_by": "UserCompact",
+                    "modified_at": {
+                        "type": "str",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                }
+            }
+        ]
+    },
+    "StatusUpdateCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "status_update"
+                },
+                "props": {
+                    "resource_subtype": {
+                        "type": "str",
+                        "enum": [
+                            "project_status_update",
+                            "portfolio_status_update",
+                            "goal_status_update"
+                        ],
+                        "readOnly": true
+                    }
+                }
+            }
+        ]
+    },
+    "CustomFieldSettingCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "custom_field_setting"
+                }
+            }
+        ]
+    },
+    "CustomFieldResponse": {
+        "allOf": [
+            "CustomFieldBase",
+            {
+                "type": "obj",
+                "props": {
+                    "representation_type": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "text",
+                            "enum",
+                            "multi_enum",
+                            "num",
+                            "date",
+                            "people",
+                            "formula",
+                            "custom_id"
+                        ]
+                    },
+                    "id_prefix": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "is_formula_field": {
+                        "type": "bool"
+                    },
+                    "is_value_read_only": {
+                        "type": "bool"
+                    },
+                    "created_by": {
+                        "allOf": [
+                            "UserCompact",
+                            {
+                                "nullable": true
+                            }
+                        ]
+                    },
+                    "people_value": {
+                        "type": "array",
+                        "items": "UserCompact"
+                    }
+                }
+            }
+        ]
+    },
+    "CustomFieldSettingResponse": {
+        "allOf": [
+            "CustomFieldSettingCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "project": {
+                        "allOf": [
+                            "ProjectCompact",
+                            {
+                                "type": "obj",
+                                "readOnly": true
+                            }
+                        ]
+                    },
+                    "is_important": {
+                        "type": "bool",
+                        "readOnly": true
+                    },
+                    "parent": {
+                        "allOf": [
+                            "ProjectCompact",
+                            {
+                                "type": "obj",
+                                "readOnly": true
+                            }
+                        ]
+                    },
+                    "custom_field": {
+                        "allOf": [
+                            "CustomFieldResponse",
+                            {
+                                "type": "obj",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "ProjectBase": {
+        "allOf": [
+            "ProjectCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "archived": {
+                        "type": "bool"
+                    },
+                    "color": {
+                        "type": "str",
+                        "nullable": true,
+                        "enum": [
+                            "dark-pink",
+                            "dark-green",
+                            "dark-blue",
+                            "dark-red",
+                            "dark-teal",
+                            "dark-brown",
+                            "dark-orange",
+                            "dark-purple",
+                            "dark-warm-gray",
+                            "light-pink",
+                            "light-green",
+                            "light-blue",
+                            "light-red",
+                            "light-teal",
+                            "light-brown",
+                            "light-orange",
+                            "light-purple",
+                            "light-warm-gray",
+                            "none",
+                            null
+                        ]
+                    },
+                    "created_at": {
+                        "type": "str",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "current_status": {
+                        "allOf": [
+                            "ProjectStatusResponse",
+                            {
+                                "type": "obj",
+                                "nullable": true
+                            }
+                        ]
+                    },
+                    "current_status_update": {
+                        "allOf": [
+                            "StatusUpdateCompact",
+                            {
+                                "type": "obj",
+                                "nullable": true
+                            }
+                        ]
+                    },
+                    "custom_field_settings": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": "CustomFieldSettingResponse"
+                    },
+                    "default_view": {
+                        "type": "str",
+                        "enum": [
+                            "list",
+                            "board",
+                            "calendar",
+                            "timeline"
+                        ]
+                    },
+                    "due_date": {
+                        "type": "str",
+                        "nullable": true,
+                        "format": "date"
+                    },
+                    "due_on": {
+                        "type": "str",
+                        "nullable": true,
+                        "format": "date"
+                    },
+                    "html_notes": {
+                        "type": "str"
+                    },
+                    "members": {
+                        "type": "array",
+                        "items": "UserCompact",
+                        "readOnly": true
+                    },
+                    "modified_at": {
+                        "type": "str",
+                        "readOnly": true,
+                        "format": "date-time"
+                    },
+                    "notes": {
+                        "type": "str"
+                    },
+                    "public": {
+                        "type": "bool"
+                    },
+                    "privacy_setting": {
+                        "type": "str",
+                        "enum": [
+                            "public_to_workspace",
+                            "private_to_team",
+                            "private"
+                        ]
+                    },
+                    "start_on": {
+                        "type": "str",
+                        "nullable": true,
+                        "format": "date"
+                    },
+                    "default_access_level": {
+                        "type": "str",
+                        "enum": [
+                            "admin",
+                            "editor",
+                            "commenter",
+                            "viewer"
+                        ]
+                    },
+                    "minimum_access_level_for_customization": {
+                        "type": "str",
+                        "enum": [
+                            "admin",
+                            "editor"
+                        ]
+                    },
+                    "minimum_access_level_for_sharing": {
+                        "type": "str",
+                        "enum": [
+                            "admin",
+                            "editor"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "ProjectRequest": {
+        "allOf": [
+            "ProjectBase",
+            {
+                "type": "obj",
+                "props": {
+                    "custom_fields": {
+                        "type": "obj",
+                        "additionalProperties": {
+                            "type": "str"
+                        }
+                    },
+                    "followers": {
+                        "type": "str"
+                    },
+                    "owner": {
+                        "nullable": true,
+                        "type": "str"
+                    },
+                    "team": {
+                        "type": "str"
+                    },
+                    "workspace": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "ProjectsCreateNewProjectRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectRequest"
+        }
+    },
+    "ProjectUpdateRequest": {
+        "allOf": [
+            "ProjectBase",
+            {
+                "type": "obj",
+                "props": {
+                    "custom_fields": {
+                        "type": "obj",
+                        "additionalProperties": {
+                            "type": "str"
+                        }
+                    },
+                    "followers": {
+                        "type": "str"
+                    },
+                    "owner": {
+                        "nullable": true,
+                        "type": "str"
+                    },
+                    "team": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "ProjectsUpdateProjectRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectUpdateRequest"
+        }
+    },
+    "ProjectDuplicateRequest": {
+        "type": "obj",
+        "req": [
+            "name"
+        ],
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "team": {
+                "type": "str"
+            },
+            "include": {
+                "type": "str"
+            },
+            "schedule_dates": {
+                "type": "obj",
+                "req": [
+                    "should_skip_weekends"
+                ],
+                "props": {
+                    "should_skip_weekends": {
+                        "type": "bool"
+                    },
+                    "due_on": {
+                        "type": "str"
+                    },
+                    "start_on": {
+                        "type": "str"
+                    }
+                }
+            }
+        }
+    },
+    "ProjectsDuplicateProjectJobRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectDuplicateRequest"
+        }
+    },
+    "task_path_gid": {
+        "name": "task_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "task"
+    },
+    "ProjectsCreateProjectForTeamRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectRequest"
+        }
+    },
+    "ProjectsCreateInWorkspaceRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectRequest"
+        }
+    },
+    "ProjectsAddCustomFieldSettingRequest": {
+        "type": "obj",
+        "props": {
+            "data": "AddCustomFieldSettingRequest"
+        }
+    },
+    "ProjectsRemoveCustomFieldRequest": {
+        "type": "obj",
+        "props": {
+            "data": "RemoveCustomFieldSettingRequest"
+        }
+    },
+    "ProjectsAddMembersToProjectRequest": {
+        "type": "obj",
+        "props": {
+            "data": "AddMembersRequest"
+        }
+    },
+    "ProjectsRemoveMembersFromProjectRequest": {
+        "type": "obj",
+        "props": {
+            "data": "RemoveMembersRequest"
+        }
+    },
+    "AddFollowersRequest": {
+        "type": "obj",
+        "req": [
+            "followers"
+        ],
+        "props": {
+            "followers": {
+                "type": "str"
+            }
+        }
+    },
+    "ProjectsAddFollowersToProjectRequest": {
+        "type": "obj",
+        "props": {
+            "data": "AddFollowersRequest"
+        }
+    },
+    "RemoveFollowersRequest": {
+        "type": "obj",
+        "req": [
+            "followers"
+        ],
+        "props": {
+            "followers": {
+                "type": "str"
+            }
+        }
+    },
+    "ProjectsRemoveProjectFollowersRequest": {
+        "type": "obj",
+        "props": {
+            "data": "RemoveFollowersRequest"
+        }
+    },
+    "ProjectSaveAsTemplateRequest": {
+        "type": "obj",
+        "req": [
+            "name",
+            "public"
+        ],
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "team": {
+                "type": "str"
+            },
+            "workspace": {
+                "type": "str"
+            },
+            "public": {
+                "type": "bool"
+            }
+        }
+    },
+    "ProjectsCreateProjectTemplateJobRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectSaveAsTemplateRequest"
+        }
+    },
+    "rule_trigger_path_gid": {
+        "name": "rule_trigger_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "rule"
+    },
+    "RuleTriggerRequest": {
+        "type": "obj",
+        "props": {
+            "resource": {
+                "type": "str"
+            },
+            "action_data": {
+                "type": "obj",
+                "additionalProperties": true
+            }
+        },
+        "req": [
+            "resource",
+            "action_data"
+        ]
+    },
+    "RulesTriggerRuleRequestRequest": {
+        "type": "obj",
+        "props": {
+            "data": "RuleTriggerRequest"
+        }
+    },
+    "section_path_gid": {
+        "name": "section_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "section"
+    },
+    "SectionRequest": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "insert_before": {
+                "type": "str"
+            },
+            "insert_after": {
+                "type": "str"
+            }
+        },
+        "req": [
+            "name"
+        ]
+    },
+    "SectionsUpdateSectionRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "SectionRequest"
+        }
+    },
+    "SectionsCreateNewSectionRequest": {
+        "type": "obj",
+        "props": {
+            "data": "SectionRequest"
+        }
+    },
+    "SectionTaskInsertRequest": {
+        "type": "obj",
+        "props": {
+            "task": {
+                "type": "str"
+            },
+            "insert_before": {
+                "type": "str"
+            },
+            "insert_after": {
+                "type": "str"
+            }
+        },
+        "req": [
+            "task"
+        ]
+    },
+    "SectionsAddTaskToSectionRequest": {
+        "type": "obj",
+        "props": {
+            "data": "SectionTaskInsertRequest"
+        }
+    },
+    "ProjectSectionInsertRequest": {
+        "type": "obj",
+        "props": {
+            "section": {
+                "type": "str"
+            },
+            "before_section": {
+                "type": "str"
+            },
+            "after_section": {
+                "type": "str"
+            }
+        },
+        "req": [
+            "section"
+        ]
+    },
+    "SectionsMoveOrInsertRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ProjectSectionInsertRequest"
+        }
+    },
+    "status_update_path_gid": {
+        "name": "status_update_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "status"
+    },
+    "StatusUpdateBase": {
+        "allOf": [
+            "StatusUpdateCompact",
+            {
+                "type": "obj",
+                "req": [
+                    "text",
+                    "status_type"
+                ],
+                "props": {
+                    "text": {
+                        "type": "str"
+                    },
+                    "html_text": {
+                        "type": "str"
+                    },
+                    "status_type": {
+                        "type": "str",
+                        "enum": [
+                            "on_track",
+                            "at_risk",
+                            "off_track",
+                            "on_hold",
+                            "complete",
+                            "achieved",
+                            "partial",
+                            "missed",
+                            "dropped"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "StatusUpdateRequest": {
+        "allOf": [
+            "StatusUpdateBase",
+            {
+                "type": "obj",
+                "req": [
+                    "parent"
+                ],
+                "props": {
+                    "parent": {
+                        "allOf": [
+                            {
+                                "type": "str"
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "StatusUpdatesCreateNewStatusUpdateRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "StatusUpdateRequest"
+        }
+    },
+    "story_path_gid": {
+        "name": "story_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "story"
+    },
+    "StoryBase": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "story"
+                },
+                "props": {
+                    "created_at": {
+                        "type": "str",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "resource_subtype": {
+                        "type": "str",
+                        "readOnly": true
+                    },
+                    "text": {
+                        "type": "str"
+                    },
+                    "html_text": {
+                        "type": "str"
+                    },
+                    "is_pinned": {
+                        "type": "bool"
+                    },
+                    "sticker_name": {
+                        "type": "str",
+                        "enum": [
+                            "green_checkmark",
+                            "people_dancing",
+                            "dancing_unicorn",
+                            "heart",
+                            "party_popper",
+                            "people_waving_flags",
+                            "splashing_narwhal",
+                            "trophy",
+                            "yeti_riding_unicorn",
+                            "celebrating_people",
+                            "determined_climbers",
+                            "phoenix_spreading_love"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "StoriesUpdateFullRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "StoryBase"
+        }
+    },
+    "StoriesCreateCommentRequest": {
+        "type": "obj",
+        "props": {
+            "data": "StoryBase"
+        }
+    },
+    "TagCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "tag"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "TagBase": {
+        "allOf": [
+            "TagCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "color": {
+                        "type": "str",
+                        "nullable": true,
+                        "enum": [
+                            "dark-pink",
+                            "dark-green",
+                            "dark-blue",
+                            "dark-red",
+                            "dark-teal",
+                            "dark-brown",
+                            "dark-orange",
+                            "dark-purple",
+                            "dark-warm-gray",
+                            "light-pink",
+                            "light-green",
+                            "light-blue",
+                            "light-red",
+                            "light-teal",
+                            "light-brown",
+                            "light-orange",
+                            "light-purple",
+                            "light-warm-gray",
+                            null
+                        ]
+                    },
+                    "notes": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "TagRequest": {
+        "allOf": [
+            "TagBase",
+            {
+                "type": "obj",
+                "props": {
+                    "followers": {
+                        "type": "array",
+                        "items": {
+                            "type": "str"
+                        }
+                    },
+                    "workspace": {
+                        "type": "str",
+                        "x-env-variable": true
+                    }
+                }
+            }
+        ]
+    },
+    "TagsCreateNewTagRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TagRequest"
+        }
+    },
+    "tag_path_gid": {
+        "name": "tag_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "tag"
+    },
+    "TagCreateTagForWorkspaceRequest": {
+        "allOf": [
+            "TagBase",
+            {
+                "type": "obj",
+                "props": {
+                    "followers": {
+                        "type": "array",
+                        "items": {
+                            "type": "str"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "TagsCreateTagInWorkspaceRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TagCreateTagForWorkspaceRequest"
+        }
+    },
+    "task_template_path_gid": {
+        "name": "task_template_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "task_template"
+    },
+    "TaskTemplateInstantiateTaskRequest": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            }
+        }
+    },
+    "TaskTemplatesInstantiateTaskJobRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskTemplateInstantiateTaskRequest"
+        }
+    },
+    "TaskCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "task"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    },
+                    "resource_subtype": {
+                        "type": "str",
+                        "enum": [
+                            "default_task",
+                            "milestone",
+                            "section",
+                            "approval"
+                        ]
+                    },
+                    "created_by": {
+                        "type": "obj",
+                        "readOnly": true,
+                        "props": {
+                            "gid": {
+                                "type": "str"
+                            },
+                            "resource_type": {
+                                "type": "str"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "Like": {
+        "type": "obj",
+        "props": {
+            "gid": {
+                "type": "str",
+                "readOnly": true
+            },
+            "user": "UserCompact"
+        }
+    },
+    "SectionCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "section"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "TaskBase": {
+        "allOf": [
+            "TaskCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "approval_status": {
+                        "type": "str",
+                        "enum": [
+                            "pending",
+                            "approved",
+                            "rejected",
+                            "changes_requested"
+                        ]
+                    },
+                    "assignee_status": {
+                        "type": "str",
+                        "enum": [
+                            "today",
+                            "upcoming",
+                            "later",
+                            "new",
+                            "inbox"
+                        ]
+                    },
+                    "completed": {
+                        "type": "bool"
+                    },
+                    "completed_at": {
+                        "type": "str",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true
+                    },
+                    "completed_by": {
+                        "allOf": [
+                            "UserCompact",
+                            {
+                                "readOnly": true,
+                                "nullable": true
+                            }
+                        ]
+                    },
+                    "created_at": {
+                        "type": "str",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "dependencies": {
+                        "type": "array",
+                        "items": "AsanaResource",
+                        "readOnly": true
+                    },
+                    "dependents": {
+                        "type": "array",
+                        "items": "AsanaResource",
+                        "readOnly": true
+                    },
+                    "due_at": {
+                        "type": "str",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "due_on": {
+                        "type": "str",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "external": {
+                        "type": "obj",
+                        "props": {
+                            "gid": {
+                                "type": "str"
+                            },
+                            "data": {
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "html_notes": {
+                        "type": "str"
+                    },
+                    "hearted": {
+                        "type": "bool",
+                        "readOnly": true
+                    },
+                    "hearts": {
+                        "type": "array",
+                        "items": "Like",
+                        "readOnly": true
+                    },
+                    "is_rendered_as_separator": {
+                        "type": "bool",
+                        "readOnly": true
+                    },
+                    "liked": {
+                        "type": "bool"
+                    },
+                    "likes": {
+                        "type": "array",
+                        "items": "Like",
+                        "readOnly": true
+                    },
+                    "memberships": {
+                        "type": "array",
+                        "readOnly": true,
+                        "items": {
+                            "type": "obj",
+                            "props": {
+                                "project": "ProjectCompact",
+                                "section": "SectionCompact"
+                            }
+                        }
+                    },
+                    "modified_at": {
+                        "type": "str",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "str"
+                    },
+                    "notes": {
+                        "type": "str"
+                    },
+                    "num_hearts": {
+                        "type": "int",
+                        "readOnly": true
+                    },
+                    "num_likes": {
+                        "type": "int",
+                        "readOnly": true
+                    },
+                    "num_subtasks": {
+                        "type": "int",
+                        "readOnly": true
+                    },
+                    "start_at": {
+                        "type": "str",
+                        "nullable": true,
+                        "format": "date-time"
+                    },
+                    "start_on": {
+                        "type": "str",
+                        "nullable": true,
+                        "format": "date"
+                    },
+                    "actual_time_minutes": {
+                        "type": "num",
+                        "readOnly": true,
+                        "nullable": true
+                    }
+                }
+            }
+        ]
+    },
+    "TaskRequest": {
+        "allOf": [
+            "TaskBase",
+            {
+                "type": "obj",
+                "props": {
+                    "assignee": {
+                        "type": "str",
+                        "readOnly": false,
+                        "x-env-variable": true,
+                        "nullable": true
+                    },
+                    "assignee_section": {
+                        "nullable": true,
+                        "type": "str"
+                    },
+                    "custom_fields": {
+                        "type": "obj",
+                        "additionalProperties": {
+                            "type": "str"
+                        }
+                    },
+                    "followers": {
+                        "type": "array",
+                        "items": {
+                            "type": "str"
+                        }
+                    },
+                    "parent": {
+                        "type": "str",
+                        "readOnly": false,
+                        "x-env-variable": true,
+                        "nullable": true
+                    },
+                    "projects": {
+                        "type": "array",
+                        "items": {
+                            "type": "str"
+                        }
+                    },
+                    "workspace": {
+                        "type": "str",
+                        "readOnly": false,
+                        "x-env-variable": true
+                    }
+                }
+            }
+        ]
+    },
+    "TasksCreateNewTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskRequest"
+        }
+    },
+    "TasksUpdateTaskRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskRequest"
+        }
+    },
+    "TaskDuplicateRequest": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "include": {
+                "type": "str"
+            }
+        }
+    },
+    "TasksDuplicateTaskJobRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskDuplicateRequest"
+        }
+    },
+    "completed_since": {
+        "name": "completed_since",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str"
+        }
+    },
+    "user_task_list_path_gid": {
+        "name": "user_task_list_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "user_task_list"
+    },
+    "TasksCreateSubtaskRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskRequest"
+        }
+    },
+    "TaskSetParentRequest": {
+        "type": "obj",
+        "props": {
+            "parent": {
+                "type": "str"
+            },
+            "insert_after": {
+                "type": "str"
+            },
+            "insert_before": {
+                "type": "str"
+            }
+        },
+        "req": [
+            "parent"
+        ]
+    },
+    "TasksSetParentTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskSetParentRequest"
+        }
+    },
+    "ModifyDependenciesRequest": {
+        "type": "obj",
+        "props": {
+            "dependencies": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            }
+        }
+    },
+    "TasksSetDependenciesForTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ModifyDependenciesRequest"
+        }
+    },
+    "TasksUnlinkDependenciesFromTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ModifyDependenciesRequest"
+        }
+    },
+    "ModifyDependentsRequest": {
+        "type": "obj",
+        "props": {
+            "dependents": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            }
+        }
+    },
+    "TasksSetTaskDependentsRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ModifyDependentsRequest"
+        }
+    },
+    "TasksUnlinkDependentsRequest": {
+        "type": "obj",
+        "props": {
+            "data": "ModifyDependentsRequest"
+        }
+    },
+    "TaskAddProjectRequest": {
+        "type": "obj",
+        "props": {
+            "project": {
+                "type": "str"
+            },
+            "insert_after": {
+                "type": "str",
+                "nullable": true
+            },
+            "insert_before": {
+                "type": "str",
+                "nullable": true
+            },
+            "section": {
+                "type": "str",
+                "nullable": true
+            }
+        },
+        "req": [
+            "project"
+        ]
+    },
+    "TasksAddProjectToTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskAddProjectRequest"
+        }
+    },
+    "TaskRemoveProjectRequest": {
+        "type": "obj",
+        "props": {
+            "project": {
+                "type": "str"
+            }
+        },
+        "req": [
+            "project"
+        ]
+    },
+    "TasksRemoveProjectFromTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskRemoveProjectRequest"
+        }
+    },
+    "TaskAddTagRequest": {
+        "type": "obj",
+        "props": {
+            "tag": {
+                "type": "str"
+            }
+        },
+        "req": [
+            "tag"
+        ]
+    },
+    "TasksAddTagToTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskAddTagRequest"
+        }
+    },
+    "TaskRemoveTagRequest": {
+        "type": "obj",
+        "props": {
+            "tag": {
+                "type": "str"
+            }
+        },
+        "req": [
+            "tag"
+        ]
+    },
+    "TasksRemoveTagFromTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskRemoveTagRequest"
+        }
+    },
+    "TasksAddFollowersToTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskAddFollowersRequest"
+        }
+    },
+    "TaskRemoveFollowersRequest": {
+        "type": "obj",
+        "props": {
+            "followers": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            }
+        },
+        "req": [
+            "followers"
+        ]
+    },
+    "TasksRemoveFollowersFromTaskRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TaskRemoveFollowersRequest"
+        }
+    },
+    "custom_id": {
+        "name": "custom_id",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        }
+    },
+    "team_membership_path_gid": {
+        "name": "team_membership_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "team_membership"
+    },
+    "user_path_gid": {
+        "name": "user_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "user"
+    },
+    "TeamCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "team"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "TeamRequest": {
+        "allOf": [
+            "TeamCompact",
+            {
+                "type": "obj",
+                "props": {
+                    "html_description": {
+                        "type": "str"
+                    },
+                    "organization": {
+                        "type": "str"
+                    },
+                    "visibility": {
+                        "type": "str",
+                        "enum": [
+                            "secret",
+                            "request_to_join",
+                            "public"
+                        ]
+                    },
+                    "edit_team_name_or_description_access_level": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "all_team_members",
+                            "only_team_admins"
+                        ]
+                    },
+                    "edit_team_visibility_or_trash_team_access_level": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "all_team_members",
+                            "only_team_admins"
+                        ]
+                    },
+                    "member_invite_management_access_level": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "all_team_members",
+                            "only_team_admins"
+                        ]
+                    },
+                    "guest_invite_management_access_level": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "all_team_members",
+                            "only_team_admins"
+                        ]
+                    },
+                    "join_request_management_access_level": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "all_team_members",
+                            "only_team_admins"
+                        ]
+                    },
+                    "team_member_removal_access_level": {
+                        "type": "str",
+                        "readOnly": true,
+                        "enum": [
+                            "all_team_members",
+                            "only_team_admins"
+                        ]
+                    }
+                }
+            }
+        ]
+    },
+    "TeamsCreateTeamRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TeamRequest"
+        }
+    },
+    "TeamsUpdateTeamRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TeamRequest"
+        }
+    },
+    "TeamAddUserRequest": {
+        "type": "obj",
+        "props": {
+            "user": {
+                "type": "str"
+            }
+        }
+    },
+    "TeamsAddUserToTeamRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TeamAddUserRequest"
+        }
+    },
+    "TeamRemoveUserRequest": {
+        "type": "obj",
+        "props": {
+            "user": {
+                "type": "str"
+            }
+        }
+    },
+    "TeamsRemoveUserFromTeamRequest": {
+        "type": "obj",
+        "props": {
+            "data": "TeamRemoveUserRequest"
+        }
+    },
+    "time_period_path_gid": {
+        "name": "time_period_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "time_period"
+    },
+    "CreateTimeTrackingEntryRequest": {
+        "type": "obj",
+        "props": {
+            "duration_minutes": {
+                "type": "int"
+            },
+            "entered_on": {
+                "type": "str",
+                "format": "date"
+            }
+        }
+    },
+    "TimeTrackingEntriesCreateNewTimeEntryRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "CreateTimeTrackingEntryRequest"
+        }
+    },
+    "time_tracking_entry_path_gid": {
+        "name": "time_tracking_entry_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "time_tracking_entry"
+    },
+    "UpdateTimeTrackingEntryRequest": {
+        "type": "obj",
+        "props": {
+            "duration_minutes": {
+                "type": "int"
+            },
+            "entered_on": {
+                "type": "str",
+                "format": "date"
+            }
+        }
+    },
+    "TimeTrackingEntriesUpdateTimeTrackingEntryRequest": {
+        "type": "obj",
+        "props": {
+            "data": "UpdateTimeTrackingEntryRequest"
+        }
+    },
+    "WebhookFilter": {
+        "type": "obj",
+        "props": {
+            "resource_type": {
+                "type": "str"
+            },
+            "resource_subtype": {
+                "type": "str"
+            },
+            "action": {
+                "type": "str"
+            },
+            "fields": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            }
+        }
+    },
+    "WebhookRequest": {
+        "type": "obj",
+        "props": {
+            "resource": {
+                "type": "str"
+            },
+            "target": {
+                "type": "str",
+                "format": "uri"
+            },
+            "filters": {
+                "type": "array",
+                "items": {
+                    "allOf": [
+                        "WebhookFilter",
+                        {},
+                        {
+                            "type": "obj"
+                        }
+                    ]
+                }
+            }
+        },
+        "req": [
+            "resource",
+            "target"
+        ]
+    },
+    "WebhooksEstablishWebhookRequest": {
+        "type": "obj",
+        "props": {
+            "data": "WebhookRequest"
+        }
+    },
+    "webhook_path_gid": {
+        "name": "webhook_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "webhook"
+    },
+    "WebhookUpdateRequest": {
+        "type": "obj",
+        "props": {
+            "filters": {
+                "type": "array",
+                "items": {
+                    "allOf": [
+                        "WebhookFilter",
+                        {},
+                        {
+                            "type": "obj"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "WebhooksUpdateWebhookFiltersRequest": {
+        "type": "obj",
+        "props": {
+            "data": "WebhookUpdateRequest"
+        }
+    },
+    "workspace_membership_path_gid": {
+        "name": "workspace_membership_gid",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        },
+        "x-env-variable": "workspace_membership"
+    },
+    "WorkspaceCompact": {
+        "allOf": [
+            "AsanaResource",
+            {
+                "type": "obj",
+                "x-docs-overrides": {
+                    "properties.resource_type.example": "workspace"
+                },
+                "props": {
+                    "name": {
+                        "type": "str"
+                    }
+                }
+            }
+        ]
+    },
+    "WorkspacesUpdateWorkspaceRecordRequest": {
+        "type": "obj",
+        "props": {
+            "data": "WorkspaceCompact"
+        }
+    },
+    "WorkspaceAddUserRequest": {
+        "type": "obj",
+        "props": {
+            "user": {
+                "type": "str"
+            }
+        }
+    },
+    "WorkspacesAddUserToWorkspaceRequest": {
+        "type": "obj",
+        "props": {
+            "data": "WorkspaceAddUserRequest"
+        }
+    },
+    "WorkspaceRemoveUserRequest": {
+        "type": "obj",
+        "props": {
+            "user": {
+                "type": "str"
+            }
+        }
+    },
+    "WorkspacesRemoveUserFromWorkspaceRequest": {
+        "type": "obj",
+        "props": {
+            "data": "WorkspaceRemoveUserRequest"
+        }
+    }
+}

@@ -1,0 +1,252 @@
+###IMPORTANT: base_url:http://localhost:8080/v1
+---
+###SECURITY SCHEMES
+-ConnectToken
+type: http
+scheme: bearer
+bearerFormat: JWT
+---
+###ENDPOINTS
+##path: /activity
+#method:get
+-security
+ConnectToken: []
+-
+opid: Activity_getApiRequests
+params
+in: query
+name: limit
+schema
+type: int
+def: 50
+req: False
+in: query
+name: offset
+schema
+type: int
+def: 0
+req: False
+---
+##path: /vaults
+#method:get
+-security
+ConnectToken: []
+-
+opid: Vaults_listAll
+params
+in: query
+name: filter
+schema
+type: str
+req: False
+---
+##path: /vaults/{vaultUuid}
+#method:get
+-security
+ConnectToken: []
+-
+opid: Vaults_getDetails
+params
+in: path
+name: vaultUuid
+schema
+type: str
+req: True
+---
+##path: /vaults/{vaultUuid}/items
+#method:get
+-security
+ConnectToken: []
+-
+opid: Items_getAll
+params
+in: path
+name: vaultUuid
+schema
+type: str
+req: True
+in: query
+name: filter
+schema
+type: str
+req: False
+#method:post
+-security
+ConnectToken: []
+-
+opid: Items_createNewItem
+params
+in: path
+name: vaultUuid
+schema
+type: str
+req: True
+ref: #FullItem
+---
+##path: /vaults/{vaultUuid}/items/{itemUuid}
+#method:get
+-security
+ConnectToken: []
+-
+opid: Items_getDetailsById
+params
+in: path
+name: vaultUuid
+schema
+type: str
+req: True
+in: path
+name: itemUuid
+schema
+type: str
+req: True
+#method:put
+-security
+ConnectToken: []
+-
+opid: Items_updateItemDetails
+params
+in: path
+name: vaultUuid
+schema
+type: str
+req: True
+in: path
+name: itemUuid
+schema
+type: str
+req: True
+ref: #FullItem
+#method:delete
+-security
+ConnectToken: []
+-
+opid: Items_deleteItemById
+params
+in: path
+name: vaultUuid
+schema
+type: str
+req: True
+in: path
+name: itemUuid
+schema
+type: str
+req: True
+#method:patch
+-security
+ConnectToken: []
+-
+opid: Items_updateSubsetAttributes
+params
+in: path
+name: vaultUuid
+schema
+type: str
+req: True
+in: path
+name: itemUuid
+schema
+type: str
+req: True
+ref: #Patch
+---
+##path: /vaults/{vaultUuid}/items/{itemUuid}/files
+#method:get
+-security
+ConnectToken: []
+-
+opid: Files_getAllFilesInsideItem
+params
+in: path
+name: vaultUuid
+schema
+type: str
+format: uuid
+req: True
+in: path
+name: itemUuid
+schema
+type: str
+format: uuid
+req: True
+in: query
+name: inline_files
+schema
+type: bool
+req: False
+---
+##path: /vaults/{vaultUuid}/items/{itemUuid}/files/{fileUuid}
+#method:get
+-security
+ConnectToken: []
+-
+opid: Files_getFileDetails
+params
+in: path
+name: vaultUuid
+schema
+type: str
+format: uuid
+req: True
+in: path
+name: itemUuid
+schema
+type: str
+format: uuid
+req: True
+in: path
+name: fileUuid
+schema
+type: str
+format: uuid
+req: True
+in: query
+name: inline_files
+schema
+type: bool
+req: False
+---
+##path: /vaults/{vaultUuid}/items/{itemUuid}/files/{fileUuid}/content
+#parameters
+in: path
+name: vaultUuid
+schema
+type: str
+format: uuid
+req: True
+in: path
+name: itemUuid
+schema
+type: str
+format: uuid
+req: True
+in: path
+name: fileUuid
+req: True
+schema
+type: str
+#method:get
+-security
+ConnectToken: []
+-
+opid: Files_getContent
+---
+##path: /heartbeat
+#method:get
+opid: Health_checkLiveness
+servers
+url: http//localhost8080
+---
+##path: /health
+#method:get
+opid: Health_serverStateCheck
+servers
+url: http//localhost8080
+---
+##path: /metrics
+#method:get
+opid: Metrics_queryServerMetrics
+servers
+url: http//localhost8080
+---

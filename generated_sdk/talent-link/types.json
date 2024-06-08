@@ -1,0 +1,4189 @@
+{
+    "ApplicationStatusDto": {
+        "type": "obj",
+        "req": [
+            "applicationId",
+            "targetStatus"
+        ],
+        "props": {
+            "applicationId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "targetStatus": {
+                "type": "str"
+            },
+            "reasonOfChange": {
+                "type": "str"
+            },
+            "reasonOfCompletion": {
+                "type": "str"
+            },
+            "memo": {
+                "type": "str"
+            },
+            "sendCancellationToCandidate": {
+                "type": "bool",
+                "def": false
+            },
+            "offerAccepted": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "ApplicationsStatusDto": {
+        "type": "obj",
+        "req": [
+            "newStatuses"
+        ],
+        "props": {
+            "newStatuses": {
+                "type": "array",
+                "items": "ApplicationStatusDto"
+            }
+        }
+    },
+    "ReportDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "fileName": {
+                "type": "str"
+            },
+            "docType": {
+                "type": "str",
+                "enum": [
+                    "BO_CP",
+                    "BO_CPE",
+                    "BO_CPI",
+                    "BO_CPEC",
+                    "BO_CPIC",
+                    "FO_CP",
+                    "FO_PIF",
+                    "FO_RPM",
+                    "FO_CNT",
+                    "BEST_PIF",
+                    "PROFILE",
+                    "R",
+                    "RESUME",
+                    "CL",
+                    "COVER_LETTER",
+                    "COVERLETTER",
+                    "DQ",
+                    "I",
+                    "IATTACHMENT",
+                    "Q",
+                    "MAIL",
+                    "SEARCH",
+                    "AGENCY_CONTRACT",
+                    "DOCUMENT_PACK",
+                    "EXPENSE",
+                    "EXTSYSATTACHMENT",
+                    "PHOTO",
+                    "PORTRAIT",
+                    "THUMBNAIL",
+                    "OFFER_LETTER",
+                    "OTHER",
+                    "DOCUSIGN_PACKAGE",
+                    "BGCK_REP",
+                    "LINKEDIN_INMAIL",
+                    "SMS",
+                    "RESPONSE_EMAILS",
+                    "TRACKED_MAIL",
+                    "SB_ATTACHMENT",
+                    "HIRINGFORM",
+                    "MAILTRACK"
+                ]
+            },
+            "docLanguage": {
+                "type": "str"
+            },
+            "base64Data": {
+                "type": "str"
+            },
+            "size": {
+                "type": "int",
+                "format": "int64"
+            },
+            "author": {
+                "type": "str"
+            },
+            "creationDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "docId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "publishable": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "SubmitReportRequest": {
+        "type": "obj",
+        "props": {
+            "requestId": {
+                "type": "str"
+            },
+            "report": "ReportDto"
+        }
+    },
+    "SubmitResourceRequest": {
+        "type": "obj",
+        "props": {
+            "requestId": {
+                "type": "str"
+            },
+            "name": {
+                "type": "str"
+            },
+            "location": {
+                "type": "str",
+                "format": "url"
+            },
+            "value": {
+                "type": "str"
+            },
+            "sendCandidateEmailWithoutUrl": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "LocalizedValueDto": {
+        "type": "obj",
+        "props": {
+            "lang": {
+                "type": "str"
+            },
+            "value": {
+                "type": "str"
+            }
+        }
+    },
+    "AnswerDto": {
+        "type": "obj",
+        "props": {
+            "values": {
+                "type": "array",
+                "xml": {
+                    "name": "value",
+                    "wrapped": true
+                },
+                "items": {
+                    "type": "str"
+                }
+            },
+            "availableAnswers": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            },
+            "children": {
+                "type": "array",
+                "items": "AnswerDto"
+            },
+            "multipleAnswer": {
+                "type": "array",
+                "items": "AnswerDto"
+            },
+            "dataType": {
+                "type": "str"
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "answerTypeFormat": {
+                "type": "str"
+            },
+            "fatherid": {
+                "type": "int",
+                "format": "int64"
+            }
+        },
+        "xml": {
+            "name": "answer"
+        }
+    },
+    "AssignedQuestionDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "label": {
+                "type": "str"
+            },
+            "order": {
+                "type": "int",
+                "format": "int64"
+            },
+            "type": {
+                "type": "str"
+            },
+            "localizedLabel": {
+                "type": "str"
+            },
+            "questionId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "index": {
+                "type": "int",
+                "format": "int32"
+            },
+            "req": {
+                "type": "bool",
+                "def": false
+            },
+            "localizedLabels": {
+                "type": "array",
+                "items": "LocalizedValueDto"
+            },
+            "answer": "AnswerDto",
+            "children": {
+                "type": "array",
+                "items": "AssignedQuestionDto"
+            },
+            "matrixCells": {
+                "type": "array",
+                "items": {
+                    "type": "array",
+                    "items": "AssignedQuestionDto"
+                }
+            },
+            "simple": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "StructuredDocumentDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "score": {
+                "type": "int",
+                "format": "int64"
+            },
+            "questions": {
+                "type": "array",
+                "items": "AssignedQuestionDto"
+            }
+        }
+    },
+    "SubmitResultsRequest": {
+        "type": "obj",
+        "props": {
+            "requestId": {
+                "type": "str"
+            },
+            "results": "StructuredDocumentDto"
+        }
+    },
+    "SubmitStatusRequest": {
+        "type": "obj",
+        "props": {
+            "requestId": {
+                "type": "str"
+            },
+            "status": {
+                "type": "str"
+            }
+        }
+    },
+    "CampaignTypeAssignmentDto": {
+        "type": "obj",
+        "req": [
+            "campaignTypeIds",
+            "candidateIds"
+        ],
+        "props": {
+            "candidateIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "campaignTypeIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "BasicTagCategoryDto": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            }
+        }
+    },
+    "BasicCandidateTagDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "name": {
+                "type": "str"
+            },
+            "icon": {
+                "type": "str"
+            },
+            "category": "BasicTagCategoryDto"
+        }
+    },
+    "AddressDto": {
+        "type": "obj",
+        "props": {
+            "address1": {
+                "type": "str"
+            },
+            "address2": {
+                "type": "str"
+            },
+            "city": {
+                "type": "str"
+            },
+            "zip": {
+                "type": "str"
+            },
+            "regionName": {
+                "type": "str"
+            },
+            "homePhone": {
+                "type": "str"
+            },
+            "workPhone": {
+                "type": "str"
+            },
+            "mobilePhone": {
+                "type": "str"
+            },
+            "fax": {
+                "type": "str"
+            },
+            "alternateEmail": {
+                "type": "str"
+            },
+            "personalWebSite": {
+                "type": "str"
+            },
+            "preferredComChannel": {
+                "type": "str"
+            },
+            "countryName": {
+                "type": "str"
+            }
+        }
+    },
+    "ReferenceDto": {
+        "type": "obj",
+        "props": {
+            "employeeCode": {
+                "type": "str"
+            },
+            "company": {
+                "type": "str"
+            },
+            "email": {
+                "type": "str"
+            },
+            "referredFrom": {
+                "type": "str"
+            }
+        }
+    },
+    "PersonalDataDto": {
+        "type": "obj",
+        "props": {
+            "dateOfBirth": {
+                "type": "int",
+                "format": "int64"
+            },
+            "numberOfChildren": {
+                "type": "int",
+                "format": "int32"
+            },
+            "citizenship": {
+                "type": "str"
+            },
+            "language": {
+                "type": "str"
+            },
+            "maritalStatus": {
+                "type": "str"
+            },
+            "sex": {
+                "type": "str"
+            }
+        }
+    },
+    "UserDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "login": {
+                "type": "str"
+            },
+            "fullName": {
+                "type": "str"
+            },
+            "language": {
+                "type": "str"
+            }
+        }
+    },
+    "PositionDto": {
+        "type": "obj",
+        "props": {
+            "company": {
+                "type": "str"
+            },
+            "companyStartDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "position": {
+                "type": "str"
+            },
+            "positionStartDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "positionEndDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "managerName": {
+                "type": "str"
+            },
+            "employeeCode": {
+                "type": "str"
+            },
+            "compensation": {
+                "type": "str"
+            },
+            "location": {
+                "type": "str"
+            }
+        }
+    },
+    "IdDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "BasicCandidateConsentDto": {
+        "type": "obj",
+        "req": [
+            "consentId",
+            "status"
+        ],
+        "props": {
+            "consentId": "IdDto",
+            "consentType": {
+                "type": "str"
+            },
+            "status": {
+                "type": "str"
+            },
+            "comment": {
+                "type": "str"
+            }
+        }
+    },
+    "BasicCampaignTypeDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "ReferrerDto": {
+        "type": "obj",
+        "props": {
+            "firstName": {
+                "type": "str"
+            },
+            "lastName": {
+                "type": "str"
+            },
+            "email": {
+                "type": "str"
+            },
+            "employeeCode": {
+                "type": "str"
+            },
+            "employeeCompany": {
+                "type": "str"
+            }
+        }
+    },
+    "BasicCandidateDto": {
+        "type": "obj",
+        "req": [
+            "firstname",
+            "lastname"
+        ],
+        "props": {
+            "tags": {
+                "type": "array",
+                "items": "BasicCandidateTagDto"
+            },
+            "type": {
+                "type": "str"
+            },
+            "contractor": {
+                "type": "bool",
+                "def": false
+            },
+            "initialType": {
+                "type": "str"
+            },
+            "firstname": {
+                "type": "str"
+            },
+            "lastname": {
+                "type": "str"
+            },
+            "middlename": {
+                "type": "str"
+            },
+            "email": {
+                "type": "str"
+            },
+            "academicTitle": {
+                "type": "str"
+            },
+            "srcChannelName": {
+                "type": "str"
+            },
+            "origin": {
+                "type": "str"
+            },
+            "creation": {
+                "type": "int",
+                "format": "int64"
+            },
+            "update": {
+                "type": "int",
+                "format": "int64"
+            },
+            "socialSecurityNumber": {
+                "type": "str"
+            },
+            "anonymous": {
+                "type": "bool",
+                "def": false
+            },
+            "formOfAddress": {
+                "type": "str"
+            },
+            "address": "AddressDto",
+            "reference": "ReferenceDto",
+            "personalData": "PersonalDataDto",
+            "creationUser": "UserDto",
+            "updateUser": "UserDto",
+            "sourceChannelType": {
+                "type": "str"
+            },
+            "status": {
+                "type": "str"
+            },
+            "sourcingMedium": {
+                "type": "str"
+            },
+            "uiLanguage": {
+                "type": "str"
+            },
+            "dataPrivacyStatement": {
+                "type": "str"
+            },
+            "expectedArchiving": {
+                "type": "int",
+                "format": "int64"
+            },
+            "memo": {
+                "type": "str"
+            },
+            "linkedInId": {
+                "type": "str"
+            },
+            "partiallyDeleted": {
+                "type": "bool",
+                "def": false
+            },
+            "latitude": {
+                "type": "num",
+                "format": "double"
+            },
+            "longitude": {
+                "type": "num",
+                "format": "double"
+            },
+            "internalCandidateId": {
+                "type": "str"
+            },
+            "position": "PositionDto",
+            "candidateConsents": {
+                "type": "array",
+                "items": "BasicCandidateConsentDto"
+            },
+            "openingId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "poolId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "campaignTypes": {
+                "type": "array",
+                "items": "BasicCampaignTypeDto"
+            },
+            "referrer": "ReferrerDto"
+        }
+    },
+    "UpdateApplicationScoreDto": {
+        "type": "obj",
+        "req": [
+            "applicationId",
+            "score",
+            "system"
+        ],
+        "props": {
+            "info": {
+                "type": "str"
+            },
+            "score": {
+                "type": "num",
+                "format": "double"
+            },
+            "system": {
+                "type": "str"
+            },
+            "applicationId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "populateScoreToChildApplications": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "CandidateListDto": {
+        "type": "obj",
+        "req": [
+            "candidatesIds"
+        ],
+        "props": {
+            "candidatesIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "UpdateConsentDto": {
+        "type": "obj",
+        "req": [
+            "consentId",
+            "status"
+        ],
+        "props": {
+            "consentId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "status": {
+                "type": "str",
+                "enum": [
+                    "NOT_REQUESTED",
+                    "REQUESTED",
+                    "GRANTED",
+                    "REVOKED_BY_USER",
+                    "WITHDRAWN_BY_CANDIDATE",
+                    "EXPIRED"
+                ]
+            },
+            "comment": {
+                "type": "str"
+            }
+        }
+    },
+    "LinkToJobsDto": {
+        "type": "obj",
+        "props": {
+            "requisitionIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "copyAllDocuments": {
+                "type": "bool",
+                "def": false
+            },
+            "documentsIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "QuestionAnsweredDto": {
+        "type": "obj",
+        "props": {
+            "assignedQuestionId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "questionId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "answerValue": {
+                "type": "str"
+            },
+            "options": {
+                "type": "array",
+                "items": "IdDto"
+            },
+            "index": {
+                "type": "int",
+                "format": "int32"
+            },
+            "childQuestions": {
+                "type": "array",
+                "items": "QuestionAnsweredDto"
+            }
+        }
+    },
+    "AnsweredDto": {
+        "type": "obj",
+        "props": {
+            "questionsAnswered": {
+                "type": "array",
+                "items": "QuestionAnsweredDto"
+            }
+        }
+    },
+    "CandidateTagAssignmentDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "name": {
+                "type": "str"
+            },
+            "icon": {
+                "type": "str"
+            },
+            "category": "BasicTagCategoryDto",
+            "department": "IdDto"
+        }
+    },
+    "CandidateDocumentDto": {
+        "type": "obj",
+        "req": [
+            "base64File",
+            "docType",
+            "fileName"
+        ],
+        "props": {
+            "fileName": {
+                "type": "str"
+            },
+            "docType": {
+                "type": "str",
+                "enum": [
+                    "RESUME",
+                    "COVER_LETTER",
+                    "MAIL",
+                    "OFFER_LETTER",
+                    "OTHER"
+                ]
+            },
+            "language": {
+                "type": "str"
+            },
+            "base64File": {
+                "type": "str"
+            },
+            "applicationId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "CandidatePoolCreationDto": {
+        "type": "obj",
+        "req": [
+            "departmentId",
+            "name"
+        ],
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "outOfMatching": {
+                "type": "bool",
+                "def": false
+            },
+            "country": {
+                "type": "str"
+            },
+            "departmentId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "PermanentDetailsDto": {
+        "type": "obj",
+        "req": [
+            "fixedCurrency",
+            "fixedSalary",
+            "fixedSalaryPeriod"
+        ],
+        "props": {
+            "fixedSalary": {
+                "type": "num"
+            },
+            "variableSalary": {
+                "type": "num"
+            },
+            "relocation": {
+                "type": "num"
+            },
+            "probationaryPeriod": {
+                "type": "str"
+            },
+            "carAllowance": {
+                "type": "bool",
+                "def": false
+            },
+            "memo": {
+                "type": "str"
+            },
+            "fixedCurrency": {
+                "type": "str"
+            },
+            "fixedSalaryPeriod": {
+                "type": "str"
+            },
+            "relocationCurrency": {
+                "type": "str"
+            },
+            "variableSalaryCurrency": {
+                "type": "str"
+            },
+            "variableSalaryPeriod": {
+                "type": "str"
+            }
+        }
+    },
+    "ContractorDto": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "groupName": {
+                "type": "str"
+            },
+            "address1": {
+                "type": "str"
+            },
+            "address2": {
+                "type": "str"
+            },
+            "address3": {
+                "type": "str"
+            },
+            "address4": {
+                "type": "str"
+            },
+            "city": {
+                "type": "str"
+            },
+            "zipCode": {
+                "type": "str"
+            },
+            "phone": {
+                "type": "str"
+            },
+            "contactName": {
+                "type": "str"
+            },
+            "legalId": {
+                "type": "str"
+            },
+            "taxId": {
+                "type": "str"
+            },
+            "paymentTerms": {
+                "type": "str"
+            },
+            "bankName": {
+                "type": "str"
+            },
+            "bankAccountName": {
+                "type": "str"
+            },
+            "bankAccountNumber": {
+                "type": "str"
+            },
+            "bankSortCode": {
+                "type": "str"
+            },
+            "bankContactName": {
+                "type": "str"
+            },
+            "bankContactPhone": {
+                "type": "str"
+            },
+            "bankCity": {
+                "type": "str"
+            },
+            "iban": {
+                "type": "str"
+            },
+            "swift": {
+                "type": "str"
+            },
+            "country": {
+                "type": "str"
+            },
+            "agencyId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "CustomRateDto": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "value": {
+                "type": "num"
+            }
+        }
+    },
+    "RateDto": {
+        "type": "obj",
+        "req": [
+            "order",
+            "rateUnit"
+        ],
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "order": {
+                "type": "int",
+                "format": "int32"
+            },
+            "payRate": {
+                "type": "num"
+            },
+            "supplierRate": {
+                "type": "num"
+            },
+            "chargeRate": {
+                "type": "num"
+            },
+            "paySupplier": {
+                "type": "num"
+            },
+            "supplierCharge": {
+                "type": "num"
+            },
+            "overAll": {
+                "type": "num"
+            },
+            "rateType": {
+                "type": "str"
+            },
+            "rateUnit": {
+                "type": "str"
+            },
+            "customRates": {
+                "type": "array",
+                "items": "CustomRateDto"
+            },
+            "formulaSetId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "comment": {
+                "type": "str"
+            }
+        }
+    },
+    "ContractorDetailsDto": {
+        "type": "obj",
+        "req": [
+            "contractor",
+            "totalCost",
+            "totalCurrency"
+        ],
+        "props": {
+            "contractorType": {
+                "type": "str"
+            },
+            "flexibilityMinDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "flexibilityMaxDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "totalCost": {
+                "type": "num"
+            },
+            "benchmarkRate": {
+                "type": "num"
+            },
+            "gainShareRate": {
+                "type": "num"
+            },
+            "totalClientChargeRate": {
+                "type": "num"
+            },
+            "standardCurrency": {
+                "type": "str"
+            },
+            "totalCurrency": {
+                "type": "str"
+            },
+            "additionalInfo": {
+                "type": "str"
+            },
+            "tsActive": {
+                "type": "bool",
+                "def": false
+            },
+            "contractor": "ContractorDto",
+            "rates": {
+                "type": "array",
+                "items": "RateDto"
+            },
+            "expenseReimbursed": {
+                "type": "bool",
+                "def": false
+            },
+            "splitCostPerCostCenter": {
+                "type": "bool",
+                "def": false
+            },
+            "awdQualified": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "BasicLovDto": {
+        "type": "obj",
+        "req": [
+            "nameLovId",
+            "valueLovId"
+        ],
+        "props": {
+            "nameLovId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "valueLovId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "BasicFreeFormFieldDto": {
+        "type": "obj",
+        "req": [
+            "lovId"
+        ],
+        "props": {
+            "lovId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "value": {
+                "type": "str"
+            }
+        }
+    },
+    "BasicApproverDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "AttachmentDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "externalId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "TemporaryAttachmentDto": {
+        "type": "obj",
+        "props": {
+            "fileName": {
+                "type": "str"
+            },
+            "base64EncodedContent": {
+                "type": "str"
+            },
+            "externalId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "CommunicationToApproverAttachmentsDto": {
+        "type": "obj",
+        "props": {
+            "candidateDocuments": {
+                "type": "array",
+                "items": "AttachmentDto"
+            },
+            "sharedDocuments": {
+                "type": "array",
+                "items": "AttachmentDto"
+            },
+            "temporaryDocuments": {
+                "type": "array",
+                "items": "TemporaryAttachmentDto"
+            }
+        }
+    },
+    "CommunicationToApproverDto": {
+        "type": "obj",
+        "props": {
+            "subject": {
+                "type": "str"
+            },
+            "content": {
+                "type": "str"
+            },
+            "priority": {
+                "type": "str",
+                "enum": [
+                    "LOW",
+                    "NORMAL",
+                    "HIGH"
+                ]
+            },
+            "sensitivityName": {
+                "type": "str",
+                "enum": [
+                    "NORMAL",
+                    "PERSONAL",
+                    "PRIVATE",
+                    "CONFIDENTIAL"
+                ]
+            },
+            "templateId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "securedAttachments": {
+                "type": "bool",
+                "def": false
+            },
+            "attachments": "CommunicationToApproverAttachmentsDto"
+        }
+    },
+    "BasicApprovalProcessDto": {
+        "type": "obj",
+        "props": {
+            "dueDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "approvalMethod": {
+                "type": "str",
+                "enum": [
+                    "collaborative",
+                    "sequential",
+                    "manually"
+                ]
+            },
+            "minApprovers": {
+                "type": "int",
+                "format": "int32"
+            },
+            "approvers": {
+                "type": "array",
+                "items": "BasicApproverDto"
+            },
+            "communicationToApprover": "CommunicationToApproverDto",
+            "useAlwaysRecommendation": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "TimesheetApproverBasicDto": {
+        "type": "obj",
+        "props": {
+            "order": {
+                "type": "int",
+                "format": "int64"
+            },
+            "user": "IdDto"
+        }
+    },
+    "TimesheetApprovalStepBasicDto": {
+        "type": "obj",
+        "props": {
+            "stepNumber": {
+                "type": "int",
+                "format": "int64"
+            },
+            "approvers": {
+                "type": "array",
+                "items": "TimesheetApproverBasicDto"
+            }
+        }
+    },
+    "CostCenterConfigBasicDto": {
+        "type": "obj",
+        "props": {
+            "costCenter": "BasicLovDto",
+            "steps": {
+                "type": "array",
+                "items": "TimesheetApprovalStepBasicDto"
+            },
+            "cost": {
+                "type": "num"
+            }
+        }
+    },
+    "CostCenterApprovalConfigBasicDto": {
+        "type": "obj",
+        "props": {
+            "skipNewTimesheetGenerate": {
+                "type": "bool",
+                "def": false
+            },
+            "costCenterConfig": {
+                "type": "array",
+                "items": "CostCenterConfigBasicDto"
+            }
+        }
+    },
+    "TimesheetWithoutCostCenterApprovalConfigBasicDto": {
+        "type": "obj",
+        "props": {
+            "overdueTasksThresholdDays": {
+                "type": "int",
+                "format": "int64"
+            },
+            "steps": {
+                "type": "array",
+                "items": "TimesheetApprovalStepBasicDto"
+            }
+        }
+    },
+    "ApprovalConfigBasicDto": {
+        "type": "obj",
+        "props": {
+            "costCenterApprovalConfig": "CostCenterApprovalConfigBasicDto",
+            "timesheetWithoutCostCenterApprovalConfig": "TimesheetWithoutCostCenterApprovalConfigBasicDto"
+        }
+    },
+    "TimesheetConfigBasicDto": {
+        "type": "obj",
+        "req": [
+            "consolidationBreakdown",
+            "consolidationPeriod"
+        ],
+        "props": {
+            "consolidationPeriod": {
+                "type": "str"
+            },
+            "consolidationBreakdown": {
+                "type": "str"
+            },
+            "communicationLanguage": {
+                "type": "str"
+            },
+            "useAllApproversInApprovalProcess": {
+                "type": "bool",
+                "def": false
+            },
+            "approvalConfig": "ApprovalConfigBasicDto",
+            "candidateEmail": {
+                "type": "str"
+            }
+        }
+    },
+    "MidPeriodConfigBasicDto": {
+        "type": "obj",
+        "props": {
+            "from": {
+                "type": "int",
+                "format": "int64"
+            },
+            "to": {
+                "type": "int",
+                "format": "int64"
+            },
+            "timesheetConfig": "TimesheetConfigBasicDto",
+            "rates": {
+                "type": "array",
+                "items": "RateDto"
+            },
+            "lovs": {
+                "type": "array",
+                "items": "BasicLovDto"
+            },
+            "freeFormFields": {
+                "type": "array",
+                "items": "BasicFreeFormFieldDto"
+            },
+            "withTsTriggers": {
+                "type": "bool",
+                "def": false
+            },
+            "withRates": {
+                "type": "bool",
+                "def": false
+            },
+            "withApprovals": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "BasicContractDto": {
+        "type": "obj",
+        "req": [
+            "contractType",
+            "plannedStartDate"
+        ],
+        "props": {
+            "approved": {
+                "type": "bool",
+                "def": false
+            },
+            "accepted": {
+                "type": "bool",
+                "def": false
+            },
+            "acceptApproved": {
+                "type": "bool",
+                "def": false
+            },
+            "administrativeComments": {
+                "type": "str"
+            },
+            "plannedStartDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "plannedEndDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "scheduleType": {
+                "type": "str"
+            },
+            "workAmount": {
+                "type": "num",
+                "format": "float"
+            },
+            "workPeriod": {
+                "type": "str"
+            },
+            "workUnit": {
+                "type": "str"
+            },
+            "bonusCondition": {
+                "type": "str"
+            },
+            "contractType": {
+                "type": "str"
+            },
+            "length": {
+                "type": "num",
+                "format": "float"
+            },
+            "lengthUnit": {
+                "type": "str"
+            },
+            "permanentDetails": "PermanentDetailsDto",
+            "contractorDetails": "ContractorDetailsDto",
+            "allowConcurrentContracts": {
+                "type": "bool",
+                "def": false
+            },
+            "allowHeadCountSkip": {
+                "type": "bool",
+                "def": false
+            },
+            "application": "IdDto",
+            "lovs": {
+                "type": "array",
+                "items": "BasicLovDto"
+            },
+            "freeFormFields": {
+                "type": "array",
+                "items": "BasicFreeFormFieldDto"
+            },
+            "approvalProcess": "BasicApprovalProcessDto",
+            "timesheetConfig": "TimesheetConfigBasicDto",
+            "midPeriodsConfigs": {
+                "type": "array",
+                "items": "MidPeriodConfigBasicDto"
+            }
+        }
+    },
+    "TranslationsDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "all": {
+                "type": "obj",
+                "additionalProperties": {
+                    "type": "str"
+                }
+            },
+            "ar": {
+                "type": "str"
+            },
+            "bg": {
+                "type": "str"
+            },
+            "pl": {
+                "type": "str"
+            },
+            "pt": {
+                "type": "str"
+            },
+            "dn": {
+                "type": "str"
+            },
+            "nl": {
+                "type": "str"
+            },
+            "ro": {
+                "type": "str"
+            },
+            "sk": {
+                "type": "str"
+            },
+            "sl": {
+                "type": "str"
+            },
+            "ja": {
+                "type": "str"
+            },
+            "sp": {
+                "type": "str"
+            },
+            "is": {
+                "type": "str"
+            },
+            "br": {
+                "type": "str"
+            },
+            "cn": {
+                "type": "str"
+            },
+            "cy": {
+                "type": "str"
+            },
+            "et": {
+                "type": "str"
+            },
+            "de": {
+                "type": "str"
+            },
+            "fl": {
+                "type": "str"
+            },
+            "gl": {
+                "type": "str"
+            },
+            "hr": {
+                "type": "str"
+            },
+            "el": {
+                "type": "str"
+            },
+            "it": {
+                "type": "str"
+            },
+            "ch": {
+                "type": "str"
+            },
+            "cs": {
+                "type": "str"
+            },
+            "fr": {
+                "type": "str"
+            },
+            "ko": {
+                "type": "str"
+            },
+            "lt": {
+                "type": "str"
+            },
+            "my": {
+                "type": "str"
+            },
+            "nw": {
+                "type": "str"
+            },
+            "hu": {
+                "type": "str"
+            },
+            "ru": {
+                "type": "str"
+            },
+            "en": {
+                "type": "str"
+            },
+            "fn": {
+                "type": "str"
+            },
+            "lv": {
+                "type": "str"
+            },
+            "ua": {
+                "type": "str"
+            },
+            "tw": {
+                "type": "str"
+            },
+            "vi": {
+                "type": "str"
+            },
+            "sw": {
+                "type": "str"
+            },
+            "uk": {
+                "type": "str"
+            },
+            "wa": {
+                "type": "str"
+            },
+            "ca": {
+                "type": "str"
+            },
+            "tr": {
+                "type": "str"
+            },
+            "at": {
+                "type": "str"
+            },
+            "th": {
+                "type": "str"
+            },
+            "sr": {
+                "type": "str"
+            },
+            "mx": {
+                "type": "str"
+            }
+        }
+    },
+    "ThemeDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "name": {
+                "type": "str"
+            },
+            "type": {
+                "type": "str"
+            }
+        }
+    },
+    "BasicDepartmentConfigDto": {
+        "type": "obj",
+        "props": {
+            "interviewScheduleInJobContext": {
+                "type": "bool",
+                "def": false
+            },
+            "hideManageMyDataRemoveButton": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "BasicDepartmentDto": {
+        "type": "obj",
+        "req": [
+            "code",
+            "name"
+        ],
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "code": {
+                "type": "str"
+            },
+            "documentSecurityRule": {
+                "type": "int",
+                "format": "int32"
+            },
+            "dataPrivacyStatement": {
+                "type": "str"
+            },
+            "dataPrivacyStatementForHires": {
+                "type": "str"
+            },
+            "invitationValidity": {
+                "type": "int",
+                "format": "int64"
+            },
+            "currencyCost": {
+                "type": "str"
+            },
+            "hideDateOfBirth": {
+                "type": "bool",
+                "def": false
+            },
+            "searchByAgeEnabled": {
+                "type": "bool",
+                "def": false
+            },
+            "parentId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "translations": "TranslationsDto",
+            "keyNameId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "ofccpMaxCandidates": {
+                "type": "int",
+                "format": "int64"
+            },
+            "enforceInviteToExpressInterest": {
+                "type": "bool",
+                "def": false
+            },
+            "activateSearchRecording": {
+                "type": "bool",
+                "def": false
+            },
+            "ofccpLinkToJobShowJobs": {
+                "type": "bool",
+                "def": false
+            },
+            "enforceSalaryRangeCheck": {
+                "type": "bool",
+                "def": false
+            },
+            "mobileAccess": {
+                "type": "bool",
+                "def": false
+            },
+            "themes": {
+                "type": "array",
+                "items": "ThemeDto"
+            },
+            "emailSignatureID": {
+                "type": "int",
+                "format": "int64"
+            },
+            "letterSignatureID": {
+                "type": "int",
+                "format": "int64"
+            },
+            "awdOwner": {
+                "type": "str"
+            },
+            "awdReminderID": {
+                "type": "int",
+                "format": "int64"
+            },
+            "awdReminderPeriod": {
+                "type": "int",
+                "format": "int64"
+            },
+            "awdQualifyExpiresReminderID": {
+                "type": "int",
+                "format": "int64"
+            },
+            "calendarEventWsIntegrationURL": {
+                "type": "str"
+            },
+            "useAccountCalendarEventWsIntegrationURL": {
+                "type": "bool",
+                "def": false
+            },
+            "enforceSalaryRangeCheckApproval": {
+                "type": "bool",
+                "def": false
+            },
+            "ratingScaleId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "impJobDescAvailable": {
+                "type": "bool",
+                "def": false
+            },
+            "encryptApplicants": {
+                "type": "bool",
+                "def": false
+            },
+            "rejectionReasonRequired": {
+                "type": "bool",
+                "def": false
+            },
+            "country": {
+                "type": "str"
+            },
+            "location": {
+                "type": "str"
+            },
+            "mobileMDMAccess": {
+                "type": "bool",
+                "def": false
+            },
+            "departmentConfig": "BasicDepartmentConfigDto"
+        }
+    },
+    "NewDepartmentParentIdDto": {
+        "type": "obj",
+        "req": [
+            "newParentId"
+        ],
+        "props": {
+            "newParentId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "WorkTimeDto": {
+        "type": "obj",
+        "props": {
+            "workPeriod": {
+                "type": "str",
+                "enum": [
+                    "Day",
+                    "Week",
+                    "Month",
+                    "Quarter",
+                    "Year"
+                ]
+            },
+            "workUnit": {
+                "type": "str",
+                "enum": [
+                    "Hours",
+                    "Days",
+                    "Weeks",
+                    "Months",
+                    "Quarters"
+                ]
+            },
+            "timeCount": {
+                "type": "num",
+                "format": "float"
+            }
+        }
+    },
+    "SimpleLocationDto": {
+        "type": "obj",
+        "props": {
+            "city": {
+                "type": "str"
+            },
+            "region": {
+                "type": "str"
+            },
+            "country": {
+                "type": "str"
+            }
+        }
+    },
+    "CompensationDto": {
+        "type": "obj",
+        "props": {
+            "min": {
+                "type": "num"
+            },
+            "max": {
+                "type": "num"
+            },
+            "period": {
+                "type": "str"
+            },
+            "currency": {
+                "type": "str"
+            }
+        }
+    },
+    "AuthorizedRecruitmentDto": {
+        "type": "obj",
+        "props": {
+            "externalCandidate": {
+                "type": "bool",
+                "def": false
+            },
+            "employee": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "DurationDto": {
+        "type": "obj",
+        "props": {
+            "count": {
+                "type": "int",
+                "format": "int32"
+            },
+            "period": {
+                "type": "str"
+            }
+        }
+    },
+    "ConfigurableFieldsBasicDto": {
+        "type": "obj",
+        "props": {
+            "freeFormFields": {
+                "type": "array",
+                "items": "BasicFreeFormFieldDto"
+            },
+            "lovs": {
+                "type": "array",
+                "items": "BasicLovDto"
+            }
+        }
+    },
+    "DepartmentIdDto": {
+        "type": "obj",
+        "req": [
+            "id"
+        ],
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "TeamMemberBasicDto": {
+        "type": "obj",
+        "req": [
+            "order",
+            "user"
+        ],
+        "props": {
+            "order": {
+                "type": "int",
+                "format": "int32"
+            },
+            "lovValue": {
+                "type": "str"
+            },
+            "user": "IdDto",
+            "userId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "ApproverBasicDto": {
+        "type": "obj",
+        "req": [
+            "order",
+            "user"
+        ],
+        "props": {
+            "order": {
+                "type": "int",
+                "format": "int32"
+            },
+            "lovValue": {
+                "type": "str"
+            },
+            "user": "IdDto",
+            "stepOrder": {
+                "type": "int",
+                "format": "int32"
+            },
+            "userId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "PositionTeamBasicDto": {
+        "type": "obj",
+        "props": {
+            "recruiters": {
+                "type": "array",
+                "items": "TeamMemberBasicDto"
+            },
+            "operationals": {
+                "type": "array",
+                "items": "TeamMemberBasicDto"
+            },
+            "approvers": {
+                "type": "array",
+                "items": "ApproverBasicDto"
+            }
+        }
+    },
+    "PersonalJobTemplateBasicDto": {
+        "type": "obj",
+        "req": [
+            "organization",
+            "recruitmentContext"
+        ],
+        "props": {
+            "creationDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "lastUpdate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "requisitionNumber": {
+                "type": "str"
+            },
+            "dueDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "company": {
+                "type": "str"
+            },
+            "headCount": {
+                "type": "int",
+                "format": "int64"
+            },
+            "renewal": {
+                "type": "bool",
+                "def": false
+            },
+            "contractComments": {
+                "type": "str"
+            },
+            "scheduleType": {
+                "type": "str"
+            },
+            "contractType": {
+                "type": "str"
+            },
+            "recruitmentContext": {
+                "type": "str",
+                "enum": [
+                    "Permanent",
+                    "Contractor"
+                ]
+            },
+            "workTime": "WorkTimeDto",
+            "location": "SimpleLocationDto",
+            "compensation": "CompensationDto",
+            "authorizedRecruitment": "AuthorizedRecruitmentDto",
+            "duration": "DurationDto",
+            "configurableFields": "ConfigurableFieldsBasicDto",
+            "organization": "DepartmentIdDto",
+            "team": "PositionTeamBasicDto"
+        }
+    },
+    "SendInternalMessageAttachmentDto": {
+        "type": "obj",
+        "props": {
+            "type": {
+                "type": "str",
+                "enum": [
+                    "ADHOCREPORTRESULT",
+                    "CANDIDATEPROFILE",
+                    "FORM",
+                    "MAIL",
+                    "OPENING",
+                    "REFERRALCONFLICTCANDIDATEPROFILE1",
+                    "REFERRALCONFLICTCANDIDATEPROFILE2",
+                    "SESSIONMANAGEMENT",
+                    "TEMPLATE",
+                    "CANDIDATE_PACK",
+                    "DELETED_CANDIDATE_PACK",
+                    "APPLICANTS_LIST",
+                    "DOCUMENT",
+                    "STRUCTERED_DOCUMENT"
+                ]
+            },
+            "objectId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "SendInternalMessageRequest": {
+        "type": "obj",
+        "props": {
+            "receiverUserId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "senderUserId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "sendAsSystem": {
+                "type": "bool",
+                "def": false
+            },
+            "content": {
+                "type": "str"
+            },
+            "attachments": {
+                "type": "array",
+                "items": "SendInternalMessageAttachmentDto"
+            }
+        }
+    },
+    "InterviewLocationBasicDto": {
+        "type": "obj",
+        "req": [
+            "address1",
+            "city",
+            "country",
+            "standard",
+            "timezone",
+            "title"
+        ],
+        "props": {
+            "address1": {
+                "type": "str"
+            },
+            "address2": {
+                "type": "str"
+            },
+            "city": {
+                "type": "str"
+            },
+            "zipcode": {
+                "type": "str"
+            },
+            "region": {
+                "type": "str"
+            },
+            "country": {
+                "type": "str"
+            },
+            "room": {
+                "type": "str"
+            },
+            "timezone": {
+                "type": "str"
+            },
+            "local": {
+                "type": "bool",
+                "def": false
+            },
+            "standard": {
+                "type": "bool",
+                "def": false
+            },
+            "email": {
+                "type": "str"
+            },
+            "departments": {
+                "type": "array",
+                "items": "IdDto"
+            }
+        }
+    },
+    "LocationBasicDto": {
+        "type": "obj",
+        "req": [
+            "departmentId",
+            "name"
+        ],
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "country": {
+                "type": "str"
+            },
+            "countryCodeAlpha2": {
+                "type": "str"
+            },
+            "countryCodeAlpha3": {
+                "type": "str"
+            },
+            "region": {
+                "type": "str"
+            },
+            "regionName": {
+                "type": "str"
+            },
+            "city": {
+                "type": "str"
+            },
+            "street": {
+                "type": "str"
+            },
+            "zipCode": {
+                "type": "str"
+            },
+            "latitude": {
+                "type": "num",
+                "format": "double"
+            },
+            "longitude": {
+                "type": "num",
+                "format": "double"
+            },
+            "departmentId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "remote": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "LocationDto": {
+        "type": "obj",
+        "req": [
+            "departmentId",
+            "name"
+        ],
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "country": {
+                "type": "str"
+            },
+            "countryCodeAlpha2": {
+                "type": "str"
+            },
+            "countryCodeAlpha3": {
+                "type": "str"
+            },
+            "region": {
+                "type": "str"
+            },
+            "regionName": {
+                "type": "str"
+            },
+            "city": {
+                "type": "str"
+            },
+            "street": {
+                "type": "str"
+            },
+            "zipCode": {
+                "type": "str"
+            },
+            "latitude": {
+                "type": "num",
+                "format": "double"
+            },
+            "longitude": {
+                "type": "num",
+                "format": "double"
+            },
+            "departmentId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "remote": {
+                "type": "bool",
+                "def": false
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "countryTranslations": "TranslationsDto",
+            "regionTranslations": "TranslationsDto"
+        }
+    },
+    "LovLabelDto": {
+        "type": "obj",
+        "props": {
+            "language": {
+                "type": "str",
+                "enum": [
+                    "XX",
+                    "AR",
+                    "BG",
+                    "BR",
+                    "CH",
+                    "CN",
+                    "CS",
+                    "CY",
+                    "DE",
+                    "DN",
+                    "EL",
+                    "US",
+                    "EN",
+                    "ET",
+                    "FL",
+                    "FN",
+                    "FR",
+                    "GL",
+                    "HR",
+                    "HU",
+                    "IS",
+                    "IT",
+                    "JA",
+                    "KO",
+                    "LT",
+                    "LV",
+                    "MY",
+                    "NL",
+                    "NW",
+                    "PL",
+                    "PT",
+                    "RO",
+                    "RU",
+                    "SK",
+                    "SL",
+                    "SP",
+                    "SR",
+                    "SW",
+                    "TH",
+                    "TR",
+                    "TW",
+                    "UA",
+                    "UK",
+                    "VI",
+                    "ID",
+                    "MX",
+                    "AT",
+                    "WA",
+                    "CA"
+                ]
+            },
+            "value": {
+                "type": "str"
+            }
+        }
+    },
+    "CreateLovEntryWithDataValueDto": {
+        "type": "obj",
+        "req": [
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "dataValue": {
+                "type": "num"
+            }
+        }
+    },
+    "CreateLovWithDataTypeDto": {
+        "type": "obj",
+        "req": [
+            "entries",
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "dataType": {
+                "type": "str"
+            },
+            "entries": {
+                "type": "array",
+                "items": "CreateLovEntryWithDataValueDto"
+            }
+        }
+    },
+    "UpdateLovPropertiesDto": {
+        "type": "obj",
+        "props": {
+            "requisitionSections": {
+                "type": "str",
+                "enum": [
+                    "ADMINISTRATION",
+                    "DESCRIPTION",
+                    "ADVERTISEMENT",
+                    "OFFER_CONTRACT"
+                ]
+            },
+            "req": {
+                "type": "bool",
+                "def": false
+            },
+            "updatable": {
+                "type": "bool",
+                "def": false
+            },
+            "useInPostingExtract": {
+                "type": "bool",
+                "def": false
+            },
+            "useInApplicationExtract": {
+                "type": "bool",
+                "def": false
+            },
+            "fieldType": {
+                "type": "str",
+                "enum": [
+                    "CORPORATE_GSA",
+                    "CORPORATE_LOCAL",
+                    "SPECIFIC_DEPARTMENT"
+                ]
+            },
+            "useInOpeningPermanent": {
+                "type": "bool",
+                "def": false
+            },
+            "useInOpeningContractor": {
+                "type": "bool",
+                "def": false
+            },
+            "useInPermanentContract": {
+                "type": "bool",
+                "def": false
+            },
+            "useInTemporaryContract": {
+                "type": "bool",
+                "def": false
+            },
+            "imageLibrary": {
+                "type": "bool",
+                "def": false
+            },
+            "searchable": {
+                "type": "bool",
+                "def": false
+            },
+            "filterable": {
+                "type": "bool",
+                "def": false
+            },
+            "sortOrder": {
+                "type": "str",
+                "enum": [
+                    "ALPHABETICAL",
+                    "NUMERICAL"
+                ]
+            },
+            "accessibleInReports": {
+                "type": "bool",
+                "def": false
+            },
+            "departmentId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "CreateLovEntriesWithDataValueDto": {
+        "type": "obj",
+        "req": [
+            "entries"
+        ],
+        "props": {
+            "entries": {
+                "type": "array",
+                "items": "CreateLovEntryWithDataValueDto"
+            }
+        }
+    },
+    "UpdateLovEntryWithDataValueDto": {
+        "type": "obj",
+        "req": [
+            "id",
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "dataValue": {
+                "type": "num"
+            }
+        }
+    },
+    "UpdateLovEntriesWithDataValueDto": {
+        "type": "obj",
+        "req": [
+            "entries"
+        ],
+        "props": {
+            "entries": {
+                "type": "array",
+                "items": "UpdateLovEntryWithDataValueDto"
+            }
+        }
+    },
+    "CreateLovEntryWithDataFormatAndRequiredDto": {
+        "type": "obj",
+        "req": [
+            "dataFormat",
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "dataFormat": {
+                "type": "str"
+            },
+            "req": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "CreateLovWithEntriesWithDataFormatAndRequiredDto": {
+        "type": "obj",
+        "req": [
+            "entries",
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "entries": {
+                "type": "array",
+                "items": "CreateLovEntryWithDataFormatAndRequiredDto"
+            }
+        }
+    },
+    "CreateLovEntriesWithDataFormatAndRequiredDto": {
+        "type": "obj",
+        "req": [
+            "entries"
+        ],
+        "props": {
+            "entries": {
+                "type": "array",
+                "items": "CreateLovEntryWithDataFormatAndRequiredDto"
+            }
+        }
+    },
+    "UpdateLovEntryWithDataFormatAndRequiredDto": {
+        "type": "obj",
+        "req": [
+            "dataFormat",
+            "id",
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "dataFormat": {
+                "type": "str"
+            },
+            "req": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "UpdateLovEntriesWithDataFormatAndRequiredDto": {
+        "type": "obj",
+        "req": [
+            "entries"
+        ],
+        "props": {
+            "entries": {
+                "type": "array",
+                "items": "UpdateLovEntryWithDataFormatAndRequiredDto"
+            }
+        }
+    },
+    "CreateLovEntryDto": {
+        "type": "obj",
+        "req": [
+            "lovId",
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "lovId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "UpdateLovLabelsDto": {
+        "type": "obj",
+        "req": [
+            "id",
+            "labels"
+        ],
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            }
+        }
+    },
+    "DeactivateLovDto": {
+        "type": "obj",
+        "req": [
+            "lovsIds"
+        ],
+        "props": {
+            "lovsIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "CreateLovDto": {
+        "type": "obj",
+        "req": [
+            "entries",
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "entries": {
+                "type": "array",
+                "items": "BasicLovDto"
+            }
+        }
+    },
+    "CreateLovEntriesDto": {
+        "type": "obj",
+        "req": [
+            "entries"
+        ],
+        "props": {
+            "entries": {
+                "type": "array",
+                "items": "BasicLovDto"
+            }
+        }
+    },
+    "UpdateLovEntryDto": {
+        "type": "obj",
+        "req": [
+            "id",
+            "value"
+        ],
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "labels": {
+                "type": "array",
+                "items": "LovLabelDto"
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "UpdateLovEntriesDto": {
+        "type": "obj",
+        "req": [
+            "entries"
+        ],
+        "props": {
+            "entries": {
+                "type": "array",
+                "items": "UpdateLovEntryDto"
+            }
+        }
+    },
+    "ExpectedContractDatesDto": {
+        "type": "obj",
+        "props": {
+            "start": {
+                "type": "int",
+                "format": "int64"
+            },
+            "end": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "CustomFieldDto": {
+        "type": "obj",
+        "props": {
+            "label": {
+                "type": "str"
+            },
+            "value": {
+                "type": "str"
+            },
+            "unlocalizedLabel": {
+                "type": "str"
+            },
+            "order": {
+                "type": "int",
+                "format": "int32"
+            }
+        }
+    },
+    "StandardRateDto": {
+        "type": "obj",
+        "props": {
+            "minAmount": {
+                "type": "num"
+            },
+            "maxAmount": {
+                "type": "num"
+            },
+            "currency": {
+                "type": "str"
+            },
+            "period": {
+                "type": "str"
+            }
+        },
+        "xml": {
+            "name": "standardRate"
+        }
+    },
+    "TotalCostDto": {
+        "type": "obj",
+        "props": {
+            "min": {
+                "type": "num"
+            },
+            "max": {
+                "type": "num"
+            },
+            "currency": {
+                "type": "str"
+            }
+        }
+    },
+    "SkillDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "name": {
+                "type": "str"
+            },
+            "global": {
+                "type": "bool",
+                "def": false
+            },
+            "system": {
+                "type": "str"
+            }
+        }
+    },
+    "CustomFieldSkillDto": {
+        "type": "obj",
+        "props": {
+            "sectionOrder": {
+                "type": "int",
+                "format": "int64"
+            },
+            "skills": {
+                "type": "array",
+                "items": "SkillDto"
+            }
+        }
+    },
+    "OpeningBasicDto": {
+        "type": "obj",
+        "req": [
+            "contractType",
+            "organization"
+        ],
+        "props": {
+            "jobTitle": {
+                "type": "str"
+            },
+            "headCount": {
+                "type": "int",
+                "format": "int64"
+            },
+            "dueDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "company": {
+                "type": "str"
+            },
+            "location": "SimpleLocationDto",
+            "language": {
+                "type": "str"
+            },
+            "status": {
+                "type": "str"
+            },
+            "compensation": "CompensationDto",
+            "contractType": {
+                "type": "str"
+            },
+            "workTime": "WorkTimeDto",
+            "requisitionNumber": {
+                "type": "str"
+            },
+            "duration": "DurationDto",
+            "expectedContractDates": "ExpectedContractDatesDto",
+            "renewal": {
+                "type": "bool",
+                "def": false
+            },
+            "scheduleType": {
+                "type": "str"
+            },
+            "contractComments": {
+                "type": "str"
+            },
+            "authorizedRecruitment": "AuthorizedRecruitmentDto",
+            "customFields": {
+                "type": "array",
+                "items": "CustomFieldDto"
+            },
+            "standardRate": "StandardRateDto",
+            "totalCost": "TotalCostDto",
+            "generalApplication": {
+                "type": "bool",
+                "def": false
+            },
+            "teamComments": {
+                "type": "str"
+            },
+            "budgeted": {
+                "type": "bool",
+                "def": false
+            },
+            "encryptApplicants": {
+                "type": "bool",
+                "def": false
+            },
+            "areaOfResponsibility": {
+                "type": "str"
+            },
+            "positionType": {
+                "type": "str"
+            },
+            "costCenter": {
+                "type": "str"
+            },
+            "plainText": {
+                "type": "bool",
+                "def": false
+            },
+            "configurableFields": "ConfigurableFieldsBasicDto",
+            "organization": "DepartmentIdDto",
+            "team": "PositionTeamBasicDto",
+            "descriptionTemplateId": "IdDto",
+            "defaultJobLocationId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "jobLocationIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "customFieldSkills": {
+                "type": "array",
+                "items": "CustomFieldSkillDto"
+            },
+            "removedSkills": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            },
+            "manuallyAddedSkills": {
+                "type": "array",
+                "items": "SkillDto"
+            }
+        }
+    },
+    "AttachedFileDto": {
+        "type": "obj",
+        "req": [
+            "data",
+            "docLanguage",
+            "fileName"
+        ],
+        "props": {
+            "fileName": {
+                "type": "str"
+            },
+            "docLanguage": {
+                "type": "str"
+            },
+            "publishable": {
+                "type": "bool",
+                "def": false
+            },
+            "data": {
+                "type": "str"
+            }
+        }
+    },
+    "NewOpeningNameDto": {
+        "type": "obj",
+        "props": {
+            "newOpeningName": {
+                "type": "str"
+            }
+        }
+    },
+    "Channel": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "name": {
+                "type": "str"
+            },
+            "status": {
+                "type": "str"
+            },
+            "liveURL": {
+                "type": "str"
+            },
+            "postingStartDate": {
+                "type": "str"
+            },
+            "postingEndDate": {
+                "type": "str"
+            },
+            "statusDescription": {
+                "type": "str",
+                "xml": {
+                    "name": "statusReason"
+                }
+            }
+        },
+        "xml": {
+            "name": "channel"
+        }
+    },
+    "JobboardDTO": {
+        "type": "obj",
+        "props": {
+            "postingAction": {
+                "type": "str"
+            },
+            "postingStatus": {
+                "type": "str"
+            },
+            "startDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "endDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "errorCode": {
+                "type": "str"
+            },
+            "channels": {
+                "type": "array",
+                "xml": {
+                    "name": "channel",
+                    "wrapped": true
+                },
+                "items": "Channel"
+            },
+            "postingActionAsEnum": {
+                "type": "str",
+                "enum": [
+                    "INSERT",
+                    "UPDATE",
+                    "CHANNEL_DELETE",
+                    "DELETE",
+                    "NAVIGATE",
+                    "RESEND_WITHOUT_CHANGES"
+                ]
+            },
+            "postingStatusAsEnum": {
+                "type": "str",
+                "enum": [
+                    "INITIAL",
+                    "PENDING",
+                    "MULTIPOST_PENDING",
+                    "ACTIVE",
+                    "DEFERRED",
+                    "QUEUED_FOR_FUTURE_POSTING",
+                    "INACTIVE",
+                    "DELETED",
+                    "EXPIRED",
+                    "FAILED",
+                    "ERROR",
+                    "SUCCESS",
+                    "CANCELLED"
+                ]
+            },
+            "statusDescription": {
+                "type": "str",
+                "xml": {
+                    "name": "message"
+                }
+            }
+        },
+        "xml": {
+            "name": "jobboard"
+        }
+    },
+    "JobDTO": {
+        "type": "obj",
+        "props": {
+            "advertId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "jobboards": {
+                "type": "array",
+                "xml": {
+                    "name": "jobboard",
+                    "wrapped": true
+                },
+                "items": "JobboardDTO"
+            }
+        },
+        "xml": {
+            "name": "job"
+        }
+    },
+    "PostingStatusUpdateDTO": {
+        "type": "obj",
+        "req": [
+            "adverts"
+        ],
+        "props": {
+            "adverts": {
+                "type": "array",
+                "xml": {
+                    "name": "job",
+                    "wrapped": true
+                },
+                "items": "JobDTO"
+            }
+        },
+        "xml": {
+            "name": "postingStatusUpdate"
+        }
+    },
+    "UnpostAdvertDto": {
+        "type": "obj",
+        "req": [
+            "postingTargets"
+        ],
+        "props": {
+            "postingTargets": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "JobDescriptionUrlDto": {
+        "type": "obj",
+        "props": {
+            "jobDescriptionUrl": {
+                "type": "str"
+            }
+        }
+    },
+    "RoleTagDto": {
+        "type": "obj",
+        "req": [
+            "tagName",
+            "tagTypeName"
+        ],
+        "props": {
+            "tagName": {
+                "type": "str"
+            },
+            "tagTypeName": {
+                "type": "str"
+            }
+        }
+    },
+    "RoleTagsDto": {
+        "type": "obj",
+        "req": [
+            "roleTags"
+        ],
+        "props": {
+            "roleTags": {
+                "type": "array",
+                "items": "RoleTagDto"
+            }
+        }
+    },
+    "CustomLovGroup": {
+        "type": "obj",
+        "props": {
+            "customLovs": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "CategoryNameDto": {
+        "type": "obj",
+        "props": {
+            "order": {
+                "type": "int",
+                "format": "int32"
+            },
+            "categoryIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "SearchCriteriaDto": {
+        "type": "obj",
+        "props": {
+            "generalApplication": {
+                "type": "bool",
+                "def": false
+            },
+            "postedSince": {
+                "type": "int",
+                "format": "int32"
+            },
+            "jobNumber": {
+                "type": "str"
+            },
+            "adLanguages": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            },
+            "countries": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "regions": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "contractTypes": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "scheduleTypes": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "customLovs": {
+                "type": "array",
+                "items": "CustomLovGroup"
+            },
+            "keywords": {
+                "type": "str"
+            },
+            "categoryLists": {
+                "type": "array",
+                "items": "CategoryNameDto"
+            },
+            "organizationIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "countriesToBeFilltered": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            },
+            "showImages": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "SearchAgentDto": {
+        "type": "obj",
+        "req": [
+            "deliveryFrequency",
+            "email",
+            "expirationDate",
+            "langCode",
+            "searchCriteria",
+            "sendEmail"
+        ],
+        "props": {
+            "email": {
+                "type": "str"
+            },
+            "searchCriteria": "SearchCriteriaDto",
+            "deliveryFrequency": {
+                "type": "str",
+                "enum": [
+                    "ONCE_A_DAY",
+                    "ONCE_A_WEEK"
+                ]
+            },
+            "expirationDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "sendEmail": {
+                "type": "bool",
+                "def": false
+            },
+            "langCode": {
+                "type": "str",
+                "enum": [
+                    "XX",
+                    "AR",
+                    "BG",
+                    "BR",
+                    "CH",
+                    "CN",
+                    "CS",
+                    "CY",
+                    "DE",
+                    "DN",
+                    "EL",
+                    "US",
+                    "EN",
+                    "ET",
+                    "FL",
+                    "FN",
+                    "FR",
+                    "GL",
+                    "HR",
+                    "HU",
+                    "IS",
+                    "IT",
+                    "JA",
+                    "KO",
+                    "LT",
+                    "LV",
+                    "MY",
+                    "NL",
+                    "NW",
+                    "PL",
+                    "PT",
+                    "RO",
+                    "RU",
+                    "SK",
+                    "SL",
+                    "SP",
+                    "SR",
+                    "SW",
+                    "TH",
+                    "TR",
+                    "TW",
+                    "UA",
+                    "UK",
+                    "VI",
+                    "ID",
+                    "MX",
+                    "AT",
+                    "WA",
+                    "CA"
+                ]
+            }
+        }
+    },
+    "ProceedCandidateRequestDto": {
+        "type": "obj",
+        "props": {
+            "stepId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "RejectCandidateRequestDto": {
+        "type": "obj",
+        "props": {
+            "stepId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "sendCommunication": {
+                "type": "bool",
+                "def": false
+            },
+            "reasonOfRejection": {
+                "type": "str"
+            },
+            "comment": {
+                "type": "str"
+            },
+            "delayForTheEmail": {
+                "type": "int",
+                "format": "int32"
+            }
+        }
+    },
+    "SelectionStepStatusUpdateDto": {
+        "type": "obj",
+        "req": [
+            "stepStatus"
+        ],
+        "props": {
+            "stepStatus": {
+                "type": "str",
+                "enum": [
+                    "Cancel",
+                    "Closed",
+                    "InterviewToSchedule",
+                    "OnHold"
+                ]
+            }
+        }
+    },
+    "TimesheetApproveRequestDto": {
+        "type": "obj",
+        "props": {
+            "comment": {
+                "type": "str"
+            }
+        }
+    },
+    "TimesheetRejectRequestDto": {
+        "type": "obj",
+        "props": {
+            "comment": {
+                "type": "str"
+            }
+        }
+    },
+    "RateUnitRequestDto": {
+        "type": "obj",
+        "props": {
+            "value": {
+                "type": "str"
+            },
+            "order": {
+                "type": "str"
+            },
+            "comment": {
+                "type": "str"
+            }
+        }
+    },
+    "TimesheetSubmitRequestDto": {
+        "type": "obj",
+        "props": {
+            "rate": {
+                "type": "array",
+                "items": "RateUnitRequestDto"
+            },
+            "approversList": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int32"
+                }
+            },
+            "comments": {
+                "type": "str"
+            }
+        }
+    },
+    "MailDto": {
+        "type": "obj",
+        "req": [
+            "id"
+        ],
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "name": {
+                "type": "str"
+            }
+        }
+    },
+    "MeetingLocationDto": {
+        "type": "obj",
+        "req": [
+            "id"
+        ],
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "UserPreferencesDto": {
+        "type": "obj",
+        "req": [
+            "meetingConfirmationFormat",
+            "preferredCommunicationChannel"
+        ],
+        "props": {
+            "dateFormat": {
+                "type": "str"
+            },
+            "timeFormat": {
+                "type": "str",
+                "enum": [
+                    "H12",
+                    "H24"
+                ]
+            },
+            "timeZone": {
+                "type": "str"
+            },
+            "currency": {
+                "type": "str"
+            },
+            "firstDayOfWeek": {
+                "type": "str",
+                "enum": [
+                    "SUNDAY",
+                    "MONDAY",
+                    "TUESDAY",
+                    "WEDNESDAY",
+                    "THURSDAY",
+                    "FRIDAY",
+                    "SATURDAY"
+                ]
+            },
+            "emailSignature": "MailDto",
+            "letterSignature": "MailDto",
+            "displayTimeAlerts": {
+                "type": "bool",
+                "def": false
+            },
+            "meetingLocation": "MeetingLocationDto",
+            "interviewAvailability": {
+                "type": "str"
+            },
+            "meetingDuration": {
+                "type": "str",
+                "enum": [
+                    "HALF_HOUR",
+                    "HOUR",
+                    "HOUR_AND_HALF",
+                    "TWO_HOURS",
+                    "TWO_HOURS_AND_HALF",
+                    "THREE_HOURS"
+                ]
+            },
+            "meetingPauseDuration": {
+                "type": "str",
+                "enum": [
+                    "QUARTER",
+                    "HALF_HOUR",
+                    "THREE_QUARTERS",
+                    "HOUR"
+                ]
+            },
+            "meetingReminderBefore": {
+                "type": "str",
+                "enum": [
+                    "QUARTER",
+                    "HALF_HOUR",
+                    "THREE_QUARTERS",
+                    "HOUR"
+                ]
+            },
+            "meetingReminder": {
+                "type": "bool",
+                "def": false
+            },
+            "meetingConfirmationFormat": {
+                "type": "str",
+                "enum": [
+                    "EMAIL",
+                    "VCAL"
+                ]
+            },
+            "useDefaultTheme": {
+                "type": "bool",
+                "def": false
+            },
+            "theme": "ThemeDto",
+            "recruitmentRole": {
+                "type": "str"
+            },
+            "otherRecruitmentRole": {
+                "type": "str"
+            },
+            "cellphone": {
+                "type": "str"
+            },
+            "unitOfLength": {
+                "type": "str",
+                "enum": [
+                    "KILOMETERS",
+                    "MILES"
+                ]
+            },
+            "preferredCommunicationChannel": {
+                "type": "str",
+                "enum": [
+                    "EMAIL",
+                    "COMMUNICATION_CENTER"
+                ]
+            },
+            "language": {
+                "type": "str"
+            },
+            "publicKey": {
+                "type": "str"
+            }
+        }
+    },
+    "CreateUserDto": {
+        "type": "obj",
+        "req": [
+            "email",
+            "firstName",
+            "language",
+            "lastName",
+            "login",
+            "password",
+            "userActivation"
+        ],
+        "props": {
+            "login": {
+                "type": "str"
+            },
+            "firstName": {
+                "type": "str"
+            },
+            "lastName": {
+                "type": "str"
+            },
+            "email": {
+                "type": "str"
+            },
+            "language": {
+                "type": "str"
+            },
+            "mss": {
+                "type": "bool",
+                "def": false
+            },
+            "disabledLoginPage": {
+                "type": "bool",
+                "def": false
+            },
+            "password": {
+                "type": "str"
+            },
+            "dateFormat": {
+                "type": "str"
+            },
+            "timeFormat": {
+                "type": "str",
+                "enum": [
+                    "H12",
+                    "H24"
+                ]
+            },
+            "userActivation": {
+                "type": "str",
+                "enum": [
+                    "SENDACTIVATIONREQUESTTOEMAIL",
+                    "ACTIVATEUSERLATER",
+                    "ACTIVATEUSERNOWANDSENDEMAILNOTIFICATION",
+                    "ACTIVATEUSERNOWWITHOUTSENDINGEMAILNOTIFICATION",
+                    "ACTIVATEUSERNOWANDSENDONBOARDINGEMAILNOTIFICATION"
+                ]
+            },
+            "userPreferences": "UserPreferencesDto"
+        }
+    },
+    "EditUserDto": {
+        "type": "obj",
+        "props": {
+            "login": {
+                "type": "str"
+            },
+            "firstName": {
+                "type": "str"
+            },
+            "lastName": {
+                "type": "str"
+            },
+            "email": {
+                "type": "str"
+            },
+            "language": {
+                "type": "str"
+            },
+            "mss": {
+                "type": "bool",
+                "def": false
+            },
+            "disabledLoginPage": {
+                "type": "bool",
+                "def": false
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "mustChangePassword": {
+                "type": "bool",
+                "def": false
+            },
+            "userPreferences": "UserPreferencesDto"
+        }
+    },
+    "ActivateUserDto": {
+        "type": "obj",
+        "props": {
+            "password": {
+                "type": "str"
+            },
+            "activationType": {
+                "type": "str",
+                "enum": [
+                    "SENDACTIVATIONREQUESTTOEMAIL",
+                    "ACTIVATEUSERLATER",
+                    "ACTIVATEUSERNOWANDSENDEMAILNOTIFICATION",
+                    "ACTIVATEUSERNOWWITHOUTSENDINGEMAILNOTIFICATION",
+                    "ACTIVATEUSERNOWANDSENDONBOARDINGEMAILNOTIFICATION"
+                ]
+            }
+        }
+    },
+    "DashboardAssignmentRequestDto": {
+        "type": "obj",
+        "props": {
+            "genericDashboard": {
+                "type": "bool",
+                "def": false
+            },
+            "hiringManagerDashboard": {
+                "type": "bool",
+                "def": false
+            },
+            "recruiterDashboards": {
+                "type": "obj",
+                "additionalProperties": {
+                    "type": "bool"
+                }
+            }
+        }
+    },
+    "NamedAccessRolesDto": {
+        "type": "obj",
+        "req": [
+            "roleInRequisitionId",
+            "roleToReceiveCandidateId"
+        ],
+        "props": {
+            "roleInRequisitionId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "roleToReceiveCandidateId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "UserPasswordDto": {
+        "type": "obj",
+        "req": [
+            "password"
+        ],
+        "props": {
+            "password": {
+                "type": "str"
+            }
+        }
+    },
+    "SourceUserIdDto": {
+        "type": "obj",
+        "req": [
+            "id"
+        ],
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "DimensionConfigDto": {
+        "type": "obj",
+        "props": {
+            "dimensionLovId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "matrixLovIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "DocumentSecurityGroupDto": {
+        "type": "obj",
+        "props": {
+            "dimensionsConfig": {
+                "type": "array",
+                "items": "DimensionConfigDto"
+            }
+        }
+    },
+    "DocumentSecurityConfigDto": {
+        "type": "obj",
+        "req": [
+            "documentSecurityGroups"
+        ],
+        "props": {
+            "documentSecurityGroups": {
+                "type": "array",
+                "items": "DocumentSecurityGroupDto"
+            }
+        }
+    },
+    "DocumentSecurityGroupIdDto": {
+        "type": "obj",
+        "props": {
+            "groupId": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "TaskNotificationDto": {
+        "type": "obj",
+        "req": [
+            "enabled",
+            "taskTypeName"
+        ],
+        "props": {
+            "enabled": {
+                "type": "bool",
+                "def": false
+            },
+            "taskTypeName": {
+                "type": "str",
+                "enum": [
+                    "RESUME_REVIEW",
+                    "PANEL_REVIEW"
+                ]
+            }
+        }
+    },
+    "BasicEventNotificationConfigurationDto": {
+        "type": "obj",
+        "req": [
+            "activated",
+            "alertCandidate",
+            "alertMessage",
+            "alertNewTimesheets",
+            "frequency",
+            "plainTextAlerts",
+            "taskNotifications"
+        ],
+        "props": {
+            "frequency": {
+                "type": "str",
+                "enum": [
+                    "ONCE_A_DAY",
+                    "EVERY_HOUR"
+                ]
+            },
+            "activated": {
+                "type": "bool",
+                "def": false
+            },
+            "alertCandidate": {
+                "type": "bool",
+                "def": false
+            },
+            "alertMessage": {
+                "type": "bool",
+                "def": false
+            },
+            "alertNewTimesheets": {
+                "type": "bool",
+                "def": false
+            },
+            "plainTextAlerts": {
+                "type": "bool",
+                "def": false
+            },
+            "taskNotificationActive": {
+                "type": "bool",
+                "def": false
+            },
+            "taskNotifications": {
+                "type": "array",
+                "items": "TaskNotificationDto"
+            }
+        }
+    },
+    "CandidatePoolDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "name": {
+                "type": "str"
+            }
+        }
+    },
+    "BasicMailGatewayConfigurationDto": {
+        "type": "obj",
+        "req": [
+            "authorizedEmail1",
+            "srcChannelName",
+            "srcChannelType"
+        ],
+        "props": {
+            "activated": {
+                "type": "bool",
+                "def": false
+            },
+            "authorizedEmail1": {
+                "type": "str"
+            },
+            "authorizedEmail2": {
+                "type": "str"
+            },
+            "authorizedEmail3": {
+                "type": "str"
+            },
+            "useSequentialCreation1": {
+                "type": "bool",
+                "def": false
+            },
+            "useSequentialCreation2": {
+                "type": "bool",
+                "def": false
+            },
+            "useSequentialCreation3": {
+                "type": "bool",
+                "def": false
+            },
+            "srcChannelName": {
+                "type": "str"
+            },
+            "srcChannelType": {
+                "type": "str"
+            },
+            "privacy": {
+                "type": "str"
+            },
+            "folder": "CandidatePoolDto"
+        }
+    },
+    "DepartmentDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "name": {
+                "type": "str"
+            },
+            "parentId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "level": {
+                "type": "int",
+                "format": "int32"
+            }
+        }
+    },
+    "TagTypeDto": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "labelKey": {
+                "type": "str"
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "department": "DepartmentDto",
+            "creationUser": "UserDto"
+        }
+    },
+    "TagDto": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "labelKey": {
+                "type": "str"
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "department": "DepartmentDto",
+            "creationUser": "UserDto",
+            "tagType": "TagTypeDto"
+        }
+    },
+    "RightDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "type": {
+                "type": "str",
+                "enum": [
+                    "DEPARTMENT",
+                    "ACCOUNT"
+                ]
+            },
+            "label": {
+                "type": "str"
+            },
+            "domain": {
+                "type": "str"
+            },
+            "origin": {
+                "type": "str",
+                "enum": [
+                    "TALENT_ACQUISITION",
+                    "TALENT_MANAGEMENT",
+                    "UNSPECIFIED"
+                ]
+            },
+            "employeeRelated": {
+                "type": "bool",
+                "def": false
+            }
+        }
+    },
+    "RoleDto": {
+        "type": "obj",
+        "props": {
+            "tags": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": "TagDto"
+            },
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "roleClass": {
+                "type": "int",
+                "format": "int64"
+            },
+            "name": {
+                "type": "str"
+            },
+            "type": {
+                "type": "str",
+                "enum": [
+                    "DEPARTMENT",
+                    "ACCOUNT"
+                ]
+            },
+            "updateDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "rights": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": "RightDto"
+            },
+            "organisationVisibility": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": "DepartmentDto"
+            }
+        }
+    },
+    "RoleAssignmentDto": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int",
+                "format": "int64"
+            },
+            "creationUser": "UserDto",
+            "updateUser": "UserDto",
+            "department": "DepartmentDto",
+            "role": "RoleDto",
+            "beginDate": {
+                "type": "int",
+                "format": "int64"
+            },
+            "expirationDate": {
+                "type": "int",
+                "format": "int64"
+            }
+        }
+    },
+    "RoleAssignmentsDto": {
+        "type": "obj",
+        "req": [
+            "roleAssignments"
+        ],
+        "props": {
+            "roleAssignments": {
+                "type": "array",
+                "items": "RoleAssignmentDto"
+            }
+        }
+    },
+    "AccountRoleDto": {
+        "type": "obj",
+        "req": [
+            "includeAll"
+        ],
+        "props": {
+            "includeAll": {
+                "type": "bool",
+                "def": false
+            },
+            "roleIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "roleTags": {
+                "type": "array",
+                "items": "RoleTagDto"
+            }
+        }
+    },
+    "RoleDepartmentDeletionDto": {
+        "type": "obj",
+        "req": [
+            "includeAll"
+        ],
+        "props": {
+            "includeAll": {
+                "type": "bool",
+                "def": false
+            },
+            "departmentIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            }
+        }
+    },
+    "DepartmentRoleDeletionDto": {
+        "type": "obj",
+        "req": [
+            "includeAll"
+        ],
+        "props": {
+            "includeAll": {
+                "type": "bool",
+                "def": false
+            },
+            "roleIds": {
+                "type": "array",
+                "items": {
+                    "type": "int",
+                    "format": "int64"
+                }
+            },
+            "roleTags": {
+                "type": "array",
+                "items": "RoleTagDto"
+            }
+        }
+    },
+    "DepartmentRoleDto": {
+        "type": "obj",
+        "props": {
+            "departments": "RoleDepartmentDeletionDto",
+            "roles": "DepartmentRoleDeletionDto"
+        }
+    },
+    "RoleDeletionDto": {
+        "type": "obj",
+        "props": {
+            "accountRoles": "AccountRoleDto",
+            "departmentRoles": "DepartmentRoleDto"
+        }
+    },
+    "EditUserDataDto": {
+        "type": "obj",
+        "props": {
+            "userId": {
+                "type": "int",
+                "format": "int64"
+            },
+            "lovs": {
+                "type": "array",
+                "items": "BasicLovDto"
+            },
+            "fffs": {
+                "type": "array",
+                "items": "BasicFreeFormFieldDto"
+            }
+        }
+    }
+}

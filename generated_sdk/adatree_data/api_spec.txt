@@ -1,0 +1,368 @@
+##IMPORTANT: base_url:https://cdr-insights-prod.api.adatree.com.au
+---
+##SECURITY SCHEMES
+-bearerAuth
+type: http
+scheme: bearer
+bearerFormat: JWT
+---
+##ENDPOINTS
+---
+-method:get
+-security
+bearerAuth: ['data:banking:accounts:read']
+path: /data/banking/accounts
+opid: Banking_getAccounts
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryAccountIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryAccountIsOwned
+req: False
+ref: #/components/parameters/QueryAccountOpenStatus
+req: False
+ref: #/components/parameters/QueryProductCategory
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+ref: #/components/parameters/HeaderConsumerAuthDate
+req: False
+ref: #/components/parameters/HeaderConsumerIpAddress
+req: False
+ref: #/components/parameters/HeaderUserAgent
+req: False
+sum: Get Banking Accounts
+---
+-method:get
+-security
+bearerAuth: ['data:banking:transactions:read']
+path: /data/banking/transactions
+opid: Banking_getTransactions
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryAccountIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryTransactionTypes
+req: False
+ref: #/components/parameters/QueryTransactionStatuses
+req: False
+ref: #/components/parameters/QueryTransactionMinimumAmount
+req: False
+ref: #/components/parameters/QueryTransactionMaximumAmount
+req: False
+ref: #/components/parameters/QueryTransactionOldestRetrievalTime
+req: False
+ref: #/components/parameters/QueryTransactionNewestRetrievalTime
+req: False
+ref: #/components/parameters/QueryTransactionOldestTime
+req: False
+ref: #/components/parameters/QueryTransactionNewestTime
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Banking Transactions
+---
+-method:get
+-security
+bearerAuth: ['data:banking:payees:read']
+path: /data/banking/payees
+opid: Banking_getPayeeList
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryPayeeTypes
+req: False
+ref: #/components/parameters/QueryPayeeIds
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Banking Payees
+---
+-method:get
+-security
+bearerAuth: ['data:banking:regular_payments:read']
+path: /data/banking/payments/direct-debits
+opid: Banking_getDirectDebitsList
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryAccountIds
+req: False
+ref: #/components/parameters/QueryAccountIsOwned
+req: False
+ref: #/components/parameters/QueryAccountOpenStatus
+req: False
+ref: #/components/parameters/QueryProductCategory
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Banking Direct Debits
+---
+-method:get
+-security
+bearerAuth: ['data:banking:regular_payments:read']
+path: /data/banking/payments/scheduled
+opid: Banking_listScheduledPayments
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryAccountIds
+req: False
+ref: #/components/parameters/QueryAccountIsOwned
+req: False
+ref: #/components/parameters/QueryAccountOpenStatus
+req: False
+ref: #/components/parameters/QueryProductCategory
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Scheduled Payments
+---
+-method:get
+-security
+bearerAuth: []
+path: /data/banking/products
+opid: Banking_getBankingProducts
+params
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryProductCategory
+req: False
+ref: #/components/parameters/QueryProductIds
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Banking Products
+---
+-method:get
+-security
+bearerAuth: ['data:common:customers:read']
+path: /data/common/customers
+opid: Common_getConsumerList
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryCustomerUTypes
+req: False
+sum: Get Customers
+---
+-method:get
+-security
+bearerAuth: ['data:energy:plans:read']
+path: /data/energy/plans
+opid: Energy_getPlans
+params
+ref: #/components/parameters/QueryPlanIds
+req: False
+ref: #/components/parameters/QueryPlanTypes
+req: False
+ref: #/components/parameters/QueryPlanFuelTypes
+req: False
+ref: #/components/parameters/QueryPlanEffective
+req: False
+ref: #/components/parameters/QueryPlanUpdatedSince
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Energy Plans
+---
+-method:get
+-security
+bearerAuth: ['data:energy:accounts:read']
+path: /data/energy/accounts
+opid: Energy_getConsumerEnergyAccounts
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryAccountIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Energy Accounts
+---
+-method:get
+-security
+bearerAuth: ['data:energy:invoices:read']
+path: /data/energy/invoices
+opid: Energy_getInvoices
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryAccountIds
+req: False
+ref: #/components/parameters/QueryInvoiceIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Energy Invoices
+---
+-method:get
+-security
+bearerAuth: ['data:energy:billing:read']
+path: /data/energy/bills
+opid: Energy_getBills
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryAccountIds
+req: False
+ref: #/components/parameters/QueryBillingIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Energy Bills
+---
+-method:get
+-security
+bearerAuth: ['data:energy:electricity.servicepoints:read']
+path: /data/energy/electricity/servicepoints
+opid: Energy_getServicePoints
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryServicePointIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+sum: Get Electricity Service Points
+---
+-method:get
+-security
+bearerAuth: ['data:energy:electricity.usage:read']
+path: /data/energy/electricity/usage
+opid: Energy_getConsumerElectricityUsage
+params
+ref: #/components/parameters/QueryUseCaseIds
+req: False
+ref: #/components/parameters/QueryCdrArrangementIds
+req: False
+ref: #/components/parameters/QueryConsentIds
+req: False
+ref: #/components/parameters/QueryConsumerIds
+req: False
+ref: #/components/parameters/QueryServicePointIds
+req: False
+ref: #/components/parameters/QueryDataHolderBrandIds
+req: False
+ref: #/components/parameters/QueryPage
+req: False
+ref: #/components/parameters/QueryPageSize
+req: False
+ref: #/components/parameters/QueryOldestDate
+req: False
+ref: #/components/parameters/QueryNewestDate
+req: False
+ref: #/components/parameters/HeaderConsumerAuthDate
+req: False
+ref: #/components/parameters/HeaderConsumerIpAddress
+req: False
+ref: #/components/parameters/HeaderUserAgent
+req: False
+sum: Get Electricity Usage
+---

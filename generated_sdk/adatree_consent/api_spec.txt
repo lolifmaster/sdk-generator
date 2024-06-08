@@ -1,0 +1,269 @@
+##IMPORTANT: base_url:https://cdr-insights-prod.api.adatree.com.au
+---
+##SECURITY SCHEMES
+-bearerAuth
+type: http
+scheme: bearer
+bearerFormat: JWT
+---
+##SECURITY SCOPES
+---
+##ENDPOINTS
+---
+-method:get
+-security
+bearerAuth: ['consumer:consents:read', 'consents:read']
+m2m: ['consents:read']
+---
+path: /consents
+opid: Consent_getAllRecords
+params
+name: consumerId
+in: query
+req: False
+schema
+type: str
+ref: #/components/parameters/ParamConsentId
+req: False
+ref: #/components/parameters/ParamCdrArrangementId
+req: False
+name: status
+in: query
+req: False
+schema
+type: str
+enum
+REQUESTED
+ACTIVE
+REVOKED
+EXPIRED
+name: accessFrequency
+in: query
+req: False
+schema
+type: str
+enum
+ONCE_OFF
+ONGOING
+name: postUsageAction
+in: query
+req: False
+schema
+type: str
+enum
+DELETION
+DE_IDENTIFICATION
+name: directMarketingAllowed
+in: query
+req: False
+schema
+type: bool
+name: useCases
+in: query
+req: False
+schema
+type: arr
+items
+type: str
+name: dataHolderBrandId
+in: query
+req: False
+schema
+type: str
+name: oldestCreated
+in: query
+req: False
+schema
+type: str
+format: date-time
+name: newestCreated
+in: query
+req: False
+schema
+type: str
+format: date-time
+name: oldestRevoked
+in: query
+req: False
+schema
+type: str
+format: date-time
+name: newestRevoked
+in: query
+req: False
+schema
+type: str
+format: date-time
+name: oldestSharingEndDate
+in: query
+req: False
+schema
+type: str
+format: date-time
+name: newestSharingEndDate
+in: query
+req: False
+schema
+type: str
+format: date-time
+name: externalId
+in: query
+req: False
+schema
+type: str
+sum: Get Consents
+---
+-method:post
+-security
+bearerAuth: ['consumer:consents:write', 'consents:write']
+m2m: ['consents:write']
+---
+path: /consents
+opid: Consent_recordCreate
+params
+ref: #/components/parameters/HeaderConsumerUserAgent
+req: False
+ref: #/components/parameters/HeaderConsumerIpAddress
+req: False
+sum: Create Consent
+ref: #/components/schemas/CreateConsent
+---
+-method:get
+-security
+bearerAuth: ['consumer:consents:read', 'consents:read']
+m2m: ['consents:read']
+---
+path: /consents/consentId
+opid: Consent_getRecord
+params
+name: consentId
+in: path
+req: True
+schema
+type: str
+sum: Get Consent
+---
+-method:patch
+-security
+bearerAuth: ['consumer:consents:write', 'consents:write']
+m2m: ['consents:write']
+---
+path: /consents/consentId
+opid: Consent_updateViaDashboard
+params
+name: consentId
+in: path
+req: True
+schema
+type: str
+sum: Update a consents via dashboard or back channel
+ref: #/components/schemas/ConsentUpdateViaDashboardRequest
+---
+-method:delete
+-security
+bearerAuth: ['consumer:consents:write', 'consents:write']
+m2m: ['consents:write']
+---
+path: /consents/consentId
+opid: Consent_revokeRecord
+params
+name: consentId
+in: path
+req: True
+schema
+type: str
+sum: Revoke Consent
+---
+-method:get
+-security
+bearerAuth: ['consumer:consents:read', 'consents:read']
+m2m: ['consents:read']
+---
+path: /consents/consentId/authorization
+opid: ConsentAuthorization_redirectUrl
+params
+name: consentId
+in: path
+req: True
+schema
+type: str
+name: state
+in: query
+req: False
+schema
+type: str
+name: redirectUri
+in: query
+req: False
+schema
+type: str
+sum: Get Authorization Redirect URL for a Consent
+---
+-method:get
+-security
+bearerAuth: ['consumer:consents:read', 'consents:read']
+m2m: ['consents:read']
+---
+path: /consents/events
+opid: GetConsentEvents_list
+params
+name: oldest
+in: query
+req: False
+schema
+type: str
+format: date-time
+name: newest
+in: query
+req: False
+schema
+type: str
+format: date-time
+ref: #/components/parameters/ParamConsentId
+req: False
+ref: #/components/parameters/ParamPage
+req: False
+ref: #/components/parameters/ParamPageSize
+req: False
+sum: Retrieve consent events
+---
+-method:get
+-security
+bearerAuth: ['consumer:data-holders:read', 'data-holders:read']
+m2m: ['data-holders:read']
+---
+path: /software-products/softwareProductId/data-holders
+opid: DataHolders_listAvailable
+params
+name: softwareProductId
+in: path
+req: True
+schema
+type: str
+sum: Get Data Holders
+---
+-method:post
+-security
+bearerAuth: ['consumer:tokens:write', 'consumer_tokens_write', 'tokens:write', 'tokens_write']
+m2m: ['tokens:write']
+---
+path: /tokens
+opid: Tokens_establishDataAccess
+sum: Create Tokens
+ref: #/components/schemas/Authorization
+---
+-method:get
+-security
+bearerAuth: ['consumer:use-cases:read', 'use-cases:read']
+m2m: ['use-cases:read']
+---
+path: /use-cases
+opid: UseCase_getAll
+params
+name: combineScopes
+in: query
+req: False
+schema
+type: bool
+sum: Get Use-cases
+---

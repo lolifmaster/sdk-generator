@@ -1,0 +1,331 @@
+{
+    "programCode": {
+        "name": "code",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        }
+    },
+    "PriceBreakdown": {
+        "type": "obj",
+        "req": [
+            "currency",
+            "total"
+        ],
+        "props": {
+            "currency": {
+                "type": "str"
+            },
+            "baseFare": {
+                "type": "num",
+                "format": "float"
+            },
+            "total": {
+                "type": "num",
+                "format": "float"
+            },
+            "airlineSurcharges": {
+                "type": "num",
+                "format": "float"
+            },
+            "taxes": {
+                "type": "num",
+                "format": "float"
+            }
+        }
+    },
+    "FlightSegment": {
+        "type": "obj",
+        "req": [
+            "id",
+            "marketingAirline",
+            "operatingAirline",
+            "departureAirport",
+            "arrivalAirport",
+            "departureDate",
+            "bookingClass",
+            "flightNumber"
+        ],
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "marketingAirline": {
+                "type": "str"
+            },
+            "operatingAirline": {
+                "type": "str"
+            },
+            "departureAirport": {
+                "type": "str"
+            },
+            "arrivalAirport": {
+                "type": "str"
+            },
+            "departureDate": {
+                "type": "str",
+                "format": "date"
+            },
+            "cabin": {
+                "type": "str",
+                "enum": [
+                    "Economy",
+                    "PremiumEconomy",
+                    "Business",
+                    "First"
+                ]
+            },
+            "bookingClass": {
+                "type": "str"
+            },
+            "fareBasisCode": {
+                "type": "str"
+            },
+            "fareFamilyName": {
+                "type": "str"
+            },
+            "flightNumber": {
+                "type": "num",
+                "format": "int"
+            },
+            "distance": {
+                "type": "num",
+                "format": "int"
+            }
+        }
+    },
+    "FlightLeg": {
+        "type": "obj",
+        "req": [
+            "id",
+            "segments"
+        ],
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "segments": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                    "$ref": "FlightSegment"
+                }
+            }
+        }
+    },
+    "Flight": {
+        "type": "obj",
+        "req": [
+            "id",
+            "legs",
+            "price"
+        ],
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "bookingChannel": {
+                "type": "str",
+                "enum": [
+                    "airline",
+                    "ota"
+                ]
+            },
+            "price": {
+                "$ref": "PriceBreakdown"
+            },
+            "legs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                    "$ref": "FlightLeg"
+                }
+            }
+        }
+    },
+    "FlightsCalculateAttributesBenefitsRequest": {
+        "type": "obj",
+        "req": [
+            "flights"
+        ],
+        "props": {
+            "flights": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "$ref": "Flight"
+                }
+            }
+        }
+    },
+    "fields": {
+        "name": "fields",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str"
+        }
+    },
+    "FlightsCalculateFareAttributesRequest": {
+        "type": "obj",
+        "req": [
+            "legs"
+        ],
+        "props": {
+            "legs": {
+                "type": "array",
+                "uniqueItems": true,
+                "minItems": 1,
+                "items": {
+                    "type": "obj",
+                    "req": [
+                        "id",
+                        "departureAirport",
+                        "arrivalAirport",
+                        "airline",
+                        "fares"
+                    ],
+                    "props": {
+                        "id": {
+                            "type": "str"
+                        },
+                        "departureAirport": {
+                            "type": "str"
+                        },
+                        "arrivalAirport": {
+                            "type": "str"
+                        },
+                        "airline": {
+                            "type": "str"
+                        },
+                        "layovers": {
+                            "type": "array",
+                            "items": {
+                                "type": "str"
+                            }
+                        },
+                        "fares": {
+                            "type": "array",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                                "type": "obj",
+                                "req": [
+                                    "id"
+                                ],
+                                "props": {
+                                    "id": {
+                                        "type": "str"
+                                    },
+                                    "fareBasisCode": {
+                                        "type": "str"
+                                    },
+                                    "fareFamilyName": {
+                                        "type": "str"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "TravelersCreateProfileRequest": {
+        "type": "obj",
+        "props": {
+            "country": {
+                "type": "str"
+            }
+        }
+    },
+    "offset": {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+            "type": "int"
+        }
+    },
+    "limit": {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+            "type": "int",
+            "def": 100
+        }
+    },
+    "travelerId": {
+        "name": "id",
+        "in": "path",
+        "req": true,
+        "schema": {
+            "type": "str"
+        }
+    },
+    "Miles": {
+        "type": "obj",
+        "req": [
+            "code",
+            "value"
+        ],
+        "props": {
+            "code": {
+                "type": "int",
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "value": {
+                "type": "num",
+                "format": "float"
+            }
+        }
+    },
+    "MembershipsCreateFrequentFlyerProgramMembershipRequest": {
+        "type": "obj",
+        "req": [
+            "program"
+        ],
+        "props": {
+            "program": {
+                "type": "str"
+            },
+            "memberNumber": {
+                "type": "str"
+            },
+            "memberName": {
+                "type": "str"
+            },
+            "mileageEarnings": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                    "$ref": "Miles"
+                }
+            },
+            "statusTier": {
+                "type": "int",
+                "enum": [
+                    0,
+                    1,
+                    8,
+                    16,
+                    24,
+                    32,
+                    33,
+                    34,
+                    35,
+                    36
+                ]
+            }
+        }
+    }
+}

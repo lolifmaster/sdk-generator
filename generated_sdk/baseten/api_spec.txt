@@ -1,0 +1,129 @@
+###IMPORTANT: base_url:https://api.baseten.co
+---
+###SECURITY SCHEMES
+-ApiKeyAuth
+type: apiKey
+in: header
+name: Authorization
+---
+###SECURITY SCOPES
+ApiKeyAuth: []
+---
+###ENDPOINTS
+##path: /v1/secrets
+#method:get
+opid: Secret_getAllSecrets
+#method:post
+opid: Secret_upsertNewSecret
+ref: #UpsertSecretRequestV1
+---
+##path: /v1/models
+#method:get
+opid: Model_getAllModels
+---
+##path: /v1/models/{model_id}
+#parameters
+ref: #model_id
+#method:get
+opid: Model_getModelById
+---
+##path: /v1/models/{model_id}/deployments
+#parameters
+ref: #model_id
+#method:get
+opid: Model_getAllDeployments
+---
+##path: /v1/models/{model_id}/deployments/development
+#parameters
+ref: #model_id
+#method:get
+opid: Deployment_getDevelopmentDetails
+---
+##path: /v1/models/{model_id}/deployments/production
+#parameters
+ref: #model_id
+#method:get
+opid: Deployment_getProductionDetails
+---
+##path: /v1/models/{model_id}/deployments/{deployment_id}
+#parameters
+ref: #model_id
+ref: #deployment_id
+#method:get
+opid: Deployment_detailsGet
+---
+##path: /v1/models/{model_id}/deployments/development/autoscaling_settings
+#parameters
+ref: #model_id
+#method:patch
+opid: AutoscalingSetting_updateDevelopmentSetting
+ref: #UpdateAutoscalingSettingsV1
+---
+##path: /v1/models/{model_id}/deployments/production/autoscaling_settings
+#parameters
+ref: #model_id
+#method:patch
+opid: AutoscalingSetting_updateStatus
+ref: #UpdateAutoscalingSettingsV1
+---
+##path: /v1/models/{model_id}/deployments/{deployment_id}/autoscaling_settings
+#parameters
+ref: #model_id
+ref: #deployment_id
+#method:patch
+opid: AutoscalingSetting_updateDeploymentSettings
+ref: #UpdateAutoscalingSettingsV1
+---
+##path: /v1/models/{model_id}/deployments/development/promote
+#parameters
+ref: #model_id
+#method:post
+opid: Model_deployPromote
+ref: #PromoteRequestV1
+---
+##path: /v1/models/{model_id}/deployments/{deployment_id}/promote
+#parameters
+ref: #model_id
+ref: #deployment_id
+#method:post
+opid: Model_deploymentPromote
+ref: #PromoteRequestV1
+---
+##path: /v1/models/{model_id}/deployments/development/activate
+#parameters
+ref: #model_id
+#method:post
+opid: Deployment_activateDevelopmentDeployment
+---
+##path: /v1/models/{model_id}/deployments/production/activate
+#parameters
+ref: #model_id
+#method:post
+opid: Deployment_activateProduction
+---
+##path: /v1/models/{model_id}/deployments/{deployment_id}/activate
+#parameters
+ref: #model_id
+ref: #deployment_id
+#method:post
+opid: Deployment_activateStatus
+---
+##path: /v1/models/{model_id}/deployments/development/deactivate
+#parameters
+ref: #model_id
+#method:post
+opid: Deployment_deactivateDevelopment
+---
+##path: /v1/models/{model_id}/deployments/production/deactivate
+#parameters
+ref: #model_id
+#method:post
+opid: Deployment_deactivateProductionDeployment
+---
+##path: /v1/models/{model_id}/deployments/{deployment_id}/deactivate
+#parameters
+ref: #model_id
+ref: #deployment_id
+#method:post
+opid: Deployment_deactivateDeploymentStatus
+---

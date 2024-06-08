@@ -1,0 +1,217 @@
+{
+    "CreateUnitAttributeModel": {
+        "req": [
+            "id"
+        ],
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "str"
+            }
+        }
+    },
+    "CreateConnectedUnitModel": {
+        "req": [
+            "unitId"
+        ],
+        "type": "obj",
+        "props": {
+            "unitId": {
+                "type": "str"
+            }
+        }
+    },
+    "CreateUnitModel": {
+        "req": [
+            "desc",
+            "maxPersons",
+            "name",
+            "propertyId"
+        ],
+        "type": "obj",
+        "props": {
+            "propertyId": {
+                "type": "str"
+            },
+            "name": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "unitGroupId": {
+                "type": "str"
+            },
+            "maxPersons": {
+                "format": "int32",
+                "max": 2147483647,
+                "min": 1,
+                "type": "int"
+            },
+            "condition": {
+                "enum": [
+                    "Clean",
+                    "CleanToBeInspected",
+                    "Dirty"
+                ],
+                "type": "str"
+            },
+            "attributes": {
+                "type": "array",
+                "items": {
+                    "$ref": "CreateUnitAttributeModel"
+                }
+            },
+            "connectedUnits": {
+                "type": "array",
+                "items": {
+                    "$ref": "CreateConnectedUnitModel"
+                }
+            }
+        }
+    },
+    "BulkCreateUnitsModel": {
+        "req": [
+            "units"
+        ],
+        "type": "obj",
+        "props": {
+            "units": {
+                "type": "array",
+                "items": "CreateUnitModel"
+            }
+        }
+    },
+    "CreateUnitAttributeDefinitionModel": {
+        "req": [
+            "name"
+        ],
+        "type": "obj",
+        "props": {
+            "name": {
+                "maxLen": 50,
+                "minLen": 1,
+                "type": "str"
+            }
+        }
+    },
+    "CreateConnectedUnitGroupModel": {
+        "req": [
+            "memberCount",
+            "unitGroupId"
+        ],
+        "type": "obj",
+        "props": {
+            "unitGroupId": {
+                "type": "str"
+            },
+            "memberCount": {
+                "format": "int32",
+                "max": 2147483647,
+                "min": 1,
+                "type": "int"
+            }
+        }
+    },
+    "CreateUnitGroupModel": {
+        "req": [
+            "code",
+            "desc",
+            "maxPersons",
+            "name",
+            "propertyId"
+        ],
+        "type": "obj",
+        "props": {
+            "code": {
+                "maxLen": 10,
+                "minLen": 3,
+                "pattern": "^[a-zA-Z0-9_]*$",
+                "type": "str"
+            },
+            "propertyId": {
+                "type": "str"
+            },
+            "name": {
+                "type": "obj",
+                "additionalProperties": {
+                    "type": "str"
+                }
+            },
+            "maxPersons": {
+                "format": "int32",
+                "max": 2147483647,
+                "min": 1,
+                "type": "int"
+            },
+            "rank": {
+                "format": "int32",
+                "max": 2147483647,
+                "min": 1,
+                "type": "int"
+            },
+            "type": {
+                "enum": [
+                    "BedRoom",
+                    "MeetingRoom",
+                    "EventSpace",
+                    "ParkingLot"
+                ],
+                "type": "str"
+            },
+            "connectedUnitGroups": {
+                "type": "array",
+                "items": {
+                    "$ref": "CreateConnectedUnitGroupModel"
+                }
+            }
+        }
+    },
+    "ReplaceConnectedUnitGroupModel": {
+        "req": [
+            "memberCount",
+            "unitGroupId"
+        ],
+        "type": "obj",
+        "props": {
+            "unitGroupId": {
+                "type": "str"
+            },
+            "memberCount": {
+                "format": "int32",
+                "max": 2147483647,
+                "min": 1,
+                "type": "int"
+            }
+        }
+    },
+    "ReplaceUnitGroupModel": {
+        "req": [
+            "desc",
+            "name"
+        ],
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "obj",
+                "additionalProperties": {
+                    "type": "str"
+                }
+            },
+            "maxPersons": {
+                "format": "int32",
+                "type": "int"
+            },
+            "rank": {
+                "format": "int32",
+                "max": 2147483647,
+                "min": 1,
+                "type": "int"
+            },
+            "connectedUnitGroups": {
+                "type": "array",
+                "items": {
+                    "$ref": "ReplaceConnectedUnitGroupModel"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,276 @@
+{
+    "Item": {
+        "type": "obj",
+        "req": [
+            "vault",
+            "category"
+        ],
+        "props": {
+            "version": {
+                "type": "int"
+            },
+            "id": {
+                "type": "str"
+            },
+            "vault": {
+                "type": "obj",
+                "req": [
+                    "id"
+                ],
+                "props": {
+                    "id": {
+                        "type": "str"
+                    }
+                }
+            },
+            "category": {
+                "type": "str",
+                "enum": [
+                    "LOGIN",
+                    "PASSWORD",
+                    "API_CREDENTIAL",
+                    "SERVER",
+                    "DATABASE",
+                    "CREDIT_CARD",
+                    "MEMBERSHIP",
+                    "PASSPORT",
+                    "SOFTWARE_LICENSE",
+                    "OUTDOOR_LICENSE",
+                    "SECURE_NOTE",
+                    "WIRELESS_ROUTER",
+                    "BANK_ACCOUNT",
+                    "DRIVER_LICENSE",
+                    "IDENTITY",
+                    "REWARD_PROGRAM",
+                    "DOCUMENT",
+                    "EMAIL_ACCOUNT",
+                    "SOCIAL_SECURITY_NUMBER",
+                    "MEDICAL_RECORD",
+                    "SSH_KEY",
+                    "CUSTOM"
+                ]
+            },
+            "urls": {
+                "type": "array",
+                "items": {
+                    "type": "obj",
+                    "req": [
+                        "href"
+                    ],
+                    "props": {
+                        "label": {
+                            "type": "str"
+                        },
+                        "primary": {
+                            "type": "bool"
+                        },
+                        "href": {
+                            "type": "str",
+                            "format": "url"
+                        }
+                    }
+                }
+            },
+            "favorite": {
+                "type": "bool",
+                "def": false
+            },
+            "state": {
+                "type": "str",
+                "readOnly": true,
+                "enum": [
+                    "ARCHIVED",
+                    "DELETED"
+                ]
+            },
+            "createdAt": {
+                "type": "str",
+                "format": "date-time",
+                "readOnly": true
+            },
+            "updatedAt": {
+                "type": "str",
+                "format": "date-time",
+                "readOnly": true
+            },
+            "lastEditedBy": {
+                "type": "str",
+                "readOnly": true
+            }
+        }
+    },
+    "GeneratorRecipe": {
+        "type": "obj",
+        "props": {
+            "length": {
+                "type": "int",
+                "def": 32,
+                "min": 1,
+                "max": 64
+            },
+            "characterSets": {
+                "type": "array",
+                "items": {
+                    "type": "str",
+                    "enum": [
+                        "LETTERS",
+                        "DIGITS",
+                        "SYMBOLS"
+                    ]
+                },
+                "min": 0,
+                "max": 3,
+                "uniqueItems": true
+            },
+            "excludeCharacters": {
+                "type": "str"
+            }
+        }
+    },
+    "Field": {
+        "type": "obj",
+        "req": [
+            "id",
+            "type"
+        ],
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "section": {
+                "type": "obj",
+                "props": {
+                    "id": {
+                        "type": "str"
+                    }
+                }
+            },
+            "type": {
+                "type": "str",
+                "def": "STRING",
+                "enum": [
+                    "STRING",
+                    "EMAIL",
+                    "CONCEALED",
+                    "URL",
+                    "TOTP",
+                    "DATE",
+                    "MONTH_YEAR",
+                    "MENU"
+                ]
+            },
+            "purpose": {
+                "type": "str",
+                "enum": [
+                    "",
+                    "USERNAME",
+                    "PASSWORD",
+                    "NOTES"
+                ]
+            },
+            "label": {
+                "type": "str"
+            },
+            "value": {
+                "type": "str"
+            },
+            "generate": {
+                "type": "bool",
+                "def": false
+            },
+            "recipe": "GeneratorRecipe",
+            "entropy": {
+                "type": "num",
+                "readOnly": true
+            }
+        }
+    },
+    "File": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "str"
+            },
+            "name": {
+                "type": "str"
+            },
+            "size": {
+                "type": "int"
+            },
+            "content_path": {
+                "type": "str",
+                "readOnly": true
+            },
+            "section": {
+                "type": "obj",
+                "props": {
+                    "id": {
+                        "type": "str"
+                    }
+                }
+            },
+            "content": {
+                "type": "str",
+                "format": "byte"
+            }
+        }
+    },
+    "FullItem": {
+        "allOf": [
+            "Item",
+            {
+                "type": "obj",
+                "props": {
+                    "sections": {
+                        "type": "array",
+                        "items": {
+                            "type": "obj",
+                            "props": {
+                                "id": {
+                                    "type": "str"
+                                },
+                                "label": {
+                                    "type": "str"
+                                }
+                            }
+                        }
+                    },
+                    "fields": {
+                        "type": "array",
+                        "items": "Field"
+                    },
+                    "files": {
+                        "type": "array",
+                        "items": "File"
+                    }
+                }
+            }
+        ]
+    },
+    "Patch": {
+        "type": "array",
+        "items": {
+            "type": "obj",
+            "props": {
+                "op": {
+                    "type": "str",
+                    "enum": [
+                        "add",
+                        "remove",
+                        "replace"
+                    ]
+                },
+                "path": {
+                    "type": "str"
+                },
+                "value": {
+                    "type": "obj"
+                }
+            },
+            "req": [
+                "op",
+                "path"
+            ]
+        }
+    }
+}

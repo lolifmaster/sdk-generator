@@ -1,0 +1,958 @@
+##IMPORTANT: base_url:https://ws.api.video
+---
+##SECURITY SCHEMES
+-bearerAuth
+type: http
+scheme: bearer
+-apiKey
+type: http
+scheme: basic
+---
+##ENDPOINTS
+---
+-method:post
+path: /auth/api-key
+opid: AdvancedAuthentication_getBearerToken
+sum: Get Bearer Token
+ref: #/components/schemas/authenticate-payload
+---
+-method:post
+path: /auth/refresh
+opid: AdvancedAuthentication_refreshBearerToken
+sum: Refresh Bearer Token
+ref: #/components/schemas/refresh-token-payload
+---
+-method:get
+-security
+apiKey: []
+path: /videos
+opid: Videos_listAllObjects
+params
+name: title
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+name: tags
+in: query
+req: False
+style: form
+explode: True
+schema
+type: arr
+items
+type: str
+name: metadata
+in: query
+req: False
+style: deepObject
+x-is-deep-object: True
+explode: True
+schema
+type: obj
+additionalProperties
+type: str
+name: desc
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+name: liveStreamId
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+name: sortBy
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+enum
+title
+createdAt
+publishedAt
+updatedAt
+name: sortOrder
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+enum
+asc
+desc
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: List all video objects
+---
+-method:post
+-security
+apiKey: []
+path: /videos
+opid: Videos_createObject
+sum: Create a video object
+ref: #/components/schemas/video-creation-payload
+---
+-method:post
+-security
+apiKey: []
+path: /videos/videoId/source
+opid: Videos_ingestVideoFromSource
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+name: Content-Range
+in: header
+req: False
+style: simple
+explode: False
+schema
+pattern: /bytes d-d|part d/d|/
+type: str
+x-client-ignore: True
+sum: Upload a video
+---
+-method:post
+-security
+apiKey: []
+path: /watermarks
+opid: POST_watermark
+sum: Upload a watermark
+---
+-method:get
+-security
+apiKey: []
+path: /watermarks
+opid: Watermarks_listAll
+params
+name: sortBy
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+name: sortOrder
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: List all watermarks
+---
+-method:delete
+-security
+apiKey: []
+path: /watermarks/watermarkId
+opid: DELETE_watermark
+params
+name: watermarkId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete a watermark
+---
+-method:post
+-security
+apiKey: []
+path: /videos/videoId/thumbnail
+opid: Videos_uploadThumbnail
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Upload a thumbnail
+---
+-method:patch
+-security
+apiKey: []
+path: /videos/videoId/thumbnail
+opid: Videos_setThumbnailFromInterval
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Set a thumbnail
+ref: #/components/schemas/video-thumbnail-pick-payload
+---
+-method:get
+-security
+apiKey: []
+path: /videos/videoId
+opid: Videos_getVideoObject
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Retrieve a video object
+---
+-method:delete
+-security
+apiKey: []
+path: /videos/videoId
+opid: Videos_deleteVideoObject
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete a video object
+---
+-method:patch
+-security
+apiKey: []
+path: /videos/videoId
+opid: Videos_updateVideoObjectParameters
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Update a video object
+ref: #/components/schemas/video-update-payload
+---
+-method:get
+-security
+apiKey: []
+path: /videos/videoId/status
+opid: Videos_getVideoStatusAndDetails
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Retrieve video status and details
+---
+-method:get
+-security
+apiKey: []
+path: /upload-tokens
+opid: UploadTokens_listActiveDelegatedTokens
+params
+name: sortBy
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+enum
+createdAt
+ttl
+name: sortOrder
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+enum
+asc
+desc
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: List all active upload tokens
+---
+-method:post
+-security
+apiKey: []
+path: /upload-tokens
+opid: UploadTokens_generateToken
+sum: Generate an upload token
+ref: #/components/schemas/token-creation-payload
+---
+-method:get
+-security
+apiKey: []
+path: /upload-tokens/uploadToken
+opid: UploadTokens_getDetails
+params
+name: uploadToken
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Retrieve upload token
+---
+-method:delete
+-security
+apiKey: []
+path: /upload-tokens/uploadToken
+opid: UploadTokens_deleteToken
+params
+name: uploadToken
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete an upload token
+---
+-method:post
+path: /upload
+opid: POST_upload
+params
+name: token
+in: query
+req: True
+style: form
+explode: True
+schema
+type: str
+name: Content-Range
+in: header
+req: False
+style: simple
+explode: False
+schema
+pattern: bytes 0-9-0-9/0-9
+type: str
+x-client-ignore: True
+sum: Upload with an delegated upload token
+---
+-method:get
+-security
+apiKey: []
+path: /live-streams
+opid: LiveStreams_listAll
+params
+name: streamKey
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+name: name
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+name: sortBy
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+enum
+name
+createdAt
+updatedAt
+name: sortOrder
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+enum
+asc
+desc
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: List all live streams
+---
+-method:post
+-security
+apiKey: []
+path: /live-streams
+opid: LiveStreams_createLivestreamObject
+sum: Create live stream
+ref: #/components/schemas/live-stream-creation-payload
+---
+-method:get
+-security
+apiKey: []
+path: /live-streams/liveStreamId
+opid: LiveStreams_getLivestreamById
+params
+name: liveStreamId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Retrieve live stream
+---
+-method:delete
+-security
+apiKey: []
+path: /live-streams/liveStreamId
+opid: LiveStreams_deleteLivestream
+params
+name: liveStreamId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete a live stream
+---
+-method:patch
+-security
+apiKey: []
+path: /live-streams/liveStreamId
+opid: LiveStreams_updateLivestreamObject
+params
+name: liveStreamId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Update a live stream
+ref: #/components/schemas/live-stream-update-payload
+---
+-method:post
+-security
+apiKey: []
+path: /live-streams/liveStreamId/thumbnail
+opid: LiveStreams_uploadThumbnail
+params
+name: liveStreamId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Upload a thumbnail
+---
+-method:delete
+-security
+apiKey: []
+path: /live-streams/liveStreamId/thumbnail
+opid: LiveStreams_deleteThumbnail
+params
+name: liveStreamId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete a thumbnail
+---
+-method:get
+-security
+apiKey: []
+path: /videos/videoId/captions/language
+opid: Captions_getByLanguage
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+name: language
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Retrieve a caption
+---
+-method:post
+-security
+apiKey: []
+path: /videos/videoId/captions/language
+opid: Captions_uploadVttFile
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+name: language
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Upload a caption
+---
+-method:delete
+-security
+apiKey: []
+path: /videos/videoId/captions/language
+opid: Captions_deleteByLanguage
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+name: language
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete a caption
+---
+-method:patch
+-security
+apiKey: []
+path: /videos/videoId/captions/language
+opid: Captions_updateSettings
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+name: language
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Update a caption
+ref: #/components/schemas/captions-update-payload
+---
+-method:get
+-security
+apiKey: []
+path: /videos/videoId/captions
+opid: Captions_listByVideoId
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: List video captions
+---
+-method:get
+-security
+apiKey: []
+path: /videos/videoId/chapters/language
+opid: Chapters_getChapterByLanguage
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+name: language
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Retrieve a chapter
+---
+-method:post
+-security
+apiKey: []
+path: /videos/videoId/chapters/language
+opid: Chapters_uploadVttFile
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+name: language
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Upload a chapter
+---
+-method:delete
+-security
+apiKey: []
+path: /videos/videoId/chapters/language
+opid: Chapters_deleteChapterInLanguage
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+name: language
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete a chapter
+---
+-method:get
+-security
+apiKey: []
+path: /videos/videoId/chapters
+opid: Chapters_listByVideo
+params
+name: videoId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: List video chapters
+---
+-method:get
+-security
+apiKey: []
+path: /players
+opid: GET_players
+params
+name: sortBy
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+enum
+name
+createdAt
+updatedAt
+name: sortOrder
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+enum
+asc
+desc
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: List all player themes
+---
+-method:post
+-security
+apiKey: []
+path: /players
+opid: POST_players
+sum: Create a player
+ref: #/components/schemas/player-theme-creation-payload
+---
+-method:get
+-security
+apiKey: []
+path: /players/playerId
+opid: PlayerThemes_getThemeByPlayerId
+params
+name: playerId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Retrieve a player
+---
+-method:delete
+-security
+apiKey: []
+path: /players/playerId
+opid: PlayerThemes_deletePlayer
+params
+name: playerId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete a player
+---
+-method:patch
+-security
+apiKey: []
+path: /players/playerId
+opid: PlayerThemes_updatePlayerDetails
+params
+name: playerId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Update a player
+ref: #/components/schemas/player-theme-update-payload
+---
+-method:post
+-security
+apiKey: []
+path: /players/playerId/logo
+opid: PlayerThemes_uploadLogo
+params
+name: playerId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Upload a logo
+---
+-method:delete
+-security
+apiKey: []
+path: /players/playerId/logo
+opid: PlayerThemes_removeLogo
+params
+name: playerId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete logo
+---
+-method:get
+-security
+apiKey: []
+path: /analytics/videos/plays
+opid: Analytics_getVideoPlays
+params
+name: from
+in: query
+req: True
+style: form
+explode: True
+schema
+type: str
+format: date
+name: to
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+format: date
+name: dimension
+in: query
+req: True
+style: form
+explode: False
+schema
+type: str
+enum
+videoId
+emittedAt
+country
+deviceType
+operatingSystem
+browser
+name: filter
+in: query
+req: False
+style: form
+explode: False
+schema
+type: str
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: Get play events for video
+---
+-method:get
+-security
+apiKey: []
+path: /analytics/live-streams/plays
+opid: Analytics_getLiveStreamPlays
+params
+name: from
+in: query
+req: True
+style: form
+explode: True
+schema
+type: str
+format: date
+name: to
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+format: date
+name: dimension
+in: query
+req: True
+style: form
+explode: False
+schema
+type: str
+enum
+liveStreamId
+emittedAt
+country
+deviceType
+operatingSystem
+browser
+name: filter
+in: query
+req: False
+style: form
+explode: False
+schema
+type: str
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: Get play events for live stream
+---
+-method:get
+-security
+apiKey: []
+path: /webhooks
+opid: Webhooks_listAll
+params
+name: events
+in: query
+req: False
+style: form
+explode: True
+schema
+type: str
+ref: #/components/parameters/current-page
+req: False
+ref: #/components/parameters/page-size
+req: False
+sum: List all webhooks
+---
+-method:post
+-security
+apiKey: []
+path: /webhooks
+opid: Webhooks_createWebhookEvent
+sum: Create Webhook
+ref: #/components/schemas/webhooks-creation-payload
+---
+-method:get
+-security
+apiKey: []
+path: /webhooks/webhookId
+opid: Webhooks_getDetailsById
+params
+name: webhookId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Retrieve Webhook details
+---
+-method:delete
+-security
+apiKey: []
+path: /webhooks/webhookId
+opid: Webhooks_deleteWebhook
+params
+name: webhookId
+in: path
+req: True
+style: simple
+explode: False
+schema
+type: str
+sum: Delete a Webhook
+---

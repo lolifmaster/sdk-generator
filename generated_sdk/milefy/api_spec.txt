@@ -1,0 +1,203 @@
+##IMPORTANT: base_url:milefy-api.30k.com
+---
+##SECURITY SCHEMES
+-apiKey
+name: apiKey
+type: apiKey
+in: query
+---
+##SECURITY SCOPES
+apiKey: []
+---
+##ENDPOINTS
+---
+-method:get
+path: /programs
+opid: StaticData_getFrequentFlyerPrograms
+params
+name: authentication
+in: query
+req: False
+schema
+type: str
+items
+type: str
+enum
+simple
+none
+oauth
+pattern: simple|none|oauth,simple|none|oauth
+sum: Get program collection
+---
+-method:get
+path: /programs/code
+opid: StaticData_getFrequentFlyerProgram
+params
+ref: #/components/parameters/programCode
+req: False
+sum: Get program
+---
+-method:get
+path: /benefits
+opid: StaticData_getStatusBenefitTypeCollection
+sum: Get status benefit type collection
+---
+-method:get
+path: /benefits/code
+opid: StaticData_getStatusBenefitType
+params
+name: code
+in: path
+req: True
+schema
+type: str
+sum: Get status benefit type
+---
+-method:get
+path: /attributes
+opid: StaticData_getFareAttributeTypes
+sum: Get fare attribute type collection
+---
+-method:get
+path: /attributes/code
+opid: StaticData_getFareAttributeType
+params
+name: code
+in: path
+req: True
+schema
+type: str
+sum: Get fare attribute type
+---
+-method:post
+path: /calculate
+opid: Flights_calculateAttributesBenefits
+params
+ref: #/components/parameters/fields
+req: False
+name: traveler
+in: query
+req: True
+schema
+type: str
+name: scope
+in: query
+req: False
+schema
+type: str
+enum
+memberships
+memberships_and_default_program
+name: sourceClientId
+in: query
+req: False
+schema
+type: str
+sum: Calculate attributes  benefits
+ref: #/components/schemas/FlightsCalculateAttributesBenefitsRequest
+---
+-method:post
+path: /fare-attributes
+opid: Flights_calculateFareAttributes
+params
+in: query
+req: False
+name: scope
+schema
+type: str
+enum
+attributes
+attributes_and_mileage
+def: attributes
+sum: Calculate fare attributes
+ref: #/components/schemas/FlightsCalculateFareAttributesRequest
+---
+-method:post
+path: /travelers
+opid: Travelers_createProfile
+sum: Create traveler
+ref: #/components/schemas/TravelersCreateProfileRequest
+---
+-method:get
+path: /travelers
+opid: Travelers_listCollection
+params
+ref: #/components/parameters/offset
+req: False
+ref: #/components/parameters/limit
+req: False
+sum: Get traveler collection
+---
+-method:get
+path: /travelers/id
+opid: Travelers_getProfile
+params
+ref: #/components/parameters/travelerId
+req: False
+sum: Get traveler
+---
+-method:put
+path: /travelers/id
+opid: Travelers_updateProfile
+params
+ref: #/components/parameters/travelerId
+req: False
+sum: Edit traveler
+ref: #/components/schemas/TravelersCreateProfileRequest
+---
+-method:delete
+path: /travelers/id
+opid: Travelers_removeProfile
+params
+ref: #/components/parameters/travelerId
+req: False
+sum: Delete traveler
+---
+-method:post
+path: /travelers/id/memberships
+opid: Memberships_createFrequentFlyerProgramMembership
+params
+ref: #/components/parameters/travelerId
+req: False
+sum: Create membership
+ref: #/components/schemas/MembershipsCreateFrequentFlyerProgramMembershipRequest
+---
+-method:get
+path: /travelers/id/memberships
+opid: Memberships_getList
+params
+ref: #/components/parameters/travelerId
+req: False
+sum: Get membership collection
+---
+-method:get
+path: /travelers/id/memberships/code
+opid: Memberships_getMembershipByCode
+params
+ref: #/components/parameters/travelerId
+req: False
+ref: #/components/parameters/programCode
+req: False
+sum: Get membership
+---
+-method:put
+path: /travelers/id/memberships/code
+opid: Memberships_editTravelerMembership
+params
+ref: #/components/parameters/travelerId
+req: False
+ref: #/components/parameters/programCode
+req: False
+sum: Edit membership
+ref: #/components/schemas/MembershipsCreateFrequentFlyerProgramMembershipRequest
+---
+-method:delete
+path: /travelers/id/memberships/code
+opid: Memberships_deleteMembership
+params
+ref: #/components/parameters/travelerId
+req: False
+ref: #/components/parameters/programCode
+req: False
+sum: Delete membership
+---

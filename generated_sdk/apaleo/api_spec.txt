@@ -1,0 +1,679 @@
+##IMPORTANT: base_url:api.apaleo.com
+---
+---
+##ENDPOINTS
+---
+-method:get
+-security
+oauth2: []
+path: /inventory/v1/properties
+opid: Property_listGet
+params
+in: query
+name: status
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+Test
+Live
+type: str
+req: False
+in: query
+name: includeArchived
+schema
+type: bool
+req: False
+in: query
+name: countryCode
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+req: False
+in: query
+name: pageNumber
+schema
+type: int
+def: 1
+req: False
+in: query
+name: pageSize
+schema
+type: int
+format: int64
+req: False
+in: query
+name: expand
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+actions
+type: str
+req: False
+sum: Get a properties list
+---
+-method:post
+-security
+oauth2: ['properties.create', 'setup.manage', 'admin']
+path: /inventory/v1/properties
+opid: Property_create
+params
+in: header
+name: Idempotency-Key
+schema
+type: str
+req: False
+sum: Creates a property
+---
+-method:get
+-security
+oauth2: []
+path: /inventory/v1/properties/count
+opid: Property_getTotalCount
+sum: Return total count of properties
+---
+-method:get
+-security
+oauth2: []
+path: /inventory/v1/properties/id
+opid: Property_getById
+params
+in: path
+name: id
+req: True
+schema
+type: str
+in: query
+name: languages
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+req: False
+in: query
+name: expand
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+actions
+type: str
+req: False
+sum: Get a property
+---
+-method:patch
+-security
+oauth2: ['properties.manage', 'setup.manage', 'admin']
+path: /inventory/v1/properties/id
+opid: Property_modifyDetails
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Allows to modify property
+---
+-method:post
+-security
+oauth2: ['properties.create', 'setup.manage', 'admin']
+path: /inventory/v1/property-actions/id/clone
+opid: PropertyActions_cloneProperty
+params
+in: path
+name: id
+req: True
+schema
+type: str
+in: header
+name: Idempotency-Key
+schema
+type: str
+req: False
+sum: Clones a property
+---
+-method:put
+-security
+oauth2: ['properties.manage', 'setup.manage', 'admin']
+path: /inventory/v1/property-actions/id/archive
+opid: PropertyActions_archiveProperty
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Archive a property
+---
+-method:put
+-security
+oauth2: ['properties.manage', 'setup.manage', 'admin']
+path: /inventory/v1/property-actions/id/set-live
+opid: PropertyActions_moveToLive
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Move property to live
+---
+-method:put
+-security
+oauth2: ['properties.manage', 'setup.manage', 'admin']
+path: /inventory/v1/property-actions/id/reset
+opid: PropertyActions_resetPropertyData
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Reset a test property and delete all transactional data
+---
+-method:get
+-security
+oauth2: []
+path: /inventory/v1/types/countries
+opid: Types_supportedCountriesList
+sum: Returns a list of supported countries.
+---
+-method:patch
+-security
+oauth2: ['units.manage', 'setup.manage', 'admin']
+path: /inventory/v1/units/id
+opid: Unit_updateProperties
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Allows to patch unit
+---
+-method:get
+-security
+oauth2: ['units.read', 'setup.read', 'setup.manage', 'admin']
+path: /inventory/v1/units/id
+opid: Unit_getById
+params
+in: path
+name: id
+req: True
+schema
+type: str
+in: query
+name: languages
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+req: False
+in: query
+name: expand
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+property
+unitGroup
+connectedUnits
+type: str
+req: False
+sum: Get a unit
+---
+-method:delete
+-security
+oauth2: ['units.delete', 'setup.manage', 'admin']
+path: /inventory/v1/units/id
+opid: Unit_deleteById
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Delete a unit
+---
+-method:patch
+-security
+oauth2: ['units.manage', 'setup.manage', 'admin']
+path: /inventory/v1/units
+opid: Unit_updateUnitsAttributes
+params
+in: query
+name: unitIds
+req: True
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+sum: Allows to patch one or more units
+---
+-method:get
+-security
+oauth2: ['units.read', 'setup.read', 'setup.manage', 'admin']
+path: /inventory/v1/units
+opid: Unit_listUnits
+params
+in: query
+name: propertyId
+schema
+type: str
+req: False
+in: query
+name: unitGroupId
+schema
+type: str
+req: False
+in: query
+name: unitGroupIds
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+req: False
+in: query
+name: unitAttributeIds
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+req: False
+in: query
+name: isOccupied
+schema
+type: bool
+req: False
+in: query
+name: maintenanceType
+schema
+type: str
+enum
+OutOfService
+OutOfOrder
+OutOfInventory
+req: False
+in: query
+name: condition
+schema
+type: str
+enum
+Clean
+CleanToBeInspected
+Dirty
+req: False
+in: query
+name: textSearch
+schema
+type: str
+req: False
+in: query
+name: pageNumber
+schema
+type: int
+def: 1
+req: False
+in: query
+name: pageSize
+schema
+type: int
+format: int64
+req: False
+in: query
+name: expand
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+property
+unitGroup
+connectedUnits
+type: str
+req: False
+sum: Get a units list
+---
+-method:post
+-security
+oauth2: ['units.create', 'setup.manage', 'admin']
+path: /inventory/v1/units
+opid: Unit_create
+params
+in: header
+name: Idempotency-Key
+schema
+type: str
+req: False
+sum: Create a unit
+ref: #/components/schemas/CreateUnitModel
+---
+-method:get
+-security
+oauth2: ['units.read', 'setup.read', 'setup.manage', 'admin']
+path: /inventory/v1/units/count
+opid: Unit_getCount
+params
+in: query
+name: propertyId
+schema
+type: str
+req: False
+in: query
+name: unitGroupId
+schema
+type: str
+req: False
+in: query
+name: unitGroupIds
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+req: False
+in: query
+name: unitAttributeIds
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+req: False
+in: query
+name: isOccupied
+schema
+type: bool
+req: False
+in: query
+name: maintenanceType
+schema
+type: str
+enum
+OutOfService
+OutOfOrder
+OutOfInventory
+req: False
+in: query
+name: condition
+schema
+type: str
+enum
+Clean
+CleanToBeInspected
+Dirty
+req: False
+in: query
+name: textSearch
+schema
+type: str
+req: False
+sum: Returns number of units
+---
+-method:post
+-security
+oauth2: ['units.create', 'setup.manage', 'admin']
+path: /inventory/v1/units/bulk
+opid: Unit_bulkCreateUnits
+params
+in: header
+name: Idempotency-Key
+schema
+type: str
+req: False
+sum: Create multiple units
+ref: #/components/schemas/BulkCreateUnitsModel
+---
+-method:get
+-security
+oauth2: ['unitattributes.read', 'setup.read', 'setup.manage', 'admin']
+path: /inventory/v1/unit-attributes/id
+opid: UnitAttribute_getById
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Get unit attribute by id
+---
+-method:patch
+-security
+oauth2: ['unitattributes.manage', 'setup.manage', 'admin']
+path: /inventory/v1/unit-attributes/id
+opid: UnitAttribute_modifyDescription
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Allows to modify unit attribute
+---
+-method:delete
+-security
+oauth2: ['unitattributes.delete', 'setup.manage', 'admin']
+path: /inventory/v1/unit-attributes/id
+opid: UnitAttribute_deleteById
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Deletes unit attribute
+---
+-method:get
+-security
+oauth2: ['unitattributes.read', 'setup.read', 'setup.manage', 'admin']
+path: /inventory/v1/unit-attributes
+opid: UnitAttribute_listAttributes
+params
+in: query
+name: pageNumber
+schema
+type: int
+def: 1
+req: False
+in: query
+name: pageSize
+schema
+type: int
+format: int64
+req: False
+sum: Get unit attribute list
+---
+-method:post
+-security
+oauth2: ['unitattributes.create', 'setup.manage', 'admin']
+path: /inventory/v1/unit-attributes
+opid: UnitAttribute_createNewAttribute
+params
+in: header
+name: Idempotency-Key
+schema
+type: str
+req: False
+sum: Create a unit attribute
+ref: #/components/schemas/CreateUnitAttributeDefinitionModel
+---
+-method:post
+-security
+oauth2: ['unitgroups.create', 'setup.manage', 'admin']
+path: /inventory/v1/unit-groups
+opid: UnitGroup_createNewGroup
+params
+in: header
+name: Idempotency-Key
+schema
+type: str
+req: False
+sum: Create a unit group
+ref: #/components/schemas/CreateUnitGroupModel
+---
+-method:get
+-security
+oauth2: ['unitgroups.read', 'setup.read', 'setup.manage', 'admin']
+path: /inventory/v1/unit-groups
+opid: UnitGroup_getAll
+params
+in: query
+name: propertyId
+schema
+type: str
+req: False
+in: query
+name: unitGroupTypes
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+BedRoom
+MeetingRoom
+EventSpace
+ParkingLot
+Other
+type: str
+req: False
+in: query
+name: pageNumber
+schema
+type: int
+def: 1
+req: False
+in: query
+name: pageSize
+schema
+type: int
+format: int64
+req: False
+in: query
+name: expand
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+property
+connectedUnitGroups
+type: str
+req: False
+sum: Get all unit groups, or all unit groups for a property
+---
+-method:get
+-security
+oauth2: ['unitgroups.read', 'setup.read', 'setup.manage', 'admin']
+path: /inventory/v1/unit-groups/count
+opid: UnitGroup_getCount
+params
+in: query
+name: propertyId
+schema
+type: str
+req: False
+in: query
+name: unitGroupTypes
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+BedRoom
+MeetingRoom
+EventSpace
+ParkingLot
+Other
+type: str
+req: False
+sum: Returns number of unit groups
+---
+-method:get
+-security
+oauth2: ['unitgroups.read', 'setup.read', 'setup.manage', 'admin']
+path: /inventory/v1/unit-groups/id
+opid: UnitGroup_getById
+params
+in: path
+name: id
+req: True
+schema
+type: str
+in: query
+name: languages
+style: form
+explode: False
+schema
+type: arr
+items
+type: str
+req: False
+in: query
+name: expand
+style: form
+explode: False
+schema
+type: arr
+items
+enum
+property
+connectedUnitGroups
+type: str
+req: False
+sum: Get a unit group
+---
+-method:put
+-security
+oauth2: ['unitgroups.manage', 'setup.manage', 'admin']
+path: /inventory/v1/unit-groups/id
+opid: UnitGroup_updateGroup
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Replace a unit group
+ref: #/components/schemas/ReplaceUnitGroupModel
+---
+-method:delete
+-security
+oauth2: ['unitgroups.delete', 'setup.manage', 'admin']
+path: /inventory/v1/unit-groups/id
+opid: UnitGroup_deleteById
+params
+in: path
+name: id
+req: True
+schema
+type: str
+sum: Delete a unit group
+---

@@ -1,0 +1,358 @@
+{
+    "QueryUseCaseIds": {
+        "name": "useCaseIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryCdrArrangementIds": {
+        "name": "cdrArrangementIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryConsentIds": {
+        "name": "consentIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryConsumerIds": {
+        "name": "consumerIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryAccountIds": {
+        "name": "accountIds",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryDataHolderBrandIds": {
+        "name": "dataHolderBrandIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryAccountIsOwned": {
+        "name": "isOwned",
+        "in": "query",
+        "schema": {
+            "type": "bool"
+        }
+    },
+    "QueryAccountOpenStatus": {
+        "name": "openStatus",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "str",
+            "enum": [
+                "OPEN",
+                "CLOSED"
+            ]
+        }
+    },
+    "QueryProductCategory": {
+        "name": "productCategories",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str",
+                "enum": [
+                    "BUSINESS_LOANS",
+                    "CRED_AND_CHRG_CARDS",
+                    "LEASES",
+                    "MARGIN_LOANS",
+                    "OVERDRAFTS",
+                    "PERS_LOANS",
+                    "REGULATED_TRUST_ACCOUNTS",
+                    "RESIDENTIAL_MORTGAGES",
+                    "TERM_DEPOSITS",
+                    "TRADE_FINANCE",
+                    "TRAVEL_CARDS",
+                    "TRANS_AND_SAVINGS_ACCOUNTS"
+                ]
+            }
+        }
+    },
+    "QueryPage": {
+        "name": "page",
+        "in": "query",
+        "schema": {
+            "type": "int",
+            "format": "int32",
+            "def": 1,
+            "min": 1
+        }
+    },
+    "QueryPageSize": {
+        "name": "pageSize",
+        "in": "query",
+        "schema": {
+            "type": "int",
+            "format": "int32",
+            "def": 25,
+            "min": 1
+        }
+    },
+    "HeaderConsumerAuthDate": {
+        "name": "Adatree-Consumer-Auth-Date",
+        "in": "header",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "HeaderConsumerIpAddress": {
+        "name": "Adatree-Consumer-Ip-Address",
+        "in": "header",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "HeaderUserAgent": {
+        "name": "Adatree-Consumer-User-Agent",
+        "in": "header",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "QueryTransactionTypes": {
+        "name": "types",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryTransactionStatuses": {
+        "name": "statuses",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryTransactionMinimumAmount": {
+        "name": "minimumAmount",
+        "in": "query",
+        "schema": {
+            "type": "num"
+        }
+    },
+    "QueryTransactionMaximumAmount": {
+        "name": "maximumAmount",
+        "in": "query",
+        "schema": {
+            "type": "num"
+        }
+    },
+    "QueryTransactionOldestRetrievalTime": {
+        "name": "oldestRetrievalTime",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "QueryTransactionNewestRetrievalTime": {
+        "name": "newestRetrievalTime",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "QueryTransactionOldestTime": {
+        "name": "oldestTime",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "QueryTransactionNewestTime": {
+        "name": "newestTime",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "QueryPayeeTypes": {
+        "name": "types",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryPayeeIds": {
+        "name": "payeeIds",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryProductIds": {
+        "name": "productIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryCustomerUTypes": {
+        "name": "customerUTypes",
+        "in": "query",
+        "req": false,
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str",
+                "enum": [
+                    "person",
+                    "organisation"
+                ]
+            }
+        }
+    },
+    "QueryPlanIds": {
+        "name": "planIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryPlanTypes": {
+        "name": "planTypes",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str",
+                "enum": [
+                    "STANDING",
+                    "MARKET",
+                    "REGULATED"
+                ]
+            }
+        }
+    },
+    "QueryPlanFuelTypes": {
+        "name": "fuelTypes",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str",
+                "enum": [
+                    "ELECTRICITY",
+                    "GAS",
+                    "DUAL"
+                ]
+            }
+        }
+    },
+    "QueryPlanEffective": {
+        "name": "effective",
+        "in": "query",
+        "schema": {
+            "type": "str",
+            "enum": [
+                "CURRENT",
+                "FUTURE"
+            ]
+        }
+    },
+    "QueryPlanUpdatedSince": {
+        "name": "updatedSince",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "QueryInvoiceIds": {
+        "name": "invoiceIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryBillingIds": {
+        "name": "billingIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryServicePointIds": {
+        "name": "servicePointIds",
+        "in": "query",
+        "schema": {
+            "type": "array",
+            "items": {
+                "type": "str"
+            }
+        }
+    },
+    "QueryOldestDate": {
+        "name": "oldestDate",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        }
+    },
+    "QueryNewestDate": {
+        "name": "newestDate",
+        "in": "query",
+        "schema": {
+            "type": "str"
+        }
+    }
+}

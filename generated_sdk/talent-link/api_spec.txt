@@ -1,0 +1,3626 @@
+##IMPORTANT: base_url:https://apiproxy.shared.lumessetalentlink.com/tlk/rest
+---
+##SECURITY SCHEMES
+-access-token
+type: apiKey
+name: access-token
+in: header
+-apiKey
+type: apiKey
+name: api_key
+in: query
+-password
+type: apiKey
+name: password
+in: header
+-username
+type: apiKey
+name: username
+in: header
+---
+##ENDPOINTS
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /advertisement/generate-token
+opid: AdvertisementsApi_generateToken
+sum: Allows to generate token to preview the advert which is not yet published
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /advertisement/postings/jobNumber
+opid: AdvertisementsApi_getAdvertsForRequisition
+params
+name: jobNumber
+in: path
+req: True
+schema
+type: str
+sum: Allows to fetch details of adverts created for a given requisition
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /agency
+opid: ContractApi_listAgencies
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: agenciesfirst 10, after 0, sortBy id, orderBy ASC, where agencyId_gt 0  agencyId
+sum: List of agencies
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /application
+opid: ApplicationApi_listApplications
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: applicationsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of applications
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /application/available-statuses
+opid: ApplicationApi_getStatuses
+params
+name: langCode
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+sum: retrieves application statuses
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /application/status
+opid: ApplicationApi_updateStatusById
+sum: Updates application status
+ref: #ApplicationsStatusDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /application/applicationId/update-application-context
+opid: ApplicationApi_generateJwtToken
+params
+name: applicationId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Generates JWT token to be used in Apply API for updating an existing general application in TLK
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /assessment-provider/results-template/systemName
+opid: AssessmentProviderApi_getResultsTemplate
+params
+name: systemName
+in: path
+req: True
+schema
+type: str
+name: showLocalizedValue
+in: query
+req: False
+schema
+type: bool
+name: localizedValueLangCode
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+sum: Method returns the structure of a form to be used for uploading results
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /assessment-provider/submit-report
+opid: AssessmentProviderApi_submitReport
+sum: Allows an assessment provider to submit a physical file containing a report of the candidates assessment.
+ref: #SubmitReportRequest
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /assessment-provider/submit-resource
+opid: AssessmentProviderApi_submitResource
+sum: Allows to pass the assessment URL to TalentLink
+ref: #SubmitResourceRequest
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /assessment-provider/submit-results
+opid: AssessmentProviderApi_submitResultsForm
+sum: Allows an assessment provider to submit a structured document form containing results.
+ref: #SubmitResultsRequest
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /assessment-provider/submit-status
+opid: AssessmentProviderApi_updateAssessmentStatus
+sum: Allows an assessment provider to update the status of a candidates assessment  selection step.
+ref: #SubmitStatusRequest
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /campaign/type
+opid: CampaignApi_assignCampaignTypesToCandidates
+sum: Assign campaign types to candidates
+ref: #CampaignTypeAssignmentDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate
+opid: CandidateApi_listCandidates
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: candidatesfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of candidates
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate
+opid: CandidateApi_createCandidateRecord
+sum: Creates Candidate
+ref: #BasicCandidateDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/application/score
+opid: CandidateApi_updateApplicationScore
+sum: Update Candidate Application Score
+ref: #UpdateApplicationScoreDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/archive/mark
+opid: CandidateApi_markForArchiving
+sum: Mark candidates for archiving
+ref: #CandidateListDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/archive/unmark
+opid: CandidateApi_unmarkFromArchiving
+sum: Unmark candidates from archiving
+ref: #CandidateListDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/attachment/documentId
+opid: CandidateApi_downloadAttachment
+params
+name: documentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Download candidate attachment file
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/consent
+opid: CandidateApi_getConsents
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: consents first 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+sum: List of consents
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/document/documentId
+opid: CandidateApi_downloadDocument
+params
+name: documentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Download candidate document
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/email-document/attachment/attachmentId
+opid: CandidateApi_getCompleteEmailDocument
+params
+name: attachmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Fetch complete email documents base64
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/email-document/documentId
+opid: CandidateApi_getEmailDocumentDetails
+params
+name: documentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Get details about candidate email document for provided ID
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/form-document/documentId
+opid: CandidateApi_getDocumentAnswers
+params
+name: documentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Get answers from candidate documents
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/structured-document/documentId
+opid: CandidateApi_getDocumentAnswerById
+params
+name: documentId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: showLocalizedValues
+in: query
+req: False
+schema
+type: bool
+name: langCode
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+sum: Get document with answer for specified id
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/summary/templateType
+opid: CandidateApi_getSummaryStructure
+params
+name: templateType
+in: path
+req: True
+schema
+type: str
+name: localizedValueLangCode
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+name: showLocalizedValue
+in: query
+req: False
+schema
+type: bool
+sum: Fetch Candidate summary structure for a given template type or candidate type
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/candidateId
+opid: CandidateApi_removeById
+params
+name: candidateId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Delete candidate
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/candidateId/consent
+opid: CandidateApi_updateConsent
+params
+name: candidateId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update the candidate consent
+ref: #UpdateConsentDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/candidateId/linktojob
+opid: CandidateApi_linkToJob
+params
+name: candidateId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Link candidate to one or more jobs
+ref: #LinkToJobsDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/candidateId/referral/referralId
+opid: CandidateApi_updateReferralInfo
+params
+name: candidateId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: referralId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update Referral Info
+ref: #ReferrerDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/candidateId/summary
+opid: CandidateApi_getSummaryById
+params
+name: candidateId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: langCode
+in: query
+req: False
+schema
+type: str
+sum: Fetch candidate summary for a given Candidate.
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/candidateId/summary
+opid: CandidateApi_updateSummary
+params
+name: candidateId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update Candidate Summary
+ref: #AnsweredDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/candidateId/summary/definition
+opid: CandidateApi_getEmptySummaryDefinition
+params
+name: candidateId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Fetch empty Candidate Summary structure for existing candidate. Useful for updating candidate
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/id/tag
+opid: CandidateApi_addTagToCandidate
+params
+name: id
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Add tag to candidate
+ref: #CandidateTagAssignmentDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/id/tag/tagId
+opid: CandidateApi_removeTag
+params
+name: id
+in: path
+req: True
+schema
+type: int
+format: int64
+name: tagId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Remove tag from candidate
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidate/id/upload/document
+opid: CandidateApi_uploadDocument
+params
+name: id
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Upload candidate document
+ref: #CandidateDocumentDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /candidatepool
+opid: CandidatePools_getList
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: candidatePoolsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: Returns the list of shared candidate pools available to the user
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+path: /candidatepool
+opid: CandidatePools_createNewShared
+sum: Method to create a new, shared Candidate Pool
+ref: #CandidatePoolCreationDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+path: /candidatepool/poolId
+opid: CandidatePools_updateExistingPool
+params
+name: poolId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: allows to update or delete existing pool
+ref: #CandidatePoolCreationDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract
+opid: ContractApi_listContracts
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: contractsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of contracts
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract
+opid: ContractApi_createNewContract
+sum: Creates a new contract
+ref: #BasicContractDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract/rateset
+opid: ContractApi_listRateSets
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: ratesFormulasfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of rate formula set
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract/contractId
+opid: ContractApi_deleteContractExtension
+params
+name: contractId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Delete a Contract Extension
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract/contractId/extension
+opid: ContractApi_createExtension
+params
+name: contractId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Create a new Contract Extension
+ref: #BasicContractDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract/contractId/extension
+opid: ContractApi_createExtension
+params
+name: contractId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Create a new Contract Extension based on contract values, using PATCH logic provide only elements that are changing
+ref: #BasicContractDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract/contractId/update
+opid: ContractApi_updateContractEntireStructure
+params
+name: contractId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update existing contract creates new contract version - entire structure is required
+ref: #BasicContractDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract/contractId/update
+opid: ContractApi_updateContractUsingPatch
+params
+name: contractId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update contract using PATCH logic provide only elements that are changing
+ref: #BasicContractDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract/extensionId/extension/update
+opid: ContractApi_updateExtension
+params
+name: extensionId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update existing extension creates new extension version - entire structure is required
+ref: #BasicContractDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /contract/extensionId/extension/update
+opid: ContractApi_updateExtensionUsingPatch
+params
+name: extensionId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update extension using PATCH logic provide only elements that are changing
+ref: #BasicContractDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department
+opid: DepartmentApi_getList
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: departmentsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of departments
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department
+opid: DepartmentApi_createNewDepartment
+sum: Creates a new department
+ref: #BasicDepartmentDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/departmentId
+opid: DepartmentApi_updateDepartment
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Updates an existing department
+ref: #BasicDepartmentDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/departmentId
+opid: DepartmentApi_deleteDepartmentById
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Deletes a department with the given id
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/departmentId/activate
+opid: DepartmentApi_activateDepartmentById
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Activates a department with the given id
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/departmentId/contractorcontract/config
+opid: ContractApi_getTemporaryContractConfig
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: userType
+in: query
+req: True
+schema
+type: str
+enum
+ADVANCED
+MSS
+CANDIDATE
+sum: Fetch configuration of the Temporary contract
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/departmentId/deactivate
+opid: DepartmentApi_deactivateDepartment
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Deactivates a department with the given id
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/departmentId/job-template/config
+opid: PersonalJobTemplateApi_getConfiguration
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: recruitmentContext
+in: query
+req: False
+schema
+type: str
+enum
+CONTRACTOR
+PERMANENT
+name: userType
+in: query
+req: False
+schema
+type: str
+enum
+ADVANCED
+MSS
+name: language
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+sum: Fetch Job template configuration for a given Department.
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/departmentId/move
+opid: DepartmentApi_moveDepartmentToNewParent
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Moves a department with the given id to another parent with a destination id
+ref: #NewDepartmentParentIdDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/departmentId/permanentcontract/config
+opid: ContractApi_getPermanentContractConfig
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: userType
+in: query
+req: True
+schema
+type: str
+enum
+ADVANCED
+MSS
+CANDIDATE
+sum: Fetch configuration of the Permanent contract
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /department/userId/job-template
+opid: PersonalJobTemplateApi_assignOrUpdateJobTemplate
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Assign or Update a job template for a given User.
+ref: #PersonalJobTemplateBasicDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+path: /internal-message
+opid: InternalMessageApi_getMessageList
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: internalMessagesfirst 10, after 0, sortBy id, orderBy ASC, where receiverUser_eq 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of internal messages
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+path: /internal-message
+opid: InternalMessageApi_sendNewMessage
+sum: Send new message
+ref: #SendInternalMessageRequest
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+path: /internal-message/archive
+opid: InternalMessageApi_archiveMessageById
+params
+name: internalMessageIds
+in: query
+req: True
+explode: True
+schema
+type: arr
+items
+type: int
+format: int64
+sum: Archive internal message
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /interview/location
+opid: InterviewLocationApi_getList
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: locationsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+sum: List of interview locations
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /interview/location
+opid: InterviewLocationApi_createNewLocation
+sum: Creates Location
+ref: #InterviewLocationBasicDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /interview/location/timezones
+opid: InterviewLocationApi_listTimezones
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: timezones where  name_like Europe, name_notLike Europe/Warsaw   name
+sum: List of available timezones
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /interview/location/id
+opid: InterviewLocationApi_updateById
+params
+name: id
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update Location
+ref: #InterviewLocationBasicDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /interview/location/id
+opid: InterviewLocationApi_deleteById
+params
+name: id
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Delete location
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /location
+opid: LocationApi_listLocations
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: locationsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of Locations
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /location
+opid: LocationApi_createLocation
+sum: Creates Location
+ref: #LocationBasicDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /location/id
+opid: LocationApi_updateLocationRequest
+params
+name: id
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Updates Location
+ref: #LocationDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /location/id
+opid: LocationApi_removeById
+params
+name: id
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Delete location
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov
+opid: LovApi_getStandardFields
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: lovsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of standard fields
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/configurable
+opid: LovApiConfigurableLov_createConfigurableFieldWithEntries
+sum: Allows to create a new Configurable Fields with entries
+ref: #CreateLovWithDataTypeDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/configurable/lovId
+opid: LovApiConfigurableLov_updateField
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to update a Configurable Field.
+ref: #BasicLovDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/configurable/lovId/deactivate
+opid: LovApiConfigurableLov_deactivateConfigField
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to deactivate entire Configurable Field with entries.
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/configurable/lovId/entry
+opid: LovApiConfigurableLov_deleteEntry
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: entriesIds
+in: query
+req: False
+explode: True
+schema
+type: arr
+items
+type: int
+format: int64
+sum: Allows to delete one or more entries from an existing Configurable Field.
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/configurable/lovId/properties
+opid: LovApiConfigurableLov_updateProperties
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to update properties of the Configurable Field
+ref: #UpdateLovPropertiesDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/configurable/parentId/entry
+opid: LovApiConfigurableLov_createEntry
+params
+name: parentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to create a new Configurable Field entries
+ref: #CreateLovEntriesWithDataValueDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/configurable/parentId/entry
+opid: LovApiConfigurableLov_updateEntries
+params
+name: parentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to update one or more entries in an Configurable LOV
+ref: #UpdateLovEntriesWithDataValueDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/free-form-field
+opid: LovApiFreeFormFieldLov_createNewLovWithEntries
+sum: Allows to create a new Free Form Field with entries
+ref: #CreateLovWithEntriesWithDataFormatAndRequiredDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/free-form-field/lovId
+opid: LovApiFreeFormFieldLov_updateEntry
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to update a Free Form Field LOV
+ref: #BasicLovDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/free-form-field/lovId/deactivate
+opid: LovApiFreeFormFieldLov_deactivateField
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to deactivate Free Form Field
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/free-form-field/lovId/entry
+opid: LovApiFreeFormFieldLov_deleteEntry
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: entriesIds
+in: query
+req: False
+explode: True
+schema
+type: arr
+items
+type: int
+format: int64
+sum: Allows to delete one or more entries from an existing Free Form Field LOV
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/free-form-field/lovId/properties
+opid: LovApiFreeFormFieldLov_updateProperties
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to update properties of the Free Form Field
+ref: #UpdateLovPropertiesDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/free-form-field/parentId/entry
+opid: LovApiFreeFormFieldLov_createNewEntry
+params
+name: parentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to create a new Free Form Field entries.
+ref: #CreateLovEntriesWithDataFormatAndRequiredDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/free-form-field/parentId/entry
+opid: LovApiFreeFormFieldLov_updateEntries
+params
+name: parentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to update one or more entries in an Free Form Field
+ref: #UpdateLovEntriesWithDataFormatAndRequiredDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/standard-fields
+opid: LovApiStandardFields_createNewEntry
+sum: Allows to create a new entry within an existing Standard Field
+ref: #CreateLovEntryDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/standard-fields
+opid: LovApiStandardFields_updateEntry
+sum: Allows to update an entry within a Standard Field using PATCH logic.
+ref: #UpdateLovLabelsDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/standard-fields/deactivate
+opid: LovApiStandardFields_deactivateEntry
+sum: Method to deactivate an existing entry in the Standard Field.
+ref: #DeactivateLovDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/user-data
+opid: LovApiUserData_createNewField
+sum: Allows to create a new User Data LOV with entries
+ref: #CreateLovDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/user-data/lovId
+opid: LovApiUserData_deleteEntireField
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to delete entire User Data LOV field and its entries
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/user-data/lovId
+opid: LovApiUserData_updateUserDataLov
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to update an User Data LOV
+ref: #BasicLovDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/user-data/lovId/entry
+opid: LovApiUserData_deleteEntry
+params
+name: lovId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: entriesIds
+in: query
+req: False
+explode: True
+schema
+type: arr
+items
+type: int
+format: int64
+sum: Allows to delete one or more entries from an existing User Data LOV.
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/user-data/parentId/entry
+opid: LovApiUserData_createNewEntry
+params
+name: parentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to create a new User Data LOV entries
+ref: #CreateLovEntriesDto
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /lov/user-data/parentId/entry
+opid: LovApiUserData_updateUserEntries
+params
+name: parentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to update one or more entries in an User Data LOV.
+ref: #UpdateLovEntriesDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /passwordRule
+opid: PasswordRuleApi_listPasswordRules
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: passwordRulefirst 7, after 1  backOfficeuserHasToChangePassword
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of password rules
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /position
+opid: PositionApi_listPositions
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: positionsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of positions
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /position
+opid: PositionApi_createPositionRequest
+sum: Creates Position
+ref: #OpeningBasicDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /position/structure/departmentId
+opid: PositionApi_getStructureForDepartment
+params
+name: departmentId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: recruitmentContext
+in: query
+req: False
+schema
+type: str
+enum
+CONTRACTOR
+PERMANENT
+name: userType
+in: query
+req: False
+schema
+type: str
+enum
+ADVANCED
+MSS
+name: language
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+sum: Position structure for a given department
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /position/openingId
+opid: PositionApi_updateData
+params
+name: openingId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update opening data
+ref: #OpeningBasicDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /position/positionId/attachDocument
+opid: PositionApi_attachDocument
+params
+name: positionId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Attach a file to the existing Position
+ref: #AttachedFileDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /position/positionId/copy
+opid: PositionApi_copyPosition
+params
+name: positionId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Copy Position
+ref: #NewOpeningNameDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert
+opid: PublishedAdvertApi_listPostingTargets
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: publishedAdvertsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of posting targets
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert/activechannel
+opid: PublishedAdvertApi_listActiveChannels
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: sourcingChannelsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of active posting channels
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert/attachment/documentId
+opid: PublishedAdvertApi_downloadAdvertAttachment
+params
+name: documentId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Download advert attachment file
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert/criteria
+opid: PublishedAdvertApi_getCriteria
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: publishedAdvertsCriteria categories label value
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: Search criteria
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert/multiPoster/updateStatus
+opid: PublishedAdvertApi_submitJobStatusUpdate
+sum: Allow Multi-posters to submit Client User selected end job boards and its up-to-date status update for a specific posting id
+ref: #PostingStatusUpdateDTO
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert/preview
+opid: PublishedAdvertApi_getAdvertByToken
+params
+name: token
+in: query
+req: True
+schema
+type: str
+name: langCode
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+sum: Fetch advert by token
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert/sorting-columns
+opid: PublishedAdvertApi_getColumnNames
+sum: list of String column names.
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert/unpost
+opid: PublishedAdvertApi_unpostAdverts
+sum: Unpost one or more adverts
+ref: #UnpostAdvertDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /publishedadvert/publishedAdvertId/updateJobDescriptionUrl
+opid: PublishedAdvertApi_setJobDescriptionUrl
+params
+name: publishedAdvertId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Sets external job description url on published advert
+ref: #JobDescriptionUrlDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues
+opid: QueuesApi_getQueueList
+sum: Retrieve list of all queues available for the user
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/application/queueName/oldest-element
+opid: QueuesApiApplication_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: showCandidateData
+in: query
+req: False
+schema
+type: bool
+sum: Retrieves the oldest element from the Application queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/application/queueName/elementId
+opid: QueuesApiApplication_getElementById
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: showCandidateData
+in: query
+req: False
+schema
+type: bool
+sum: Retrieves any element from the Application queue based on the elementID
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/archived-candidate/queueName/oldest-element
+opid: QueuesApiArchivedCandidate_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Retrieves the oldest element from the Archived Candidates queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/archived-candidate/queueName/elementId
+opid: QueuesApiArchivedCandidate_getElementById
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Retrieves any element from the Archived Candidates queue based on the elementID
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/candidate/queueName/oldest-element
+opid: QueuesApiCandidates_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Retrieve oldest element of the  Candidate queue.
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/candidate/queueName/elementId
+opid: QueuesApiCandidates_getElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Retrieves any element from the Candidate queue based on the elementID
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/contract/queueName/oldest-element
+opid: QueuesApiContract_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Retrieves the oldest element from the Contract queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/contract/queueName/elementId
+opid: QueuesApiContract_getElementById
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Retrieves any Contract element from the queue based on the elementID.
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/element/oldest-element
+opid: QueuesApi_removeOldestElement
+params
+name: queueName
+in: query
+req: True
+schema
+type: str
+sum: Global method allowing to remove oldest element from any queue type.
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/element/idInQueue
+opid: QueuesApi_removeElementById
+params
+name: queueName
+in: query
+req: True
+schema
+type: str
+name: idInQueue
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Global method allowing to remove any element from any queue type, out of sequence.
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/export
+opid: QueuesApi_exportQueueSettings
+params
+name: queueName
+in: query
+req: True
+schema
+type: str
+sum: Method to export the Queue settings into a file
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/externalsystemrequest/queueName/oldest-element
+opid: QueuesApiExternalSystemRequest_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: langCode
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+name: showBaseValue
+in: query
+req: False
+schema
+type: bool
+sum: Retrieves the oldest element from the External Systems Request queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/externalsystemrequest/queueName/elementId
+opid: QueuesApiExternalSystemRequest_getElementById
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: langCode
+in: query
+req: False
+schema
+type: str
+enum
+AR
+AT
+BG
+BR
+CA
+CH
+CN
+CS
+CY
+DE
+DN
+EL
+US
+EN
+ET
+FL
+FN
+FR
+GL
+HR
+HU
+ID
+IS
+IT
+JA
+KO
+LT
+LV
+MX
+MY
+NL
+NW
+PL
+PT
+RO
+RU
+SK
+SL
+SP
+SR
+SW
+TH
+TR
+TW
+UA
+UK
+VI
+WA
+XX
+name: showBaseValue
+in: query
+req: False
+schema
+type: bool
+sum: Retrieves any External System Request element from the queue based on the elementID
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/import
+opid: QueuesApi_importQueueSettings
+sum: Allows to import Queue settings from the file
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/position/queueName/oldest-element
+opid: QueuesApiPositionRequisitions_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Retrieves the oldest element from the Position queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/position/queueName/elementId
+opid: QueuesApiPositionRequisitions_getElementById
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Retrieves any element from the Position / Requisition queue based on the elementID
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/posting-target/queueName/oldest-element
+opid: QueuesApiPostingAdverts_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Retrieves the oldest element from the Advert queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/posting-target/queueName/elementId
+opid: QueuesApiPostingAdverts_getElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Retrieves any element from the Advert based on the elementID
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/selectionstep/queueName/oldest-element
+opid: QueuesApiSelectionStep_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Retrieves the oldest element from the Selection Step queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/selectionstep/queueName/elementId
+opid: QueuesApiSelectionStep_getElementById
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Retrieves any element from the Selection Step queue based on the elementID
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/timesheet/queueName/oldest-element
+opid: QueuesApiTimesheets_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Retrieves the oldest element from the Timesheets queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/timesheet/queueName/elementId
+opid: QueuesApiTimesheets_getElementById
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Retrieves any element from the Timesheet queue based on the elementID
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/user/queueName/oldest-element
+opid: QueuesApiUsers_getOldestElement
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Retrieves the oldest element from the Users queue
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/user/queueName/elementId
+opid: QueuesApiUsers_getElementById
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+name: elementId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: retrieves any element from the Users queue based on the elementID
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /queues/queueName
+opid: QueuesApi_deleteQueue
+params
+name: queueName
+in: path
+req: True
+schema
+type: str
+sum: Allows to delete any queue which is available for the user
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /role
+opid: RoleApi_listRoles
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: rolesfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of roles
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /role/roleId/tags
+opid: RoleApi_addRoleTags
+params
+name: roleId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Add tags to a role
+ref: #RoleTagsDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /role/roleId/tags
+opid: RoleApi_removeTags
+params
+name: roleId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Remove tags from a role
+ref: #RoleTagsDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /searchagent
+opid: SearchAgentApi_getList
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: searchAgentsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of Search Agent
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /searchagent
+opid: SearchAgentApi_createAgent
+sum: Creates Search Agent
+ref: #SearchAgentDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /searchagent/token
+opid: SearchAgentApi_updateAgent
+params
+name: token
+in: path
+req: True
+schema
+type: str
+sum: Updates an existing search agent
+ref: #SearchAgentDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /searchagent/token
+opid: SearchAgentApi_removeById
+params
+name: token
+in: path
+req: True
+schema
+type: str
+sum: Delete search agent
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /selection-process/application/applicationId/completePrescreening
+opid: SelectionProcessApi_completePrescreening
+params
+name: applicationId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Completes prescreening step
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /selection-process/proceed
+opid: SelectionProcessApi_proceedCandidate
+sum: Proceed candidate
+ref: #ProceedCandidateRequestDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /selection-process/reject
+opid: SelectionProcessApi_rejectCandidate
+sum: Reject candidate
+ref: #RejectCandidateRequestDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+path: /selection-process/rejection-reasons
+opid: SelectionProcessApi_getRejectionReasons
+sum: Allows to fetch the list of Reason of rejection values
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /selection-process/selection-tasks
+opid: SelectionProcessApi_getSelectionTasks
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: selectionTasksfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: Retrieve list  details of selection steps for a given candidate or application
+---
+-method:post
+path: /selection-process/step/stepId/document
+opid: SelectionProcessApi_uploadAttachmentToStep
+params
+name: stepId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Upload attachment to a step in the selection process
+---
+-method:get
+path: /selection-process/step/stepId/documents
+opid: SelectionProcessApi_getStepDocuments
+params
+name: stepId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Retrieve all documents attached to step in selection process
+---
+-method:put
+path: /selection-process/step/stepId/status
+opid: SelectionProcessApi_updateStepStatus
+params
+name: stepId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update the status of a step in selection process
+ref: #SelectionStepStatusUpdateDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /timesheet
+opid: TimesheetApi_getList
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: timeSheetsfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of timesheet
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /timesheet/adjustment-reasons
+opid: TimesheetApi_getAdjustmentReasonsList
+sum: Retrieve the list of Reasons for adjustment required when rejecting the Timesheet
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /timesheet/timesheetId/approve
+opid: TimesheetApi_approveTimesheet
+params
+name: timesheetId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to approve a specific Timesheet
+ref: #TimesheetApproveRequestDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /timesheet/timesheetId/reject
+opid: TimesheetApi_rejectTimesheet
+params
+name: timesheetId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to reject a specific Timesheet
+ref: #TimesheetRejectRequestDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /timesheet/timesheetId/submit
+opid: TimesheetApi_submitTimesheet
+params
+name: timesheetId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Allows to submit a Timesheet for the candidate
+ref: #TimesheetSubmitRequestDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user
+opid: UserApi_getUserList
+params
+name: query
+in: query
+req: True
+schema
+type: str
+def: usersfirst 10, after 0, sortBy id, orderBy ASC, where id_gt 0  id
+name: stream
+in: query
+req: False
+schema
+type: bool
+sum: List of users
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user
+opid: UserApi_createUser
+sum: Creates User
+ref: #CreateUserDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId
+opid: UserApi_removeById
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Delete user
+---
+-method:patch
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId
+opid: UserApi_updateBasicData
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Update basic user data
+ref: #EditUserDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/activate
+opid: UserApi_activateUser
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Activates user
+ref: #ActivateUserDto
+---
+-method:post
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/assignDashboard
+opid: UserApi_assignDashboardToUser
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Assign dashboards to user
+ref: #DashboardAssignmentRequestDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/assignNamedAccessRoles
+opid: UserApi_assignNamedAccessRoles
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Named Access Roles configuration
+ref: #NamedAccessRolesDto
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/availableDashboards
+opid: UserApi_listAvailableDashboards
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: List of available dashboards for given userId
+---
+-method:get
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/availableThemes
+opid: UserApi_getUserAvailableThemes
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+name: departmentId
+in: query
+req: False
+explode: True
+schema
+type: arr
+items
+type: int
+format: int64
+sum: List of available themes for given userId
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/changePassword
+opid: UserApi_updatePassword
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Change user password
+ref: #UserPasswordDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/copyRolesFromAnotherProfile
+opid: UserApi_copyRolesToTargetUser
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Copy user roles to target user
+ref: #SourceUserIdDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/deactivate
+opid: UserApi_deactivateUser
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Deactivates user
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/documentSecurity
+opid: UserApi_configureDocumentSecurity
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Document Security configuration
+ref: #DocumentSecurityConfigDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/documentSecurity
+opid: UserApi_removeDocumentSecurity
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Document Security removal
+ref: #DocumentSecurityGroupIdDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/eventNotification
+opid: UserApi_configureEventNotification
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Event notification configuration
+ref: #BasicEventNotificationConfigurationDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/mailGateway
+opid: UserApi_configureMailGateway
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Mail Gateway configuration
+ref: #BasicMailGatewayConfigurationDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/roles
+opid: UserApi_updateUserRoles
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Roles
+ref: #RoleAssignmentsDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/roles
+opid: UserApi_removeRoles
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: Remove roles
+ref: #RoleAssignmentsDto
+---
+-method:delete
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/roles/bulk
+opid: UserApi_removeUserRolesBulk
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: This method allows to remove all or groups of roles from the user
+ref: #RoleDeletionDto
+---
+-method:put
+-security
+username: []
+password: []
+apiKey: []
+access-token: []
+path: /user/userId/userData
+opid: UserApi_updateUserData
+params
+name: userId
+in: path
+req: True
+schema
+type: int
+format: int64
+sum: User Data configuration
+ref: #EditUserDataDto
+---

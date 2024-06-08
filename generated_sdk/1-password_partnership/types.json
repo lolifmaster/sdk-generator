@@ -1,0 +1,37 @@
+{
+    "CreatePartnerAccountRequest": {
+        "type": "obj",
+        "req": [
+            "customer_account_uid",
+            "account_type",
+            "domain"
+        ],
+        "props": {
+            "customer_account_uid": {
+                "type": "str"
+            },
+            "account_type": {
+                "type": "str"
+            },
+            "domain": {
+                "type": "str"
+            },
+            "ends_at": {
+                "type": "str",
+                "format": "date-time"
+            }
+        }
+    },
+    "UpdatePartnerAccountRequest": {
+        "type": "obj",
+        "req": [
+            "ends_at"
+        ],
+        "props": {
+            "ends_at": {
+                "type": "str",
+                "format": "date-time"
+            }
+        }
+    }
+}

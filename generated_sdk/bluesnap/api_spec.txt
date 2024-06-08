@@ -1,0 +1,405 @@
+##IMPORTANT: base_url:https://sandbox.bluesnap.com/services/2
+---
+##SECURITY SCHEMES
+-sec0
+type: http
+in: header
+name: Authorization
+x-bearer-format: basic
+x-default: QVBJXzE2MTk2MjgyMzU0ODkyMDM5MTMzODc0OkFsdG9pZHMxIQ==
+scheme: basic
+-sec1
+type: apiKey
+name: Authorization
+in: header
+x-default: Basic QVBJXzE0NDQ2NTAyMDMxNDQ5NDA0MjIzNjU6QkxVRTEyMw==
+---
+##SECURITY SCOPES
+sec0: []
+sec1: []
+---
+##ENDPOINTS
+---
+-method:post
+path: /transactions
+opid: Authorization_createTransaction
+sum: Auth Only
+ref: #/components/schemas/AuthorizationCreateTransactionRequest
+---
+-method:put
+path: /transactions
+opid: Reversal_authTransaction
+sum: Auth Reversal
+ref: #/components/schemas/ReversalAuthTransactionRequest
+---
+-method:get
+path: /transactions/transactionId
+opid: Transaction_getById
+params
+name: transactionId
+in: path
+schema
+type: str
+def: 1011582369
+req: True
+sum: Retrieve
+---
+-method:post
+path: /alt-transactions
+opid: Transaction_createSofortTransaction
+sum: Create SEPA DD Transaction
+ref: #/components/schemas/TransactionCreateSofortTransactionRequest
+---
+-method:put
+path: /alt-transactions
+opid: Transaction_updatePaypalTransaction
+sum: Update PayPal Transaction
+ref: #/components/schemas/TransactionUpdatePaypalTransactionRequest
+---
+-method:get
+path: /alt-transactions/transactionId
+opid: Transaction_getSepaDd
+params
+name: transactionId
+in: path
+schema
+type: str
+def: 1014672453
+req: True
+sum: Retrieve SEPA DD Transaction
+---
+-method:get
+path: /alt-transactions/resolve
+opid: Transaction_getSofortTransaction
+params
+name: orderId
+in: query
+req: True
+schema
+type: int
+format: int32
+def: 20922493
+sum: Retrieve Sofort Transaction
+---
+-method:post
+path: /agreements/debit/region/type
+opid: Agreement_createDebitForAusCan
+params
+name: region
+in: path
+schema
+type: str
+def: ca
+req: True
+name: type
+in: path
+schema
+type: str
+def: onetime
+req: True
+name: planid
+in: query
+schema
+type: str
+req: False
+name: overriderecurringchargeamount
+in: query
+schema
+type: str
+req: False
+sum: Create Debit Agreement
+---
+-method:get
+path: /agreements/agreementId
+opid: Agreement_getDebit
+params
+name: agreementId
+in: query
+schema
+type: str
+def: 1065
+req: False
+sum: Get Debit Agreement
+---
+-method:get
+path: /agreements/prenotification/transactionId
+opid: Transaction_getPreNotificationDebitAgreement
+params
+name: transactionId
+in: query
+schema
+type: str
+def: 38943468
+req: False
+sum: Get Pre-Notification Debit Agreement
+---
+-method:get
+path: /alt-transactions/resolveorderIdorderId
+opid: Transaction_getPaypalTransaction
+params
+name: orderId
+in: path
+req: True
+schema
+type: str
+def: 5666625
+sum: Retrieve PayPal Transaction
+---
+-method:post
+path: /batch-transactions
+opid: Transaction_createBatchTransaction
+sum: Create Batch Transaction
+ref: #/components/schemas/TransactionCreateBatchTransactionRequest
+---
+-method:post
+path: /transactions/refund/transactionId
+opid: Transaction_initiateRefund
+params
+name: transactionId
+in: path
+schema
+type: str
+def: 1095710747
+req: True
+sum: Refund
+ref: #/components/schemas/TransactionInitiateRefundRequest
+---
+-method:delete
+path: /transactions/pending-refund/transactionId
+opid: Transaction_cancelPendingRefund
+params
+name: transactionId
+in: path
+schema
+type: str
+def: 1109144995
+req: True
+sum: Cancel Pending Refund
+---
+-method:post
+path: /vaulted-shoppers
+opid: Shopper_createVaultedShopper
+sum: Create Vaulted Shopper
+ref: #/components/schemas/ShopperCreateVaultedShopperRequest
+---
+-method:put
+path: /vaulted-shoppers/vaultedShopperId
+opid: Shopper_updateVaultedShopper
+params
+name: vaultedShopperId
+in: path
+schema
+type: str
+def: 40444721
+req: True
+sum: Update Vaulted Shopper
+ref: #/components/schemas/ShopperUpdateVaultedShopperRequest
+---
+-method:get
+path: /vaulted-shoppers/vaultedShopperId
+opid: Shopper_get
+params
+name: vaultedShopperId
+in: path
+req: True
+schema
+type: str
+def: 20769005
+sum: Retrieve Vaulted Shopper
+---
+-method:delete
+path: /vaulted-shoppers/vaultedShopperId
+opid: Shopper_deleteVaultedShopper
+params
+name: vaultedShopperId
+in: path
+schema
+type: str
+def: 20769005
+req: True
+sum: Delete Vaulted Shopper
+---
+-method:post
+path: /recurring/plans
+opid: Plan_createRecurringPlan
+sum: Create Plan
+ref: #/components/schemas/PlanCreateRecurringPlanRequest
+---
+-method:put
+path: /recurring/plans/planId
+opid: Plan_updateRecurringPlan
+params
+name: planId
+in: path
+req: True
+schema
+type: int
+format: int32
+def: 2111111
+sum: Update Plan
+ref: #/components/schemas/PlanUpdateRecurringPlanRequest
+---
+-method:get
+path: /recurring/plans/planId
+opid: Plan_getSpecific
+params
+name: planId
+in: path
+req: True
+schema
+type: int
+format: int32
+def: 2283845
+sum: Retrieve Specific Plan
+---
+-method:get
+path: /recurring/plansparameters
+opid: Plan_getAll
+params
+name: pagesize
+in: query
+schema
+type: str
+def: 5
+req: False
+name: after
+in: query
+schema
+type: str
+def: 2185254
+req: False
+name: gettotal
+in: query
+schema
+type: bool
+def: True
+req: False
+name: fulldescription
+in: query
+schema
+type: bool
+def: False
+req: False
+sum: Retrieve All Plans
+---
+-method:post
+path: /recurring/subscriptions
+opid: Subscription_createNew
+sum: Create Subscription
+ref: #/components/schemas/SubscriptionCreateNewRequest
+---
+-method:put
+path: /recurring/subscriptions/subscriptionId
+opid: Subscription_updateSubscription
+params
+name: subscriptionId
+in: path
+req: True
+schema
+type: int
+format: int32
+def: 8491543
+sum: Update Subscription
+ref: #/components/schemas/SubscriptionUpdateSubscriptionRequest
+---
+-method:get
+path: /recurring/subscriptions/subscriptionId
+opid: Subscription_getSpecific
+params
+name: subscriptionId
+in: path
+req: True
+schema
+type: int
+format: int32
+def: 8491535
+sum: Retrieve Specific Subscription
+---
+-method:post
+path: /recurring/ondemand
+opid: Subscription_createMerchantManagedSubscription
+sum: Create Merchant-Managed Subscription
+ref: #/components/schemas/SubscriptionCreateMerchantManagedSubscriptionRequest
+---
+-method:post
+path: /recurring/ondemand/subscriptionId
+opid: Subscription_createMerchantManagedCharge
+params
+name: subscriptionId
+in: path
+req: True
+schema
+type: int
+format: int32
+def: 10543419
+sum: Create Merchant-Managed Subscription Charge
+ref: #/components/schemas/SubscriptionCreateMerchantManagedChargeRequest
+---
+-method:get
+path: /recurring/subscriptions/subscriptionId/switch-charge-amount
+opid: Subscription_getSwitchChargeAmount
+params
+name: newplanid
+in: query
+schema
+type: str
+def: 111111
+req: False
+name: newquantity
+in: query
+schema
+type: str
+def: 2
+req: False
+sum: Retrieve Subscription Switch Charge Amount
+---
+-method:put
+path: /transactions/approval
+opid: Transaction_approveMerchantTransaction
+params
+name: transactionid
+in: query
+schema
+type: str
+def: 38612140
+req: False
+name: approvetransaction
+in: query
+schema
+type: bool
+def: True
+req: False
+sum: Merchant Approve Transaction
+---
+-method:post
+path: /vendors
+opid: Vendor_create
+sum: Create Vendor
+ref: #/components/schemas/VendorCreateRequest
+---
+-method:put
+path: /vendors/vendorId
+opid: Vendor_updateVendor
+params
+name: vendorId
+in: path
+req: True
+schema
+type: int
+format: int32
+sum: Update Vendor
+ref: #/components/schemas/VendorUpdateVendorRequest
+---
+-method:get
+path: /vendors/vendorId
+opid: Vendor_getVendor
+params
+name: vendorId
+in: path
+req: True
+schema
+type: int
+format: int32
+def: 837389
+sum: Retrieve Vendor
+---

@@ -1,0 +1,335 @@
+{
+    "Article": {
+        "type": "obj",
+        "props": {
+            "article": {
+                "type": "obj",
+                "props": {
+                    "tags": {
+                        "type": "str"
+                    },
+                    "title": {
+                        "type": "str"
+                    },
+                    "body_markdown": {
+                        "type": "str"
+                    },
+                    "published": {
+                        "type": "bool",
+                        "def": false
+                    },
+                    "series": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "main_image": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "canonical_url": {
+                        "type": "str",
+                        "nullable": true
+                    },
+                    "organization_id": {
+                        "type": "int",
+                        "nullable": true
+                    }
+                }
+            }
+        }
+    },
+    "pageParam": {
+        "in": "query",
+        "name": "page",
+        "req": false,
+        "schema": {
+            "type": "int",
+            "format": "int32",
+            "min": 1,
+            "def": 1
+        }
+    },
+    "perPageParam30to1000": {
+        "in": "query",
+        "name": "per_page",
+        "req": false,
+        "schema": {
+            "type": "int",
+            "format": "int32",
+            "min": 1,
+            "max": 1000,
+            "def": 30
+        }
+    },
+    "SegmentUserIds": {
+        "type": "obj",
+        "props": {
+            "user_ids": {
+                "type": "array",
+                "items": {
+                    "type": "int"
+                },
+                "maxItems": 10000
+            }
+        }
+    },
+    "Billboard": {
+        "type": "obj",
+        "props": {
+            "id": {
+                "type": "int"
+            },
+            "name": {
+                "type": "str"
+            },
+            "body_markdown": {
+                "type": "str"
+            },
+            "approved": {
+                "type": "bool"
+            },
+            "published": {
+                "type": "bool"
+            },
+            "organization_id": {
+                "type": "int",
+                "nullable": true
+            },
+            "creator_id": {
+                "type": "int",
+                "nullable": true
+            },
+            "placement_area": {
+                "type": "str",
+                "enum": [
+                    "sidebar_left",
+                    "sidebar_left_2",
+                    "sidebar_right",
+                    "feed_first",
+                    "feed_second",
+                    "feed_third",
+                    "home_hero",
+                    "post_sidebar",
+                    "post_comments"
+                ]
+            },
+            "tag_list": {
+                "type": "str"
+            },
+            "exclude_article_ids": {
+                "type": "str",
+                "nullable": true
+            },
+            "audience_segment_id": {
+                "type": "int"
+            },
+            "audience_segment_type": {
+                "type": "str",
+                "enum": [
+                    "manual",
+                    "trusted",
+                    "posted",
+                    "no_posts_yet",
+                    "dark_theme",
+                    "light_theme",
+                    "no_experience",
+                    "experience1",
+                    "experience2",
+                    "experience3",
+                    "experience4",
+                    "experience5"
+                ]
+            },
+            "target_geolocations": {
+                "type": "array",
+                "items": {
+                    "type": "str"
+                }
+            },
+            "display_to": {
+                "type": "str",
+                "enum": [
+                    "all",
+                    "logged_in",
+                    "logged_out"
+                ],
+                "def": "all"
+            },
+            "type_of": {
+                "type": "str",
+                "enum": [
+                    "in_house",
+                    "community",
+                    "external"
+                ],
+                "def": "in_house"
+            }
+        },
+        "req": [
+            "name",
+            "body_markdown",
+            "placement_area"
+        ]
+    },
+    "BillboardsCreateNewBillboardRequest": {
+        "type": "obj",
+        "items": {
+            "$ref": "Billboard"
+        }
+    },
+    "BillboardsUpdateByIdRequest": {
+        "type": "obj",
+        "items": "Billboard"
+    },
+    "perPageParam10to1000": {
+        "in": "query",
+        "name": "per_page",
+        "req": false,
+        "schema": {
+            "type": "int",
+            "format": "int32",
+            "min": 1,
+            "max": 1000,
+            "def": 10
+        }
+    },
+    "Organization": {
+        "type": "obj",
+        "props": {
+            "summary": {
+                "type": "str"
+            },
+            "type_of": {
+                "type": "str"
+            },
+            "username": {
+                "type": "str"
+            },
+            "name": {
+                "type": "str"
+            },
+            "twitter_username": {
+                "type": "str"
+            },
+            "github_username": {
+                "type": "str"
+            },
+            "url": {
+                "type": "str"
+            },
+            "location": {
+                "type": "str"
+            },
+            "joined_at": {
+                "type": "str"
+            },
+            "tech_stack": {
+                "type": "str"
+            },
+            "tag_line": {
+                "type": "str",
+                "nullable": true
+            },
+            "story": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "PagesCreateNewPageRequest": {
+        "type": "obj",
+        "props": {
+            "title": {
+                "type": "str"
+            },
+            "slug": {
+                "type": "str"
+            },
+            "body_markdown": {
+                "type": "str"
+            },
+            "body_json": {
+                "type": "str"
+            },
+            "is_top_level_path": {
+                "type": "bool"
+            },
+            "template": {
+                "type": "str",
+                "enum": [
+                    "contained",
+                    "full_within_layout",
+                    "nav_bar_included",
+                    "json"
+                ],
+                "def": "contained"
+            }
+        }
+    },
+    "Page": {
+        "type": "obj",
+        "props": {
+            "title": {
+                "type": "str"
+            },
+            "slug": {
+                "type": "str"
+            },
+            "body_markdown": {
+                "type": "str",
+                "nullable": true
+            },
+            "body_json": {
+                "type": "str",
+                "nullable": true
+            },
+            "is_top_level_path": {
+                "type": "bool"
+            },
+            "social_image": {
+                "type": "obj",
+                "nullable": true
+            },
+            "template": {
+                "type": "str",
+                "enum": [
+                    "contained",
+                    "full_within_layout",
+                    "nav_bar_included",
+                    "json"
+                ],
+                "def": "contained"
+            }
+        },
+        "req": [
+            "title",
+            "slug",
+            "desc",
+            "template"
+        ]
+    },
+    "UserInviteParam": {
+        "type": "obj",
+        "props": {
+            "email": {
+                "type": "str"
+            },
+            "name": {
+                "type": "str",
+                "nullable": true
+            }
+        }
+    },
+    "perPageParam24to1000": {
+        "in": "query",
+        "name": "per_page",
+        "req": false,
+        "schema": {
+            "type": "int",
+            "format": "int32",
+            "min": 1,
+            "max": 1000,
+            "def": 24
+        }
+    }
+}

@@ -1,0 +1,1021 @@
+{
+    "AuthorizationCreateTransactionRequest": {
+        "type": "obj",
+        "props": {
+            "amount": {
+                "type": "num",
+                "def": 11,
+                "format": "float"
+            },
+            "softDescriptor": {
+                "type": "str",
+                "def": "DescTest"
+            },
+            "cardHolderInfo": {
+                "type": "obj",
+                "props": {
+                    "firstName": {
+                        "type": "str",
+                        "def": "test first name"
+                    },
+                    "lastName": {
+                        "type": "str",
+                        "def": "test last name"
+                    },
+                    "zip": {
+                        "type": "str",
+                        "def": "02453"
+                    }
+                }
+            },
+            "currency": {
+                "type": "str",
+                "def": "USD"
+            },
+            "creditCard": {
+                "type": "obj",
+                "props": {
+                    "expirationYear": {
+                        "type": "int",
+                        "def": 2026,
+                        "format": "int32"
+                    },
+                    "securityCode": {
+                        "type": "int",
+                        "def": 837,
+                        "format": "int32"
+                    },
+                    "expirationMonth": {
+                        "type": "str",
+                        "def": "02"
+                    },
+                    "cardNumber": {
+                        "type": "str",
+                        "def": "4263982640269299"
+                    }
+                }
+            },
+            "cardTransactionType": {
+                "type": "str",
+                "def": "AUTH_ONLY"
+            }
+        }
+    },
+    "ReversalAuthTransactionRequest": {
+        "type": "obj",
+        "props": {
+            "cardTransactionType": {
+                "type": "str",
+                "def": "AUTH_REVERSAL"
+            },
+            "transactionId": {
+                "type": "int",
+                "def": 1011671987,
+                "format": "int32"
+            }
+        }
+    },
+    "TransactionCreateSofortTransactionRequest": {
+        "type": "obj",
+        "props": {
+            "ecpTransaction": {
+                "type": "obj",
+                "props": {
+                    "routingNumber": {
+                        "type": "str",
+                        "def": "011075150"
+                    },
+                    "accountType": {
+                        "type": "str",
+                        "def": "CONSUMER_CHECKING"
+                    },
+                    "accountNumber": {
+                        "type": "int",
+                        "def": 4099999992,
+                        "format": "int32"
+                    }
+                }
+            },
+            "amount": {
+                "type": "num",
+                "def": 9.65,
+                "format": "float"
+            },
+            "payerInfo": {
+                "type": "obj",
+                "props": {
+                    "zip": {
+                        "type": "str",
+                        "def": "12345"
+                    },
+                    "firstName": {
+                        "type": "str",
+                        "def": "John"
+                    },
+                    "lastName": {
+                        "type": "str",
+                        "def": "Doe"
+                    },
+                    "phone": {
+                        "type": "str",
+                        "def": "1234567890"
+                    },
+                    "country": {
+                        "type": "str",
+                        "def": "CA"
+                    }
+                }
+            },
+            "softDescriptor": {
+                "type": "str",
+                "def": "ABC COMPANY"
+            },
+            "currency": {
+                "type": "str",
+                "def": "EUR"
+            },
+            "authorizedByShopper": {
+                "type": "bool",
+                "def": true
+            },
+            "becsDirectDebitTransaction": {
+                "type": "obj",
+                "props": {
+                    "bsbNumber": {
+                        "type": "str",
+                        "def": "980201"
+                    },
+                    "accountNumber": {
+                        "type": "str",
+                        "def": "9990000001"
+                    },
+                    "accountName": {
+                        "type": "str",
+                        "def": "Boris Britva"
+                    },
+                    "financialInstitution": {
+                        "type": "str",
+                        "def": "financialInstitution"
+                    },
+                    "branchName": {
+                        "type": "str",
+                        "def": "branchName"
+                    },
+                    "agreementId": {
+                        "type": "int",
+                        "def": 81,
+                        "format": "int32"
+                    }
+                }
+            },
+            "idealTransaction": {
+                "type": "obj",
+                "props": {
+                    "returnUrl": {
+                        "type": "str",
+                        "def": "http://www.returnURL.com"
+                    }
+                }
+            },
+            "localBankTransferTransaction": {
+                "type": "obj",
+                "props": {
+                    "{}": {
+                        "type": "str"
+                    }
+                }
+            },
+            "paypalTransaction": {
+                "type": "obj",
+                "props": {
+                    "cancelUrl": {
+                        "type": "str",
+                        "def": "http://www.cancelURL.com"
+                    },
+                    "returnUrl": {
+                        "type": "str",
+                        "def": "http://www.returnURL.com"
+                    },
+                    "transactionType": {
+                        "type": "str",
+                        "def": "SET_ORDER"
+                    }
+                }
+            },
+            "acssDirectDebitTransaction": {
+                "type": "obj",
+                "props": {
+                    "routingNumber": {
+                        "type": "str",
+                        "def": "001004820"
+                    },
+                    "accountNumber": {
+                        "type": "str",
+                        "def": "9990000001"
+                    },
+                    "accountType": {
+                        "type": "str",
+                        "def": "PERSONAL"
+                    },
+                    "agreementId": {
+                        "type": "int",
+                        "def": 87,
+                        "format": "int32"
+                    }
+                }
+            },
+            "sepaDirectDebitTransaction": {
+                "type": "obj",
+                "props": {
+                    "iban": {
+                        "type": "str",
+                        "def": "DE09100100101234567893"
+                    }
+                }
+            }
+        }
+    },
+    "TransactionUpdatePaypalTransactionRequest": {
+        "type": "obj",
+        "props": {
+            "amount": {
+                "type": "num",
+                "def": 105,
+                "format": "float"
+            },
+            "currency": {
+                "type": "str",
+                "def": "USD"
+            },
+            "paypalTransaction": {
+                "type": "obj",
+                "props": {
+                    "orderId": {
+                        "type": "str",
+                        "def": "7078033"
+                    },
+                    "transactionType": {
+                        "type": "str",
+                        "def": "DO_ORDER"
+                    }
+                }
+            }
+        }
+    },
+    "TransactionCreateBatchTransactionRequest": {
+        "type": "obj",
+        "props": {
+            "batchTransaction": {
+                "type": "obj",
+                "props": {
+                    "batchId": {
+                        "type": "str",
+                        "def": "567890"
+                    },
+                    "callbackUrl": {
+                        "type": "str",
+                        "def": "http://example.com/batch_callback"
+                    },
+                    "cardTransaction": {
+                        "type": "array",
+                        "items": {
+                            "props": {
+                                "cardTransactionType": {
+                                    "type": "str",
+                                    "def": "AUTH_CAPTURE"
+                                },
+                                "merchantTransactionId": {
+                                    "type": "str",
+                                    "def": "566"
+                                },
+                                "amount": {
+                                    "type": "str",
+                                    "def": "20.00"
+                                },
+                                "currency": {
+                                    "type": "str",
+                                    "def": "USD"
+                                },
+                                "cardHolderInfo": {
+                                    "type": "obj",
+                                    "props": {
+                                        "firstName": {
+                                            "type": "str",
+                                            "def": "test first name"
+                                        },
+                                        "lastName": {
+                                            "type": "str",
+                                            "def": "test last name"
+                                        },
+                                        "zip": {
+                                            "type": "str",
+                                            "def": "02453"
+                                        }
+                                    }
+                                },
+                                "creditCard": {
+                                    "type": "obj",
+                                    "props": {
+                                        "cardNumber": {
+                                            "type": "str",
+                                            "def": "4263982640269299"
+                                        },
+                                        "expirationMonth": {
+                                            "type": "str",
+                                            "def": "02"
+                                        },
+                                        "expirationYear": {
+                                            "type": "str",
+                                            "def": "2023"
+                                        },
+                                        "": {
+                                            "type": "str"
+                                        }
+                                    }
+                                }
+                            },
+                            "type": "obj"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "TransactionInitiateRefundRequest": {
+        "type": "obj",
+        "props": {
+            "reason": {
+                "type": "str",
+                "def": "Refund for order #1992"
+            },
+            "cancelSubscriptions": {
+                "type": "bool",
+                "def": false
+            },
+            "transactionMetaData": {
+                "type": "obj",
+                "props": {
+                    "metaData": {
+                        "type": "array",
+                        "items": {
+                            "props": {
+                                "metaValue": {
+                                    "type": "str",
+                                    "def": "1552,8832"
+                                },
+                                "metaKey": {
+                                    "type": "str",
+                                    "def": "refundedItems"
+                                },
+                                "metaDescription": {
+                                    "type": "str",
+                                    "def": "Refunded Items"
+                                }
+                            },
+                            "type": "obj"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ShopperCreateVaultedShopperRequest": {
+        "type": "obj",
+        "props": {
+            "paymentSources": {
+                "type": "obj",
+                "props": {
+                    "creditCardInfo": {
+                        "type": "array",
+                        "items": {
+                            "props": {
+                                "creditCard": {
+                                    "type": "obj",
+                                    "props": {
+                                        "expirationYear": {
+                                            "type": "int",
+                                            "def": 2023,
+                                            "format": "int32"
+                                        },
+                                        "securityCode": {
+                                            "type": "str",
+                                            "def": "837"
+                                        },
+                                        "expirationMonth": {
+                                            "type": "int",
+                                            "def": 2,
+                                            "format": "int32"
+                                        },
+                                        "cardNumber": {
+                                            "type": "str",
+                                            "def": "4263982640269299"
+                                        }
+                                    }
+                                }
+                            },
+                            "type": "obj"
+                        }
+                    }
+                }
+            },
+            "firstName": {
+                "type": "str",
+                "def": "FirstName"
+            },
+            "lastName": {
+                "type": "str",
+                "def": "LastName"
+            }
+        }
+    },
+    "ShopperUpdateVaultedShopperRequest": {
+        "type": "obj",
+        "props": {
+            "paymentSources": {
+                "type": "obj",
+                "props": {
+                    "creditCardInfo": {
+                        "type": "array",
+                        "items": {
+                            "props": {
+                                "creditCard": {
+                                    "type": "obj",
+                                    "props": {
+                                        "expirationYear": {
+                                            "type": "int",
+                                            "def": 2023,
+                                            "format": "int32"
+                                        },
+                                        "securityCode": {
+                                            "type": "str",
+                                            "def": "837"
+                                        },
+                                        "expirationMonth": {
+                                            "type": "int",
+                                            "def": 2,
+                                            "format": "int32"
+                                        },
+                                        "cardNumber": {
+                                            "type": "str",
+                                            "def": "4263982640269299"
+                                        }
+                                    }
+                                }
+                            },
+                            "type": "obj"
+                        }
+                    }
+                }
+            },
+            "firstName": {
+                "type": "str",
+                "def": "FirstName"
+            },
+            "lastName": {
+                "type": "str",
+                "def": "LastName"
+            }
+        }
+    },
+    "PlanCreateRecurringPlanRequest": {
+        "type": "obj",
+        "props": {
+            "chargeFrequency": {
+                "type": "str",
+                "def": "MONTHLY"
+            },
+            "gracePeriodDays": {
+                "type": "int",
+                "def": 10,
+                "format": "int32"
+            },
+            "trialPeriodDays": {
+                "type": "int",
+                "def": 14,
+                "format": "int32"
+            },
+            "initialChargeAmount": {
+                "type": "int",
+                "def": 100,
+                "format": "int32"
+            },
+            "name": {
+                "type": "str",
+                "def": "Gold Plan"
+            },
+            "currency": {
+                "type": "str",
+                "def": "USD"
+            },
+            "maxNumberOfCharges": {
+                "type": "int",
+                "def": 12,
+                "format": "int32"
+            },
+            "recurringChargeAmount": {
+                "type": "num",
+                "def": 29.99,
+                "format": "float"
+            },
+            "chargeOnPlanSwitch": {
+                "type": "bool",
+                "def": true
+            }
+        }
+    },
+    "PlanUpdateRecurringPlanRequest": {
+        "type": "obj",
+        "props": {
+            "chargeFrequency": {
+                "type": "str",
+                "def": "MONTHLY"
+            },
+            "trialPeriodDays": {
+                "type": "str",
+                "def": "7"
+            },
+            "initialChargeAmount": {
+                "type": "str",
+                "def": "30"
+            },
+            "name": {
+                "type": "str",
+                "def": "Gold Plan"
+            },
+            "currency": {
+                "type": "str",
+                "def": "USD"
+            },
+            "recurringChargeAmount": {
+                "type": "str",
+                "def": "19"
+            }
+        }
+    },
+    "SubscriptionCreateNewRequest": {
+        "type": "obj",
+        "props": {
+            "payerInfo": {
+                "type": "obj",
+                "props": {
+                    "zip": {
+                        "type": "str",
+                        "def": "02453"
+                    },
+                    "firstName": {
+                        "type": "str",
+                        "def": "John"
+                    },
+                    "lastName": {
+                        "type": "str",
+                        "def": "Doe"
+                    },
+                    "phone": {
+                        "type": "str",
+                        "def": "1234567890"
+                    }
+                }
+            },
+            "paymentSource": {
+                "type": "obj",
+                "props": {
+                    "creditCardInfo": {
+                        "type": "obj",
+                        "props": {
+                            "creditCard": {
+                                "type": "obj",
+                                "props": {
+                                    "expirationYear": {
+                                        "type": "int",
+                                        "def": 2023,
+                                        "format": "int32"
+                                    },
+                                    "securityCode": {
+                                        "type": "str",
+                                        "def": "111"
+                                    },
+                                    "expirationMonth": {
+                                        "type": "str",
+                                        "def": "07"
+                                    },
+                                    "cardNumber": {
+                                        "type": "str",
+                                        "def": "4111111111111111"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "planId": {
+                "type": "int",
+                "def": 2283845,
+                "format": "int32"
+            }
+        }
+    },
+    "SubscriptionUpdateSubscriptionRequest": {
+        "type": "obj",
+        "props": {
+            "planId": {
+                "type": "str",
+                "def": "2283849"
+            }
+        }
+    },
+    "SubscriptionCreateMerchantManagedSubscriptionRequest": {
+        "type": "obj",
+        "props": {
+            "amount": {
+                "type": "num",
+                "def": 45,
+                "format": "float"
+            },
+            "currency": {
+                "type": "str",
+                "def": "USD"
+            },
+            "payerInfo": {
+                "type": "obj",
+                "props": {
+                    "firstName": {
+                        "type": "str",
+                        "def": "John"
+                    },
+                    "lastName": {
+                        "type": "str",
+                        "def": "Doe"
+                    },
+                    "zip": {
+                        "type": "str",
+                        "def": "02453"
+                    },
+                    "country": {
+                        "type": "str",
+                        "def": "us"
+                    }
+                }
+            },
+            "paymentSource": {
+                "type": "obj",
+                "props": {
+                    "creditCardInfo": {
+                        "type": "obj",
+                        "props": {
+                            "creditCard": {
+                                "type": "obj",
+                                "props": {
+                                    "expirationYear": {
+                                        "type": "int",
+                                        "def": 2026,
+                                        "format": "int32"
+                                    },
+                                    "securityCode": {
+                                        "type": "str",
+                                        "def": "111"
+                                    },
+                                    "expirationMonth": {
+                                        "type": "int",
+                                        "def": 5,
+                                        "format": "int32"
+                                    },
+                                    "cardNumber": {
+                                        "type": "str",
+                                        "def": "4012000033330026"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "SubscriptionCreateMerchantManagedChargeRequest": {
+        "type": "obj",
+        "props": {
+            "amount": {
+                "type": "num",
+                "def": 45,
+                "format": "float"
+            },
+            "currency": {
+                "type": "str",
+                "def": "USD"
+            },
+            "merchantTransactionId": {
+                "type": "str",
+                "def": "MyUniqueOnDemandSubscription"
+            },
+            "taxReference": {
+                "type": "str",
+                "def": "048deff0-a285-47e1-bc39-42f79bf0095b"
+            }
+        }
+    },
+    "VendorCreateRequest": {
+        "type": "obj",
+        "props": {
+            "email": {
+                "type": "str",
+                "def": "vendor@example.com"
+            },
+            "firstName": {
+                "type": "str",
+                "def": "Joe"
+            },
+            "lastName": {
+                "type": "str",
+                "def": "Smith"
+            },
+            "phone": {
+                "type": "str",
+                "def": "1-123-456-7890"
+            },
+            "address": {
+                "type": "str",
+                "def": "123 Main Street"
+            },
+            "city": {
+                "type": "str",
+                "def": "Boston"
+            },
+            "country": {
+                "type": "str",
+                "def": "US"
+            },
+            "state": {
+                "type": "str",
+                "def": "MA"
+            },
+            "zip": {
+                "type": "str",
+                "def": "02453"
+            },
+            "defaultPayoutCurrency": {
+                "type": "str",
+                "def": "USD"
+            },
+            "ipnUrl": {
+                "type": "str",
+                "def": "https://ipnaddress.com"
+            },
+            "vendorPrincipal": {
+                "type": "obj",
+                "props": {
+                    "firstName": {
+                        "type": "str",
+                        "def": "Joe"
+                    },
+                    "lastName": {
+                        "type": "str",
+                        "def": "Smith"
+                    },
+                    "address": {
+                        "type": "str",
+                        "def": "123 Main Street"
+                    },
+                    "city": {
+                        "type": "str",
+                        "def": "Boston"
+                    },
+                    "country": {
+                        "type": "str",
+                        "def": "US"
+                    },
+                    "zip": {
+                        "type": "str",
+                        "def": "02453"
+                    },
+                    "dob": {
+                        "type": "str",
+                        "def": "28-09-9999"
+                    },
+                    "personalIdentificationNumber": {
+                        "type": "str",
+                        "def": "1234"
+                    },
+                    "driverLicenseNumber": {
+                        "type": "str",
+                        "def": "561196411"
+                    },
+                    "email": {
+                        "type": "str",
+                        "def": "individual.vendor@bluesnap.com"
+                    }
+                }
+            },
+            "vendorAgreement": {
+                "type": "obj",
+                "props": {
+                    "commissionPercent": {
+                        "type": "int",
+                        "def": 30,
+                        "format": "int32"
+                    }
+                }
+            },
+            "payoutInfo": {
+                "type": "obj",
+                "props": {}
+            }
+        }
+    },
+    "VendorUpdateVendorRequest": {
+        "type": "obj",
+        "props": {
+            "email": {
+                "type": "str",
+                "def": "vendor@bluesnap.com"
+            },
+            "name": {
+                "type": "str",
+                "def": "Important Vendor"
+            },
+            "firstName": {
+                "type": "str",
+                "def": "Joe"
+            },
+            "lastName": {
+                "type": "str",
+                "def": "Smith"
+            },
+            "address": {
+                "type": "str",
+                "def": "123 Main Street"
+            },
+            "city": {
+                "type": "str",
+                "def": "testing city"
+            },
+            "zip": {
+                "type": "str",
+                "def": "02453"
+            },
+            "country": {
+                "type": "str",
+                "def": "US"
+            },
+            "phone": {
+                "type": "str",
+                "def": "1-054-976-6778"
+            },
+            "state": {
+                "type": "str",
+                "def": "MA"
+            },
+            "taxId": {
+                "type": "int",
+                "def": 123456789,
+                "format": "int32"
+            },
+            "vendorUrl": {
+                "type": "str",
+                "def": "http://mycompany.com"
+            },
+            "ipnUrl": {
+                "type": "str",
+                "def": "https://ipnaddress.com"
+            },
+            "defaultPayoutCurrency": {
+                "type": "str",
+                "def": "USD"
+            },
+            "vendorPrincipal": {
+                "type": "obj",
+                "props": {
+                    "firstName": {
+                        "type": "str",
+                        "def": "Joe"
+                    },
+                    "lastName": {
+                        "type": "str",
+                        "def": "Smith"
+                    },
+                    "address": {
+                        "type": "str",
+                        "def": "123 Main Street"
+                    },
+                    "city": {
+                        "type": "str",
+                        "def": "Juneau"
+                    },
+                    "zip": {
+                        "type": "str",
+                        "def": "02453"
+                    },
+                    "country": {
+                        "type": "str",
+                        "def": "US"
+                    },
+                    "dob": {
+                        "type": "str",
+                        "def": "28-09-9999"
+                    },
+                    "personalIdentificationNumber": {
+                        "type": "int",
+                        "def": 1234,
+                        "format": "int32"
+                    },
+                    "driverLicenseNumber": {
+                        "type": "str",
+                        "def": "561196411"
+                    },
+                    "email": {
+                        "type": "str",
+                        "def": "principal.name@vendor.com"
+                    }
+                }
+            },
+            "payoutInfo": {
+                "type": "array",
+                "items": {
+                    "props": {
+                        "payoutType": {
+                            "type": "str",
+                            "def": "ACH"
+                        },
+                        "baseCurrency": {
+                            "type": "str",
+                            "def": "USD"
+                        },
+                        "nameOnAccount": {
+                            "type": "str",
+                            "def": "vendor"
+                        },
+                        "bankAccountClass": {
+                            "type": "str",
+                            "def": "PERSONAL"
+                        },
+                        "bankAccountType": {
+                            "type": "str",
+                            "def": "CHECKING"
+                        },
+                        "bankName": {
+                            "type": "str",
+                            "def": "Leumi"
+                        },
+                        "bankId": {
+                            "type": "str",
+                            "def": "123456789"
+                        },
+                        "country": {
+                            "type": "str",
+                            "def": "US"
+                        },
+                        "city": {
+                            "type": "str",
+                            "def": "Portland"
+                        },
+                        "address": {
+                            "type": "str",
+                            "def": "1 bank address"
+                        },
+                        "state": {
+                            "type": "str",
+                            "def": "MA"
+                        },
+                        "zip": {
+                            "type": "str",
+                            "def": "02453"
+                        },
+                        "bankAccountId": {
+                            "type": "str",
+                            "def": "123456789"
+                        },
+                        "minimalPayoutAmount": {
+                            "type": "int",
+                            "def": 50,
+                            "format": "int32"
+                        },
+                        "paymentReference": {
+                            "type": "str",
+                            "def": "Payment for vendor 1234"
+                        },
+                        "refundReserve": {
+                            "type": "int",
+                            "def": 200,
+                            "format": "int32"
+                        }
+                    },
+                    "type": "obj"
+                }
+            },
+            "vendorAgreement": {
+                "type": "obj",
+                "props": {
+                    "commissionPercent": {
+                        "type": "int",
+                        "def": 20,
+                        "format": "int32"
+                    },
+                    "accountStatus": {
+                        "type": "str",
+                        "def": "ACTIVE"
+                    }
+                }
+            }
+        }
+    }
+}

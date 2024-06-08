@@ -1,0 +1,733 @@
+##IMPORTANT: base_url:https://api.flickr.com/services
+---
+---
+##ENDPOINTS
+---
+-method:get
+path: /oauth/access_token
+opid: Public_getAccessToken
+params
+in: query
+name: oauth_consumer_key
+req: True
+schema
+type: str
+in: query
+name: oauth_nonce
+req: True
+schema
+type: str
+in: query
+name: oauth_timestamp
+req: True
+schema
+pattern: 0-9
+type: str
+in: query
+name: oauth_signature_method
+req: True
+schema
+type: str
+in: query
+name: oauth_version
+req: True
+schema
+type: str
+in: query
+name: oauth_signature
+req: True
+schema
+type: str
+in: query
+name: oauth_verifier
+req: True
+schema
+type: str
+in: query
+name: oauth_token
+req: True
+schema
+type: str
+---
+-method:get
+path: /oauth/request_token
+opid: Public_getOAuthToken
+params
+in: query
+name: oauth_consumer_key
+req: True
+schema
+type: str
+in: query
+name: oauth_nonce
+req: True
+schema
+type: str
+in: query
+name: oauth_timestamp
+req: True
+schema
+pattern: 0-9
+type: str
+in: query
+name: oauth_signature_method
+req: True
+schema
+type: str
+in: query
+name: oauth_version
+req: True
+schema
+type: str
+in: query
+name: oauth_signature
+req: True
+schema
+type: str
+in: query
+name: oauth_callback
+req: True
+schema
+pattern: http.
+type: str
+---
+-method:get
+path: /restmethodflickr.favorites.getContext
+opid: Public_getFavoritesContext
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photo_id
+req: True
+schema
+pattern: 0-9
+type: str
+in: query
+name: user_id
+req: False
+schema
+pattern: 0-9N0-9|0-9a-zA-Z-_
+type: str
+---
+-method:get
+path: /restmethodflickr.favorites.getList
+opid: Public_getFavoritePhotos
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: user_id
+req: True
+schema
+type: str
+in: query
+name: min_fave_date
+schema
+type: num
+req: False
+in: query
+name: max_fave_date
+schema
+type: num
+req: False
+in: query
+name: page
+schema
+type: num
+req: False
+in: query
+name: per_page
+schema
+type: num
+req: False
+---
+-method:get
+path: /restmethodflickr.galleries.getPhotos
+opid: Public_getGalleryPhotos
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: gallery_id
+req: True
+schema
+type: str
+---
+-method:get
+path: /restmethodflickr.groups.discuss.replies.getInfo
+opid: Public_getGroupTopicRepliesInfo
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: group_id
+req: False
+schema
+pattern: 0-9N0-9|0-9a-zA-Z-_
+type: str
+in: query
+name: topic_id
+req: True
+schema
+pattern: 0-9
+type: str
+in: query
+name: reply_id
+req: True
+schema
+pattern: 0-9
+type: str
+---
+-method:get
+path: /restmethodflickr.groups.discuss.topics.getInfo
+opid: Public_getGroupTopicInfo
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: group_id
+req: False
+schema
+pattern: 0-9N0-9|0-9a-zA-Z-_
+type: str
+in: query
+name: topic_id
+req: True
+schema
+pattern: 0-9
+type: str
+---
+-method:get
+path: /restmethodflickr.groups.discuss.topics.getList
+opid: Public_getGroupDiscussionTopics
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: group_id
+req: False
+schema
+pattern: 0-9N0-9|0-9a-zA-Z-_
+type: str
+in: query
+name: page
+schema
+type: num
+req: False
+in: query
+name: per_page
+schema
+type: num
+req: False
+---
+-method:get
+path: /restmethodflickr.groups.getInfo
+opid: Public_getGroupInfo
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: group_id
+req: False
+schema
+pattern: 0-9N0-9|0-9a-zA-Z-_
+type: str
+in: query
+name: group_path_alias
+req: False
+schema
+type: str
+in: query
+name: lang
+req: False
+schema
+type: str
+---
+-method:get
+path: /restmethodflickr.groups.pools.getContext
+opid: Public_flickrGroupsPoolsGetContext
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photo_id
+req: True
+schema
+pattern: 0-9
+type: str
+in: query
+name: group_id
+req: False
+schema
+pattern: 0-9N0-9|0-9a-zA-Z-_
+type: str
+---
+-method:get
+path: /restmethodflickr.groups.pools.getPhotos
+opid: Public_getGroupPoolPhotos
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: group_id
+req: False
+schema
+pattern: 0-9N0-9|0-9a-zA-Z-_
+type: str
+---
+-method:get
+path: /restmethodflickr.people.getInfo
+opid: Public_getPersonInformation
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: user_id
+req: False
+schema
+pattern: 0-9N0-9|0-9a-zA-Z-_
+type: str
+---
+-method:get
+path: /restmethodflickr.people.getPhotos
+opid: Public_getUserPhotos
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: user_id
+req: True
+schema
+type: str
+in: query
+name: safe_search
+schema
+type: num
+req: False
+in: query
+name: min_upload_date
+schema
+type: num
+req: False
+in: query
+name: max_upload_date
+schema
+type: num
+req: False
+in: query
+name: min_taken_date
+schema
+type: num
+req: False
+in: query
+name: max_taken_date
+schema
+type: num
+req: False
+in: query
+name: content_type
+schema
+type: num
+req: False
+in: query
+name: privacy_filter
+schema
+type: num
+req: False
+in: query
+name: page
+schema
+type: num
+req: False
+in: query
+name: per_page
+schema
+type: num
+req: False
+---
+-method:get
+path: /restmethodflickr.photolist.getContext
+opid: Public_getPhotoListContext
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photo_id
+req: True
+schema
+pattern: 0-9
+type: str
+in: query
+name: photolist_id
+req: True
+schema
+type: str
+---
+-method:get
+path: /restmethodflickr.photos.getContext
+opid: Public_getPhotostreamContext
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photo_id
+req: True
+schema
+pattern: 0-9
+type: str
+---
+-method:get
+path: /restmethodflickr.photos.getExif
+opid: Public_getPhotoExif
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photo_id
+req: True
+schema
+pattern: 0-9
+type: str
+in: query
+name: secret
+req: False
+schema
+type: str
+---
+-method:get
+path: /restmethodflickr.photos.getInfo
+opid: Public_getPhotoInfo
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photo_id
+req: True
+schema
+pattern: 0-9
+type: str
+---
+-method:get
+path: /restmethodflickr.photos.getSizes
+opid: Public_getPhotoSizes
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photo_id
+req: True
+schema
+pattern: 0-9
+type: str
+---
+-method:get
+path: /restmethodflickr.photos.licenses.getInfo
+opid: Public_getPhotoLicenses
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+---
+-method:get
+path: /restmethodflickr.photos.search
+opid: Public_searchPhotos
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: text
+schema
+type: str
+req: False
+in: query
+name: tags
+schema
+type: str
+req: False
+in: query
+name: user_id
+schema
+type: str
+req: False
+in: query
+name: min_upload_date
+schema
+type: str
+req: False
+in: query
+name: max_upload_date
+schema
+type: str
+req: False
+in: query
+name: min_taken_date
+schema
+type: str
+req: False
+in: query
+name: max_taken_date
+schema
+type: str
+req: False
+in: query
+name: license
+schema
+type: str
+req: False
+in: query
+name: sort
+schema
+type: str
+req: False
+in: query
+name: privacy_filter
+schema
+type: num
+req: False
+in: query
+name: bbox
+schema
+type: str
+req: False
+in: query
+name: accuracy
+schema
+type: str
+req: False
+in: query
+name: safe_search
+schema
+type: num
+req: False
+in: query
+name: content_type
+schema
+type: num
+req: False
+in: query
+name: machine_tags
+schema
+type: str
+req: False
+in: query
+name: machine_tag_mode
+schema
+type: str
+req: False
+in: query
+name: group_id
+schema
+type: str
+req: False
+in: query
+name: contacts
+schema
+type: str
+req: False
+in: query
+name: woe_id
+schema
+type: str
+req: False
+in: query
+name: place_id
+schema
+type: str
+req: False
+in: query
+name: media
+schema
+type: str
+req: False
+in: query
+name: has_geo
+schema
+type: str
+req: False
+in: query
+name: geo_context
+schema
+type: str
+req: False
+in: query
+name: lat
+schema
+type: str
+req: False
+in: query
+name: lon
+schema
+type: str
+req: False
+in: query
+name: radius
+schema
+type: num
+req: False
+in: query
+name: radius_units
+schema
+type: str
+req: False
+in: query
+name: is_commons
+schema
+type: bool
+req: False
+in: query
+name: in_gallery
+schema
+type: bool
+req: False
+in: query
+name: is_getty
+schema
+type: bool
+req: False
+in: query
+name: per_page
+schema
+type: num
+req: False
+in: query
+name: page
+schema
+type: num
+req: False
+---
+-method:get
+path: /restmethodflickr.photosets.getContext
+opid: Public_getPhotoSetContext
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photo_id
+req: True
+schema
+pattern: 0-9
+type: str
+in: query
+name: photoset_id
+req: False
+schema
+pattern: 0-9
+type: str
+---
+-method:get
+path: /restmethodflickr.photosets.getList
+opid: Public_getUserAlbums
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: user_id
+req: True
+schema
+type: str
+in: query
+name: page
+schema
+type: num
+req: False
+in: query
+name: per_page
+schema
+type: num
+req: False
+---
+-method:get
+path: /restmethodflickr.photosets.getPhotos
+opid: Public_getAlbumPhotos
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: photoset_id
+req: True
+schema
+pattern: 0-9
+type: str
+---
+-method:get
+path: /restmethodflickr.test.echo
+opid: Public_getFlickrTestEcho
+params
+in: query
+name: api_key
+req: True
+schema
+type: str
+in: query
+name: echo
+req: False
+schema
+type: str
+---
+-method:post
+path: /upload
+opid: Public_uploadPhoto
+---

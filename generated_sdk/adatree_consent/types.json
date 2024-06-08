@@ -1,0 +1,112 @@
+{
+    "PostUsageAction": {
+        "type": "str",
+        "enum": [
+            "DELETION",
+            "DE_IDENTIFICATION"
+        ]
+    },
+    "Grantee": {
+        "type": "obj",
+        "props": {
+            "name": {
+                "type": "str"
+            },
+            "licenceNumber": {
+                "type": "str"
+            },
+            "id": {
+                "type": "str"
+            }
+        }
+    },
+    "CreateConsent": {
+        "type": "obj",
+        "req": [
+            "sharingEndDate",
+            "dataHolderBrandId",
+            "useCaseId"
+        ],
+        "props": {
+            "consumerEmail": {
+                "type": "str"
+            },
+            "sharingEndDate": {
+                "type": "str",
+                "format": "date-time"
+            },
+            "dataHolderBrandId": {
+                "type": "str"
+            },
+            "useCaseId": {
+                "type": "str"
+            },
+            "postUsageAction": {
+                "$ref": "PostUsageAction"
+            },
+            "directMarketingAllowed": {
+                "type": "bool"
+            },
+            "externalId": {
+                "type": "str"
+            },
+            "consumerId": {
+                "type": "str"
+            },
+            "grantee": {
+                "$ref": "Grantee"
+            },
+            "customData": {
+                "type": "obj"
+            }
+        }
+    },
+    "UpdateConsentConsumer": {
+        "type": "obj",
+        "props": {
+            "postUsageAction": "PostUsageAction",
+            "directMarketingAllowed": {
+                "type": "bool"
+            },
+            "sharingEndDate": {
+                "type": "str",
+                "format": "date-time"
+            }
+        }
+    },
+    "UpdateConsentMachine": {
+        "type": "obj",
+        "props": {
+            "externalId": {
+                "type": "str"
+            }
+        }
+    },
+    "ConsentUpdateViaDashboardRequest": {
+        "oneOf": [
+            {
+                "$ref": "UpdateConsentConsumer"
+            },
+            {
+                "$ref": "UpdateConsentMachine"
+            }
+        ]
+    },
+    "Authorization": {
+        "type": "obj",
+        "props": {
+            "code": {
+                "type": "str"
+            },
+            "state": {
+                "type": "str"
+            },
+            "id_token": {
+                "type": "str"
+            },
+            "response": {
+                "type": "str"
+            }
+        }
+    }
+}
