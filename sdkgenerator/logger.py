@@ -30,7 +30,7 @@ def log_llm_response(
                 "sdk_name": sdk_name,
                 "payload": payload,
                 "response": response,
-                "custom": AGENT[step]['custom']
+                "custom": AGENT[step]["custom"],
             }
         )
 

@@ -1,12 +1,15 @@
 import requests
 from types import *
 
+
 class BaseTenClient:
     def __init__(self, api_key: str):
         self.base_url = "https://api.baseten.co"
         self.api_key = api_key
 
-    def _make_authenticated_request(self, method: str, url: str, **kwargs) -> requests.Response:
+    def _make_authenticated_request(
+        self, method: str, url: str, **kwargs
+    ) -> requests.Response:
         headers = kwargs.get("headers", {})
         headers["Authorization"] = f"ApiKey {self.api_key}"
         kwargs["headers"] = headers
@@ -47,32 +50,50 @@ class BaseTenClient:
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/production"
         return self._make_authenticated_request("GET", url)
 
-    def get_deployment_details(self, model_id: ModelId, deployment_id: DeploymentId) -> requests.Response:
+    def get_deployment_details(
+        self, model_id: ModelId, deployment_id: DeploymentId
+    ) -> requests.Response:
         """Retrieve deployment details for a specific deployment."""
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/{deployment_id['name']}"
         return self._make_authenticated_request("GET", url)
 
-    def update_development_autoscaling_settings(self, model_id: ModelId, settings: UpdateAutoscalingSettingsV1) -> requests.Response:
+    def update_development_autoscaling_settings(
+        self, model_id: ModelId, settings: UpdateAutoscalingSettingsV1
+    ) -> requests.Response:
         """Update autoscaling settings for the development deployment."""
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/development/autoscaling_settings"
         return self._make_authenticated_request("PATCH", url, json=settings)
 
-    def update_production_autoscaling_settings(self, model_id: ModelId, settings: UpdateAutoscalingSettingsV1) -> requests.Response:
+    def update_production_autoscaling_settings(
+        self, model_id: ModelId, settings: UpdateAutoscalingSettingsV1
+    ) -> requests.Response:
         """Update autoscaling settings for the production deployment."""
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/production/autoscaling_settings"
         return self._make_authenticated_request("PATCH", url, json=settings)
 
-    def update_deployment_autoscaling_settings(self, model_id: ModelId, deployment_id: DeploymentId, settings: UpdateAutoscalingSettingsV1) -> requests.Response:
+    def update_deployment_autoscaling_settings(
+        self,
+        model_id: ModelId,
+        deployment_id: DeploymentId,
+        settings: UpdateAutoscalingSettingsV1,
+    ) -> requests.Response:
         """Update autoscaling settings for a specific deployment."""
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/{deployment_id['name']}/autoscaling_settings"
         return self._make_authenticated_request("PATCH", url, json=settings)
 
-    def promote_development(self, model_id: ModelId, promote_request: PromoteRequestV1) -> requests.Response:
+    def promote_development(
+        self, model_id: ModelId, promote_request: PromoteRequestV1
+    ) -> requests.Response:
         """Promote the development deployment."""
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/development/promote"
         return self._make_authenticated_request("POST", url, json=promote_request)
 
-    def promote_deployment(self, model_id: ModelId, deployment_id: DeploymentId, promote_request: PromoteRequestV1) -> requests.Response:
+    def promote_deployment(
+        self,
+        model_id: ModelId,
+        deployment_id: DeploymentId,
+        promote_request: PromoteRequestV1,
+    ) -> requests.Response:
         """Promote a specific deployment."""
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/{deployment_id['name']}/promote"
         return self._make_authenticated_request("POST", url, json=promote_request)
@@ -87,7 +108,9 @@ class BaseTenClient:
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/production/activate"
         return self._make_authenticated_request("POST", url)
 
-    def activate_deployment_status(self, model_id: ModelId, deployment_id: DeploymentId) -> requests.Response:
+    def activate_deployment_status(
+        self, model_id: ModelId, deployment_id: DeploymentId
+    ) -> requests.Response:
         """Activate a specific deployment."""
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/{deployment_id['name']}/activate"
         return self._make_authenticated_request("POST", url)
@@ -102,7 +125,9 @@ class BaseTenClient:
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/production/deactivate"
         return self._make_authenticated_request("POST", url)
 
-    def deactivate_deployment_status(self, model_id: ModelId, deployment_id: DeploymentId) -> requests.Response:
+    def deactivate_deployment_status(
+        self, model_id: ModelId, deployment_id: DeploymentId
+    ) -> requests.Response:
         """Deactivate a specific deployment."""
         url = f"{self.base_url}/v1/models/{model_id['name']}/deployments/{deployment_id['name']}/deactivate"
         return self._make_authenticated_request("POST", url)
