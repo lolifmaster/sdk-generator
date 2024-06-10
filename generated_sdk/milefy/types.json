@@ -109,9 +109,7 @@
                 "type": "array",
                 "minItems": 1,
                 "uniqueItems": true,
-                "items": {
-                    "$ref": "FlightSegment"
-                }
+                "items": "FlightSegment"
             }
         }
     },
@@ -133,16 +131,12 @@
                     "ota"
                 ]
             },
-            "price": {
-                "$ref": "PriceBreakdown"
-            },
+            "price": "PriceBreakdown",
             "legs": {
                 "type": "array",
                 "minItems": 1,
                 "uniqueItems": true,
-                "items": {
-                    "$ref": "FlightLeg"
-                }
+                "items": "FlightLeg"
             }
         }
     },
@@ -155,9 +149,7 @@
             "flights": {
                 "type": "array",
                 "minItems": 1,
-                "items": {
-                    "$ref": "Flight"
-                }
+                "items": "Flight"
             }
         }
     },
@@ -307,9 +299,7 @@
                 "type": "array",
                 "minItems": 1,
                 "uniqueItems": true,
-                "items": {
-                    "$ref": "Miles"
-                }
+                "items": "Miles"
             },
             "statusTier": {
                 "type": "int",

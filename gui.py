@@ -9,6 +9,8 @@ from sdkgenerator.types import Language
 def process_openapi_file(
     openapi_file: NamedString, user_input: str, language: Language = "python"
 ):
+    if not user_input:
+        user_input = "1. Use the requests library: All HTTP requests within the SDK must be made using the 'requests' library.\n2. Class structure: The SDK must be a class, with each method representing an endpoint in the API. Choose method names that reflect the action or resource they interact with.\n3. Authenticated requests: Implement a method '_make_authenticated_request' to handle authenticated requests.\n4. JSON request body: Use JSON format for the body of all requests.\n5. Return type: All methods must return the 'Response' object from the 'requests' library."
     UPLOAD_DIR = Path(__file__).parent / "GUI_uploads"
     UPLOAD_DIR.mkdir(exist_ok=True)
 
@@ -18,7 +20,8 @@ def process_openapi_file(
         openapi_content = file.read()
 
     uploaded_file_path = UPLOAD_DIR / Path(openapi_file.name).name
-    uploaded_file_path.write_text(openapi_content.decode("utf-8"))
+    with open(uploaded_file_path, "wb") as file:
+        file.write(openapi_content)
 
     sdk_folder, sdk_output_file, types_file = generate_sdk(
         uploaded_file_path, user_rules=user_input, language=language

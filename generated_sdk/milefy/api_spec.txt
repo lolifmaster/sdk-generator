@@ -1,18 +1,17 @@
-##IMPORTANT: base_url:milefy-api.30k.com
+###IMPORTANT: base_url:milefy-api.30k.com
 ---
-##SECURITY SCHEMES
+###SECURITY SCHEMES
 -apiKey
 name: apiKey
 type: apiKey
 in: query
 ---
-##SECURITY SCOPES
+###SECURITY SCOPES
 apiKey: []
 ---
-##ENDPOINTS
----
--method:get
-path: /programs
+###ENDPOINTS
+##path: /programs
+#method:get
 opid: StaticData_getFrequentFlyerPrograms
 params
 name: authentication
@@ -26,24 +25,20 @@ enum
 simple
 none
 oauth
-pattern: simple|none|oauth,simple|none|oauth
-sum: Get program collection
 ---
--method:get
-path: /programs/code
+##path: /programs/{code}
+#method:get
 opid: StaticData_getFrequentFlyerProgram
 params
-ref: #/components/parameters/programCode
+ref: #programCode
 req: False
-sum: Get program
 ---
--method:get
-path: /benefits
+##path: /benefits
+#method:get
 opid: StaticData_getStatusBenefitTypeCollection
-sum: Get status benefit type collection
 ---
--method:get
-path: /benefits/code
+##path: /benefits/{code}
+#method:get
 opid: StaticData_getStatusBenefitType
 params
 name: code
@@ -51,15 +46,13 @@ in: path
 req: True
 schema
 type: str
-sum: Get status benefit type
 ---
--method:get
-path: /attributes
+##path: /attributes
+#method:get
 opid: StaticData_getFareAttributeTypes
-sum: Get fare attribute type collection
 ---
--method:get
-path: /attributes/code
+##path: /attributes/{code}
+#method:get
 opid: StaticData_getFareAttributeType
 params
 name: code
@@ -67,13 +60,12 @@ in: path
 req: True
 schema
 type: str
-sum: Get fare attribute type
 ---
--method:post
-path: /calculate
+##path: /calculate
+#method:post
 opid: Flights_calculateAttributesBenefits
 params
-ref: #/components/parameters/fields
+ref: #fields
 req: False
 name: traveler
 in: query
@@ -93,11 +85,10 @@ in: query
 req: False
 schema
 type: str
-sum: Calculate attributes  benefits
-ref: #/components/schemas/FlightsCalculateAttributesBenefitsRequest
+ref: #FlightsCalculateAttributesBenefitsRequest
 ---
--method:post
-path: /fare-attributes
+##path: /fare-attributes
+#method:post
 opid: Flights_calculateFareAttributes
 params
 in: query
@@ -109,95 +100,72 @@ enum
 attributes
 attributes_and_mileage
 def: attributes
-sum: Calculate fare attributes
-ref: #/components/schemas/FlightsCalculateFareAttributesRequest
+ref: #FlightsCalculateFareAttributesRequest
 ---
--method:post
-path: /travelers
+##path: /travelers
+#method:post
 opid: Travelers_createProfile
-sum: Create traveler
-ref: #/components/schemas/TravelersCreateProfileRequest
----
--method:get
-path: /travelers
+ref: #TravelersCreateProfileRequest
+#method:get
 opid: Travelers_listCollection
 params
-ref: #/components/parameters/offset
+ref: #offset
 req: False
-ref: #/components/parameters/limit
+ref: #limit
 req: False
-sum: Get traveler collection
 ---
--method:get
-path: /travelers/id
+##path: /travelers/{id}
+#method:get
 opid: Travelers_getProfile
 params
-ref: #/components/parameters/travelerId
+ref: #travelerId
 req: False
-sum: Get traveler
----
--method:put
-path: /travelers/id
+#method:put
 opid: Travelers_updateProfile
 params
-ref: #/components/parameters/travelerId
+ref: #travelerId
 req: False
-sum: Edit traveler
-ref: #/components/schemas/TravelersCreateProfileRequest
----
--method:delete
-path: /travelers/id
+ref: #TravelersCreateProfileRequest
+#method:delete
 opid: Travelers_removeProfile
 params
-ref: #/components/parameters/travelerId
+ref: #travelerId
 req: False
-sum: Delete traveler
 ---
--method:post
-path: /travelers/id/memberships
+##path: /travelers/{id}/memberships
+#method:post
 opid: Memberships_createFrequentFlyerProgramMembership
 params
-ref: #/components/parameters/travelerId
+ref: #travelerId
 req: False
-sum: Create membership
-ref: #/components/schemas/MembershipsCreateFrequentFlyerProgramMembershipRequest
----
--method:get
-path: /travelers/id/memberships
+ref: #MembershipsCreateFrequentFlyerProgramMembershipRequest
+#method:get
 opid: Memberships_getList
 params
-ref: #/components/parameters/travelerId
+ref: #travelerId
 req: False
-sum: Get membership collection
 ---
--method:get
-path: /travelers/id/memberships/code
+##path: /travelers/{id}/memberships/{code}
+#method:get
 opid: Memberships_getMembershipByCode
 params
-ref: #/components/parameters/travelerId
+ref: #travelerId
 req: False
-ref: #/components/parameters/programCode
+ref: #programCode
 req: False
-sum: Get membership
----
--method:put
-path: /travelers/id/memberships/code
+#method:put
 opid: Memberships_editTravelerMembership
 params
-ref: #/components/parameters/travelerId
+ref: #travelerId
 req: False
-ref: #/components/parameters/programCode
+ref: #programCode
 req: False
-sum: Edit membership
-ref: #/components/schemas/MembershipsCreateFrequentFlyerProgramMembershipRequest
----
--method:delete
-path: /travelers/id/memberships/code
+ref: #MembershipsCreateFrequentFlyerProgramMembershipRequest
+#method:delete
 opid: Memberships_deleteMembership
 params
-ref: #/components/parameters/travelerId
+ref: #travelerId
 req: False
-ref: #/components/parameters/programCode
+ref: #programCode
 req: False
-sum: Delete membership
 ---
