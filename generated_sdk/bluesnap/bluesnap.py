@@ -95,9 +95,11 @@ class BlueSnapClient:
         """Get a pre-notification debit agreement by its transaction ID."""
         url = urljoin(
             self.base_url,
-            f"agreements/prenotification/{transaction_id}"
-            if transaction_id
-            else "agreements/prenotification",
+            (
+                f"agreements/prenotification/{transaction_id}"
+                if transaction_id
+                else "agreements/prenotification"
+            ),
         )
         return self._make_authenticated_request("GET", url)
 
