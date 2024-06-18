@@ -51,7 +51,6 @@ def process_openapi_file(
     return sdk_code, "No shared types generated.", str(sdk_path.absolute())
 
 
-# Create the Gradio interface
 interface = gr.Interface(
     fn=process_openapi_file,
     inputs=[
@@ -70,7 +69,6 @@ interface = gr.Interface(
     description="Generate SDKs from OpenAPI specifications.",
 )
 
-# Launch the interface
 if __name__ == "__main__":
     interface.launch(
         share=True,
