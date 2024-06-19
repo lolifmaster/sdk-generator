@@ -1,5 +1,4 @@
 import requests
-from typing import Optional, List
 from types import *
 
 

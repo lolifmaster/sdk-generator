@@ -3,7 +3,7 @@ from pathlib import Path
 import traceback
 
 # Mock user rules
-user_rules = "1. Use the requests library: All HTTP requests within the SDK must be made using the 'requests' library.\n2. Class structure: The SDK must be a class, with each method representing an endpoint in the API. Choose method names that reflect the action or resource they interact with.\n3. Authenticated requests: Implement a method '_make_authenticated_request' to handle authenticated requests.\n4. JSON request body: Use JSON format for the body of all requests.\n5. Return type: All methods must return the 'Response' object from the 'requests' library."
+user_rules = "- Return type: All methods must return the 'Response' object from the 'requests' library."
 
 
 def main():

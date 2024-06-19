@@ -19,6 +19,9 @@ TEMPLATES: dict[Language, Template] = {
             {rules}
 
             ##IMPORTANT:
+            - Use the requests library: All HTTP requests within the SDK must be made using the 'requests' library.
+            - Class structure: The SDK must be a class, with each method representing an endpoint in the API. Choose method names that reflect the action or resource they interact with.
+            - Authenticated requests: Implement a method '_make_authenticated_request' to handle authenticated requests.
             - The ref types are found in types.py file (from types import *).
             - Ensure implementing all the methods.
             - Dont give usage examples.
@@ -77,6 +80,9 @@ TEMPLATES_WITHOUT_TYPES: dict[Language, TemplateWithoutTypes] = {
             {rules}
 
             ##IMPORTANT:
+            - Use the requests library: All HTTP requests within the SDK must be made using the 'requests' library.
+            - Class structure: The SDK must be a class, with each method representing an endpoint in the API. Choose method names that reflect the action or resource they interact with.
+            - Authenticated requests: Implement a method '_make_authenticated_request' to handle authenticated requests.
             - Ensure implementing all the methods.
             - Dont give usage examples.
             - the code must be in this format ```(lang)\n (code``` example: ```python\n def hello():\nprint('hello)```

@@ -1,4 +1,138 @@
 {
+    "CreateAddressModel": {
+        "req": [
+            "addressLine1",
+            "city",
+            "countryCode",
+            "postalCode"
+        ],
+        "type": "obj",
+        "props": {
+            "addressLine1": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "addressLine2": {
+                "type": "str"
+            },
+            "postalCode": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "city": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "regionCode": {
+                "maxLen": 6,
+                "minLen": 2,
+                "type": "str"
+            },
+            "countryCode": {
+                "maxLen": 2,
+                "minLen": 2,
+                "type": "str"
+            }
+        }
+    },
+    "BankAccountModel": {
+        "type": "obj",
+        "props": {
+            "iban": {
+                "type": "str"
+            },
+            "bic": {
+                "type": "str"
+            },
+            "bank": {
+                "type": "str"
+            }
+        }
+    },
+    "CreatePropertyModel": {
+        "req": [
+            "code",
+            "commercialRegisterEntry",
+            "companyName",
+            "currencyCode",
+            "defaultCheckInTime",
+            "defaultCheckOutTime",
+            "location",
+            "name",
+            "paymentTerms",
+            "taxId",
+            "timeZone"
+        ],
+        "type": "obj",
+        "props": {
+            "code": {
+                "maxLen": 10,
+                "minLen": 3,
+                "type": "str"
+            },
+            "name": {
+                "type": "obj",
+                "additionalProperties": {
+                    "type": "str"
+                }
+            },
+            "companyName": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "managingDirectors": {
+                "type": "str"
+            },
+            "commercialRegisterEntry": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "taxId": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "location": "CreateAddressModel",
+            "bankAccount": "BankAccountModel",
+            "paymentTerms": {
+                "type": "obj",
+                "additionalProperties": {
+                    "type": "str"
+                }
+            },
+            "timeZone": {
+                "minLen": 1,
+                "type": "str"
+            },
+            "defaultCheckInTime": {
+                "type": "str"
+            },
+            "defaultCheckOutTime": {
+                "type": "str"
+            },
+            "currencyCode": {
+                "type": "str"
+            }
+        }
+    },
+    "Operation": {
+        "type": "obj",
+        "props": {
+            "value": {},
+            "path": {
+                "type": "str"
+            },
+            "op": {
+                "type": "str"
+            },
+            "from": {
+                "type": "str"
+            }
+        }
+    },
+    "PropertyModifyDetailsRequest": {
+        "type": "array",
+        "items": "Operation"
+    },
     "CreateUnitAttributeModel": {
         "req": [
             "id"
@@ -56,15 +190,11 @@
             },
             "attributes": {
                 "type": "array",
-                "items": {
-                    "$ref": "CreateUnitAttributeModel"
-                }
+                "items": "CreateUnitAttributeModel"
             },
             "connectedUnits": {
                 "type": "array",
-                "items": {
-                    "$ref": "CreateConnectedUnitModel"
-                }
+                "items": "CreateConnectedUnitModel"
             }
         }
     },
@@ -124,7 +254,6 @@
             "code": {
                 "maxLen": 10,
                 "minLen": 3,
-                "pattern": "^[a-zA-Z0-9_]*$",
                 "type": "str"
             },
             "propertyId": {
@@ -159,9 +288,7 @@
             },
             "connectedUnitGroups": {
                 "type": "array",
-                "items": {
-                    "$ref": "CreateConnectedUnitGroupModel"
-                }
+                "items": "CreateConnectedUnitGroupModel"
             }
         }
     },
@@ -208,9 +335,7 @@
             },
             "connectedUnitGroups": {
                 "type": "array",
-                "items": {
-                    "$ref": "ReplaceConnectedUnitGroupModel"
-                }
+                "items": "ReplaceConnectedUnitGroupModel"
             }
         }
     }

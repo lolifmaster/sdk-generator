@@ -1,12 +1,12 @@
-##IMPORTANT: base_url:api.apaleo.com
+###IMPORTANT: base_url:api.apaleo.com
 ---
 ---
-##ENDPOINTS
----
--method:get
+###ENDPOINTS
+##path: /inventory/v1/properties
+#method:get
 -security
 oauth2: []
-path: /inventory/v1/properties
+-
 opid: Property_listGet
 params
 in: query
@@ -58,12 +58,10 @@ enum
 actions
 type: str
 req: False
-sum: Get a properties list
----
--method:post
+#method:post
 -security
 oauth2: ['properties.create', 'setup.manage', 'admin']
-path: /inventory/v1/properties
+-
 opid: Property_create
 params
 in: header
@@ -71,19 +69,20 @@ name: Idempotency-Key
 schema
 type: str
 req: False
-sum: Creates a property
+ref: #CreatePropertyModel
 ---
--method:get
+##path: /inventory/v1/properties/$count
+#method:get
 -security
 oauth2: []
-path: /inventory/v1/properties/count
+-
 opid: Property_getTotalCount
-sum: Return total count of properties
 ---
--method:get
+##path: /inventory/v1/properties/{id}
+#method:get
 -security
 oauth2: []
-path: /inventory/v1/properties/id
+-
 opid: Property_getById
 params
 in: path
@@ -111,12 +110,10 @@ enum
 actions
 type: str
 req: False
-sum: Get a property
----
--method:patch
+#method:patch
 -security
 oauth2: ['properties.manage', 'setup.manage', 'admin']
-path: /inventory/v1/properties/id
+-
 opid: Property_modifyDetails
 params
 in: path
@@ -124,12 +121,13 @@ name: id
 req: True
 schema
 type: str
-sum: Allows to modify property
+ref: #PropertyModifyDetailsRequest
 ---
--method:post
+##path: /inventory/v1/property-actions/{id}/clone
+#method:post
 -security
 oauth2: ['properties.create', 'setup.manage', 'admin']
-path: /inventory/v1/property-actions/id/clone
+-
 opid: PropertyActions_cloneProperty
 params
 in: path
@@ -142,12 +140,13 @@ name: Idempotency-Key
 schema
 type: str
 req: False
-sum: Clones a property
+ref: #CreatePropertyModel
 ---
--method:put
+##path: /inventory/v1/property-actions/{id}/archive
+#method:put
 -security
 oauth2: ['properties.manage', 'setup.manage', 'admin']
-path: /inventory/v1/property-actions/id/archive
+-
 opid: PropertyActions_archiveProperty
 params
 in: path
@@ -155,12 +154,12 @@ name: id
 req: True
 schema
 type: str
-sum: Archive a property
 ---
--method:put
+##path: /inventory/v1/property-actions/{id}/set-live
+#method:put
 -security
 oauth2: ['properties.manage', 'setup.manage', 'admin']
-path: /inventory/v1/property-actions/id/set-live
+-
 opid: PropertyActions_moveToLive
 params
 in: path
@@ -168,12 +167,12 @@ name: id
 req: True
 schema
 type: str
-sum: Move property to live
 ---
--method:put
+##path: /inventory/v1/property-actions/{id}/reset
+#method:put
 -security
 oauth2: ['properties.manage', 'setup.manage', 'admin']
-path: /inventory/v1/property-actions/id/reset
+-
 opid: PropertyActions_resetPropertyData
 params
 in: path
@@ -181,19 +180,19 @@ name: id
 req: True
 schema
 type: str
-sum: Reset a test property and delete all transactional data
 ---
--method:get
+##path: /inventory/v1/types/countries
+#method:get
 -security
 oauth2: []
-path: /inventory/v1/types/countries
+-
 opid: Types_supportedCountriesList
-sum: Returns a list of supported countries.
 ---
--method:patch
+##path: /inventory/v1/units/{id}
+#method:patch
 -security
 oauth2: ['units.manage', 'setup.manage', 'admin']
-path: /inventory/v1/units/id
+-
 opid: Unit_updateProperties
 params
 in: path
@@ -201,12 +200,11 @@ name: id
 req: True
 schema
 type: str
-sum: Allows to patch unit
----
--method:get
+ref: #PropertyModifyDetailsRequest
+#method:get
 -security
 oauth2: ['units.read', 'setup.read', 'setup.manage', 'admin']
-path: /inventory/v1/units/id
+-
 opid: Unit_getById
 params
 in: path
@@ -236,12 +234,10 @@ unitGroup
 connectedUnits
 type: str
 req: False
-sum: Get a unit
----
--method:delete
+#method:delete
 -security
 oauth2: ['units.delete', 'setup.manage', 'admin']
-path: /inventory/v1/units/id
+-
 opid: Unit_deleteById
 params
 in: path
@@ -249,12 +245,12 @@ name: id
 req: True
 schema
 type: str
-sum: Delete a unit
 ---
--method:patch
+##path: /inventory/v1/units
+#method:patch
 -security
 oauth2: ['units.manage', 'setup.manage', 'admin']
-path: /inventory/v1/units
+-
 opid: Unit_updateUnitsAttributes
 params
 in: query
@@ -266,12 +262,11 @@ schema
 type: arr
 items
 type: str
-sum: Allows to patch one or more units
----
--method:get
+ref: #PropertyModifyDetailsRequest
+#method:get
 -security
 oauth2: ['units.read', 'setup.read', 'setup.manage', 'admin']
-path: /inventory/v1/units
+-
 opid: Unit_listUnits
 params
 in: query
@@ -355,12 +350,10 @@ unitGroup
 connectedUnits
 type: str
 req: False
-sum: Get a units list
----
--method:post
+#method:post
 -security
 oauth2: ['units.create', 'setup.manage', 'admin']
-path: /inventory/v1/units
+-
 opid: Unit_create
 params
 in: header
@@ -368,13 +361,13 @@ name: Idempotency-Key
 schema
 type: str
 req: False
-sum: Create a unit
-ref: #/components/schemas/CreateUnitModel
+ref: #CreateUnitModel
 ---
--method:get
+##path: /inventory/v1/units/$count
+#method:get
 -security
 oauth2: ['units.read', 'setup.read', 'setup.manage', 'admin']
-path: /inventory/v1/units/count
+-
 opid: Unit_getCount
 params
 in: query
@@ -433,12 +426,12 @@ name: textSearch
 schema
 type: str
 req: False
-sum: Returns number of units
 ---
--method:post
+##path: /inventory/v1/units/bulk
+#method:post
 -security
 oauth2: ['units.create', 'setup.manage', 'admin']
-path: /inventory/v1/units/bulk
+-
 opid: Unit_bulkCreateUnits
 params
 in: header
@@ -446,13 +439,13 @@ name: Idempotency-Key
 schema
 type: str
 req: False
-sum: Create multiple units
-ref: #/components/schemas/BulkCreateUnitsModel
+ref: #BulkCreateUnitsModel
 ---
--method:get
+##path: /inventory/v1/unit-attributes/{id}
+#method:get
 -security
 oauth2: ['unitattributes.read', 'setup.read', 'setup.manage', 'admin']
-path: /inventory/v1/unit-attributes/id
+-
 opid: UnitAttribute_getById
 params
 in: path
@@ -460,12 +453,10 @@ name: id
 req: True
 schema
 type: str
-sum: Get unit attribute by id
----
--method:patch
+#method:patch
 -security
 oauth2: ['unitattributes.manage', 'setup.manage', 'admin']
-path: /inventory/v1/unit-attributes/id
+-
 opid: UnitAttribute_modifyDescription
 params
 in: path
@@ -473,12 +464,11 @@ name: id
 req: True
 schema
 type: str
-sum: Allows to modify unit attribute
----
--method:delete
+ref: #PropertyModifyDetailsRequest
+#method:delete
 -security
 oauth2: ['unitattributes.delete', 'setup.manage', 'admin']
-path: /inventory/v1/unit-attributes/id
+-
 opid: UnitAttribute_deleteById
 params
 in: path
@@ -486,12 +476,12 @@ name: id
 req: True
 schema
 type: str
-sum: Deletes unit attribute
 ---
--method:get
+##path: /inventory/v1/unit-attributes
+#method:get
 -security
 oauth2: ['unitattributes.read', 'setup.read', 'setup.manage', 'admin']
-path: /inventory/v1/unit-attributes
+-
 opid: UnitAttribute_listAttributes
 params
 in: query
@@ -506,12 +496,10 @@ schema
 type: int
 format: int64
 req: False
-sum: Get unit attribute list
----
--method:post
+#method:post
 -security
 oauth2: ['unitattributes.create', 'setup.manage', 'admin']
-path: /inventory/v1/unit-attributes
+-
 opid: UnitAttribute_createNewAttribute
 params
 in: header
@@ -519,13 +507,13 @@ name: Idempotency-Key
 schema
 type: str
 req: False
-sum: Create a unit attribute
-ref: #/components/schemas/CreateUnitAttributeDefinitionModel
+ref: #CreateUnitAttributeDefinitionModel
 ---
--method:post
+##path: /inventory/v1/unit-groups
+#method:post
 -security
 oauth2: ['unitgroups.create', 'setup.manage', 'admin']
-path: /inventory/v1/unit-groups
+-
 opid: UnitGroup_createNewGroup
 params
 in: header
@@ -533,13 +521,11 @@ name: Idempotency-Key
 schema
 type: str
 req: False
-sum: Create a unit group
-ref: #/components/schemas/CreateUnitGroupModel
----
--method:get
+ref: #CreateUnitGroupModel
+#method:get
 -security
 oauth2: ['unitgroups.read', 'setup.read', 'setup.manage', 'admin']
-path: /inventory/v1/unit-groups
+-
 opid: UnitGroup_getAll
 params
 in: query
@@ -586,12 +572,12 @@ property
 connectedUnitGroups
 type: str
 req: False
-sum: Get all unit groups, or all unit groups for a property
 ---
--method:get
+##path: /inventory/v1/unit-groups/$count
+#method:get
 -security
 oauth2: ['unitgroups.read', 'setup.read', 'setup.manage', 'admin']
-path: /inventory/v1/unit-groups/count
+-
 opid: UnitGroup_getCount
 params
 in: query
@@ -614,12 +600,12 @@ ParkingLot
 Other
 type: str
 req: False
-sum: Returns number of unit groups
 ---
--method:get
+##path: /inventory/v1/unit-groups/{id}
+#method:get
 -security
 oauth2: ['unitgroups.read', 'setup.read', 'setup.manage', 'admin']
-path: /inventory/v1/unit-groups/id
+-
 opid: UnitGroup_getById
 params
 in: path
@@ -648,12 +634,10 @@ property
 connectedUnitGroups
 type: str
 req: False
-sum: Get a unit group
----
--method:put
+#method:put
 -security
 oauth2: ['unitgroups.manage', 'setup.manage', 'admin']
-path: /inventory/v1/unit-groups/id
+-
 opid: UnitGroup_updateGroup
 params
 in: path
@@ -661,13 +645,11 @@ name: id
 req: True
 schema
 type: str
-sum: Replace a unit group
-ref: #/components/schemas/ReplaceUnitGroupModel
----
--method:delete
+ref: #ReplaceUnitGroupModel
+#method:delete
 -security
 oauth2: ['unitgroups.delete', 'setup.manage', 'admin']
-path: /inventory/v1/unit-groups/id
+-
 opid: UnitGroup_deleteById
 params
 in: path
@@ -675,5 +657,4 @@ name: id
 req: True
 schema
 type: str
-sum: Delete a unit group
 ---

@@ -1,6 +1,5 @@
 import requests
 from typing import Optional
-from dataclasses import asdict
 from types import (
     MerchantValidationApplePay,
     PaymentBaseRequest,
@@ -39,7 +38,7 @@ class TwoC2PClient:
         Validate Apple Pay merchant.
         """
         url = f"{self.base_url}/payment/4.3/applepay/merchantvalidation"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def cache_clean_cache(self) -> requests.Response:
         """
@@ -53,7 +52,7 @@ class TwoC2PClient:
         Cancel a transaction.
         """
         url = f"{self.base_url}/payment/4.3/canceltransaction"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def card_installment_plan_info_create(
         self, data: CardInstallmentPlanInfoRequest
@@ -62,7 +61,7 @@ class TwoC2PClient:
         Create card installment plan info.
         """
         url = f"{self.base_url}/payment/4.3/cardinstallmentplaninfo"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def card_token_info_get_card_token_info(
         self, data: PaymentBaseRequest
@@ -71,7 +70,7 @@ class TwoC2PClient:
         Get card token info.
         """
         url = f"{self.base_url}/payment/4.3/cardtokeninfo"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def exchange_rate_get_rate(
         self, data: PaymentExchangeRateConverterRequest
@@ -80,21 +79,21 @@ class TwoC2PClient:
         Get exchange rate.
         """
         url = f"{self.base_url}/payment/4.3/exchangerate"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def exchange_rate_request_endpoint(self, data: PayloadRequest) -> requests.Response:
         """
         Request exchange rate endpoint.
         """
         url = f"{self.base_url}/payment/4.3/exchangerate/secure"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def exchange_rate_apm_mcc(self, data: PaymentBaseRequest) -> requests.Response:
         """
         Get exchange rate for APM MCC.
         """
         url = f"{self.base_url}/payment/4.3/exchangerate/apmmccexchangerate"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def initialization_request_creation(self) -> requests.Response:
         """
@@ -110,14 +109,14 @@ class TwoC2PClient:
         Post loyalty point info.
         """
         url = f"{self.base_url}/payment/4.3/loyaltypointinfo"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def payment_create_payment(self, data: PaymentRequestV43) -> requests.Response:
         """
         Create a payment.
         """
         url = f"{self.base_url}/payment/4.3/payment"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def payment_inquiry_post_payment_details(
         self, data: PayloadRequest
@@ -126,7 +125,7 @@ class TwoC2PClient:
         Post payment details for inquiry.
         """
         url = f"{self.base_url}/payment/4.3/paymentinquiry"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def payment_instruction_submit_instruction(
         self, data: PayloadRequest
@@ -135,7 +134,7 @@ class TwoC2PClient:
         Submit payment instruction.
         """
         url = f"{self.base_url}/payment/4.3/paymentinstruction"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def payment_notification_process_notification(
         self, data: PaymentNotificationRequest
@@ -144,7 +143,7 @@ class TwoC2PClient:
         Process payment notification.
         """
         url = f"{self.base_url}/payment/4.3/paymentnotification"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def payment_option_create_payment_option(
         self, data: PaymentBaseRequest
@@ -153,7 +152,7 @@ class TwoC2PClient:
         Create a payment option.
         """
         url = f"{self.base_url}/payment/4.3/paymentoption"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def payment_option_details_post_option_details(
         self, data: PaymentOptionDetailsRequest
@@ -162,7 +161,7 @@ class TwoC2PClient:
         Post payment option details.
         """
         url = f"{self.base_url}/payment/4.3/paymentoptiondetails"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def payment_simulate_execute_payment_simulation(
         self, data: PayloadRequest
@@ -171,14 +170,14 @@ class TwoC2PClient:
         Execute payment simulation.
         """
         url = f"{self.base_url}/payment/4.3/paymentsimulate"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def payment_token_generate_token(self, data: PayloadRequest) -> requests.Response:
         """
         Generate a payment token.
         """
         url = f"{self.base_url}/payment/4.3/paymenttoken"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def redirect_back_end_post_payment_redirect(self) -> requests.Response:
         """
@@ -201,7 +200,7 @@ class TwoC2PClient:
         Update transaction status.
         """
         url = f"{self.base_url}/payment/4.3/transactionstatus"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
 
     def user_preference_save_user_preference(
         self, data: PaymentBaseRequest
@@ -210,4 +209,4 @@ class TwoC2PClient:
         Save user preference.
         """
         url = f"{self.base_url}/payment/4.3/userpreference"
-        return self._make_authenticated_request("POST", url, asdict(data))
+        return self._make_authenticated_request("POST", url, data)
