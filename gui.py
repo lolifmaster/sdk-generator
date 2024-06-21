@@ -9,8 +9,6 @@ from sdkgenerator.types import Language
 def process_openapi_file(
     openapi_file: NamedString, user_input: str, language: Language = "python"
 ):
-    if not user_input:
-        user_input = "- Return type: All methods must return the 'Response' object from the 'requests' library."
     UPLOAD_DIR = Path(__file__).parent / "GUI_uploads"
     UPLOAD_DIR.mkdir(exist_ok=True)
 
